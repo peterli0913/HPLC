@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asymchem UK B902 PDF Extension — COO/CFO Briefing</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --navy: #0f2b46;
+      --teal: #009688;
+      --accent: #c9a227;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #2c3e50;
+      --muted: #5a6a7a;
+      --warn: #b43a2a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+    }
+    .deck { height: 100vh; position: relative; }
+    .slide {
+      display: none;
+      height: 100vh;
+      padding: 2.5rem 3.5rem 4rem;
+      flex-direction: column;
+      animation: fade 0.35s ease;
+    }
+    .slide.active { display: flex; }
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--navy), var(--teal));
+    }
+    h1 {
+      font-size: 1.85rem;
+      color: var(--navy);
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      line-height: 1.25;
+    }
+    h2 {
+      font-size: 1.05rem;
+      color: var(--muted);
+      font-weight: 400;
+      margin-bottom: 1.25rem;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--navy);
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+    ul { margin-left: 1.2rem; line-height: 1.65; font-size: 0.95rem; }
+    li { margin-bottom: 0.45rem; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      flex: 1;
+      min-height: 0;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 4px 20px rgba(15,43,70,0.08);
+      border: 1px solid #e8ecf0;
+    }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .kpi {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      border-left: 4px solid var(--teal);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .kpi .val {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .kpi .lbl {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.45rem 0.6rem;
+      border-bottom: 1px solid #eef1f4;
+    }
+    th { color: var(--navy); font-weight: 600; }
+    .warn-box {
+      background: #fef6f4;
+      border-left: 4px solid var(--warn);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      border-radius: 0 6px 6px 0;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 0.35rem;
+      top: 0.3rem;
+      bottom: 0.3rem;
+      width: 3px;
+      background: var(--teal);
+      border-radius: 2px;
+    }
+    .tl-item {
+      position: relative;
+      padding: 0.35rem 0 0.35rem 1rem;
+      font-size: 0.88rem;
+    }
+    .tl-item::before {
+      content: "";
+      position: absolute;
+      left: -1.15rem;
+      top: 0.55rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 2px solid var(--teal);
+    }
+    .tl-item.done::before { background: var(--teal); }
+    .tl-date { color: var(--muted); font-size: 0.8rem; }
+    .footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      padding: 0.5rem 3.5rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.92);
+      border-top: 1px solid #e8ecf0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .nav-hint {
+      position: fixed;
+      bottom: 2.2rem;
+      right: 2rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .title-slide {
+      justify-content: center;
+      text-align: center;
+    }
+    .title-slide h1 { font-size: 2.2rem; }
+    .chart-wrap { position: relative; height: 280px; }
+    .status-complete { color: var(--teal); font-weight: 600; }
+    .status-planned { color: var(--muted); }
+    strong { color: var(--navy); }
+  </style>
+</head>
+<body>
+  <div class="bar"></div>
+  <div class="deck" id="deck">
+
+    <!-- 1 Title -->
+    <section class="slide active title-slide" data-i="0">
+      <p><span class="tag">CONFIDENTIAL — DRAFT FOR MANAGEMENT</span></p>
+      <h1 style="margin-top:1rem">Asymchem UK · B902 PDF Extension</h1>
+      <h2>Investment &amp; Programme Briefing · Group COO / CFO</h2>
+      <p style="color:var(--muted);margin-top:1.5rem;font-size:0.95rem">
+        Feasibility Study (RIBA Stage 1) · Discovery Park, Sandwich, Kent<br/>
+        Data source: Scitech-EKIUM Project 300291 · Issue A1 · 22 May 2026
+      </p>
+    </section>
+
+    <!-- 2 Executive -->
+    <section class="slide" data-i="1">
+      <h1>Executive Summary</h1>
+      <h2>Verified conclusions from feasibility deliverables only</h2>
+      <div class="kpi-row">
+        <div class="kpi"><div class="val">Feasible*</div><div class="lbl">*Subject to planning approval</div></div>
+        <div class="kpi"><div class="val">£78.1M</div><div class="lbl">Total OOM project cost (May 2026)</div></div>
+        <div class="kpi"><div class="val">3,099 m²</div><div class="lbl">GIFA (feasibility area schedule)</div></div>
+        <div class="kpi"><div class="val">May 2030</div><div class="lbl">Project complete (master programme)</div></div>
+      </div>
+      <ul>
+        <li><strong>Scope:</strong> East extension to B902 PDF — 10 reactors, 2,500 L hydrogenation reactor, 3 filter dryers, utilities &amp; HVAC.</li>
+        <li><strong>Investment:</strong> Order-of-magnitude <strong>£78,108,089</strong> — not a final Capex; excludes inflation, tax, FX, client PM.</li>
+        <li><strong>Progress:</strong> RIBA 1 complete (May 2026); walkthrough 27 May 2026; Stage 2 Concept planned from <strong>1 Jul 2026</strong>.</li>
+        <li><strong>Ask:</strong> Conditional approval to proceed to Concept Design on baseline Option 1 (hydrogenation building removal).</li>
+      </ul>
+    </section>
+
+    <!-- 3 Progress -->
+    <section class="slide" data-i="2">
+      <h1>Project Progress &amp; Stage Gate</h1>
+      <h2>Where we are on the capital project lifecycle</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3 style="color:var(--navy);margin-bottom:0.75rem;font-size:1rem">Completed</h3>
+          <ul>
+            <li>Feasibility Report 300291-RE-0001 (72 pp + appendices)</li>
+            <li>Cost Plan, Risk Register, Programme, Option Matrix, Equipment List</li>
+            <li>UK feasibility walkthrough — 27 May 2026</li>
+            <li>BREEAM pre-assessment (~62.93% vs Very Good 55% threshold)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--navy);margin-bottom:0.75rem;font-size:1rem">In flight / Next</h3>
+          <ul>
+            <li>Pre-planning submission pack (Scitech preparing)</li>
+            <li>RIBA 2 Concept Design — appointment <strong>01 Jul 2026</strong></li>
+            <li>Concept Stage Gate — <strong>16 Feb 2027</strong> (programme)</li>
+            <li>Data gaps: B902 operations, procurement split, Stage 2 fee contract</li>
+          </ul>
+        </div>
+      </div>
+      <div class="warn-box">
+        <strong>Not in published pack:</strong> Separate FEED contract value or RIBA 2/3 fee breakdown — require Scitech commercial proposal for CFO cash-flow planning.
+      </div>
+    </section>
+
+    <!-- 4 Scope -->
+    <section class="slide" data-i="3">
+      <h1>Scope &amp; Design Baseline</h1>
+      <h2>Option 1 — highest scored in feasibility option appraisal</h2>
+      <div class="grid-2">
+        <div>
+          <ul>
+            <li><strong>Footprint:</strong> ~600 m²; <strong>4 floors + plant mezzanine</strong></li>
+            <li><strong>GIFA:</strong> 3,099 m² (GF 597 · 1F 642 · 2F 637 · 3F+mezz 1,224)</li>
+            <li><strong>Operational area:</strong> ~1,301 m² primary; ~1,168 m² plant/technical</li>
+            <li><strong>Prerequisite:</strong> Remove/relocate existing hydrogenation building</li>
+            <li><strong>Fire:</strong> Second escape stair; blast panels at hydrogenation suite</li>
+          </ul>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>Area</th><th>m²</th></tr></thead>
+            <tbody>
+              <tr><td>Ground floor</td><td>597</td></tr>
+              <tr><td>First floor</td><td>642</td></tr>
+              <tr><td>Second floor</td><td>637</td></tr>
+              <tr><td>Third + mezzanine</td><td>1,224</td></tr>
+              <tr><th>Total GIFA</th><th>3,099</th></tr>
+            </tbody>
+          </table>
+          <p style="font-size:0.75rem;color:var(--muted);margin-top:0.75rem">Source: 300291-CM-0001 Area Schedule</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 Investment overview -->
+    <section class="slide" data-i="4">
+      <h1>Investment Overview (OOM)</h1>
+      <h2>300291-CM-0001 · Base date 22 May 2026 · GBP net excl. tax</h2>
+      <div class="kpi-row">
+        <div class="kpi"><div class="val">£78.11M</div><div class="lbl">Total project cost (OOM)</div></div>
+        <div class="kpi"><div class="val">£47.59M</div><div class="lbl">Base construction cost</div></div>
+        <div class="kpi"><div class="val">£41.97M</div><div class="lbl">Direct works subtotal</div></div>
+        <div class="kpi"><div class="val">£25,205</div><div class="lbl">Per m² GIFA (derived)</div></div>
+      </div>
+      <table>
+        <thead><tr><th>Component</th><th>Amount (GBP)</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Works cost subtotal</td><td>£41,968,226</td><td>Includes process equipment line 5.6</td></tr>
+          <tr><td>Preliminaries (8%)</td><td>£3,357,458</td><td>Site management, welfare, temp works</td></tr>
+          <tr><td>Contractor OH&amp;P (5%)</td><td>£2,266,284</td><td></td></tr>
+          <tr><td><strong>Base construction cost</strong></td><td><strong>£47,591,969</strong></td><td></td></tr>
+          <tr><td>Other project costs</td><td>£4,062,357</td><td>Design 8%, BREEAM, surveys, planning</td></tr>
+          <tr><td>Risk register (factored)</td><td>£626,600</td><td></td></tr>
+          <tr><td>Risk &amp; contingency allocations</td><td>£25,827,163</td><td>15% design + 25% construction + 10% client</td></tr>
+          <tr><td><strong>Total OOM</strong></td><td><strong>£78,108,089</strong></td><td>Escalation allowance excluded</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6 Charts investment -->
+    <section class="slide" data-i="5">
+      <h1>Investment Structure Analysis</h1>
+      <h2>Professional view: envelope composition &amp; direct works mix</h2>
+      <div class="grid-2">
+        <div class="card"><div class="chart-wrap"><canvas id="chartStack"></canvas></div></div>
+        <div class="card"><div class="chart-wrap"><canvas id="chartWorks"></canvas></div></div>
+      </div>
+    </section>
+
+    <!-- 7 Contingency -->
+    <section class="slide" data-i="6">
+      <h1>Contingency &amp; Risk Provisions</h1>
+      <h2>Feasibility-stage governance — report §14 &amp; cost plan</h2>
+      <div class="grid-2">
+        <div class="card">
+          <table>
+            <thead><tr><th>Provision</th><th>GBP</th></tr></thead>
+            <tbody>
+              <tr><td>Design development (15%)</td><td>7,748,149</td></tr>
+              <tr><td>Construction &amp; equipment risk (25%)</td><td>12,913,581</td></tr>
+              <tr><td>Client contingency (10%)</td><td>5,165,433</td></tr>
+              <tr><td>Risk register (factored)</td><td>626,600</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <ul>
+            <li>Pre-mitigation exposure (report): <strong>£2.64m</strong> cost · <strong>182 weeks</strong> programme (cumulative)</li>
+            <li>Post-mitigation (report): <strong>£1.13m</strong> · <strong>107 weeks</strong></li>
+            <li>Top themes: existing site conditions, planning/BREEAM, utilities, procurement, programme</li>
+          </ul>
+          <div class="warn-box">
+            CFO action: Separate <em>earmarked contingency</em> drawdown rules vs design development allowance — per report §15.2 governance guidance.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 Capex caveats -->
+    <section class="slide" data-i="7">
+      <h1>Capex Integrity — In / Out of Estimate</h1>
+      <h2>Per cost plan ASSUMPTIONS &amp; CLARIFICATIONS (verbatim intent)</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3 style="font-size:0.95rem;color:var(--teal);margin-bottom:0.5rem">Included in published OOM</h3>
+          <ul style="margin-left:1rem;font-size:0.88rem">
+            <li>Extension &amp; alteration works per feasibility scope</li>
+            <li>Preliminaries, OH&amp;P, design fees (8% = £3,807,357)</li>
+            <li>Feasibility-stage risk &amp; contingency blocks</li>
+            <li>Process equipment line item £23,249,083 (works schedule 5.6)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="font-size:0.95rem;color:var(--warn);margin-bottom:0.5rem">Excluded / Not in base</h3>
+          <ul style="margin-left:1rem;font-size:0.88rem">
+            <li><strong>Client-purchased equipment</strong> (stated excluded — reconcile with 5.6 line at Concept)</li>
+            <li>Inflation, FX, tax, duties</li>
+            <li>Client PM, operations, consumables</li>
+            <li>Survey remediation beyond allowances</li>
+            <li>Escalation to tender date (field blank in cost plan)</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:1rem;font-size:0.85rem;color:var(--muted)">
+        Disclaimer (Scitech): OOM guide only — not for final Capex application. Comprehensive estimate at Concept Design.
+      </p>
+    </section>
+
+    <!-- 9 Programme -->
+    <section class="slide" data-i="8">
+      <h1>Overall Cycle &amp; Programme</h1>
+      <h2>300291-PM-PR-0002 · Total programme length 1,005 days (01 Jul 2026 – 07 May 2030)</h2>
+      <div class="grid-2">
+        <div class="timeline">
+          <div class="tl-item done"><strong>Feasibility (RIBA 1)</strong><br/><span class="tl-date">Complete — May 2026</span></div>
+          <div class="tl-item"><strong>Concept Design (RIBA 2)</strong><br/><span class="tl-date">15 Jul 2026 → 23 Feb 2027 (160 days)</span></div>
+          <div class="tl-item"><strong>Scheme Design (RIBA 3)</strong><br/><span class="tl-date">17 Feb 2027 → 28 Sep 2027 (8 months)</span></div>
+          <div class="tl-item"><strong>Planning consent (target)</strong><br/><span class="tl-date">21 Mar 2028</span></div>
+          <div class="tl-item"><strong>Detailed Design (RIBA 4)</strong><br/><span class="tl-date">27 Oct 2027 → 06 Jun 2028</span></div>
+          <div class="tl-item"><strong>Construction (RIBA 5)</strong><br/><span class="tl-date">02 Aug 2028 → 13 Nov 2029 (335 days)</span></div>
+          <div class="tl-item"><strong>Project complete</strong><br/><span class="tl-date">07 May 2030</span></div>
+        </div>
+        <div class="card">
+          <div class="chart-wrap" style="height:320px"><canvas id="chartProgramme"></canvas></div>
+          <p style="font-size:0.72rem;color:var(--muted);margin-top:0.5rem">Bar = indicative phase duration (months, rounded from programme)</p>
+        </div>
+      </div>
+      <div class="warn-box">
+        <strong>Schedule tension:</strong> Risk register #13 flags desired <strong>Q3 2028</strong> completion as tight vs construction through Nov 2029 and complete May 2030. Align definition of “completion” before board targets.
+      </div>
+    </section>
+
+    <!-- 10 Design investment phasing -->
+    <section class="slide" data-i="9">
+      <h1>Design &amp; Pre-Construction Investment Phasing</h1>
+      <h2>Cash-relevant milestones before main construction (Aug 2028)</h2>
+      <table>
+        <thead>
+          <tr><th>Phase</th><th>Period</th><th>Commercial note</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>RIBA 2 Concept</td><td>Jul 2026 – Feb 2027</td><td>Surveys £80k allowance; design fees part of £3.81M whole-project pot</td></tr>
+          <tr><td>RIBA 3 Scheme</td><td>Feb 2027 – Sep 2027</td><td>1-month client review gates between stages</td></tr>
+          <tr><td>Planning</td><td>Oct 2027 – Mar 2028</td><td>Statutory period 65 days in programme</td></tr>
+          <tr><td>RIBA 4 Detailed</td><td>Oct 2027 – Jun 2028</td><td>Long-lead procurement from Mar 2028 (18 mo) per programme</td></tr>
+          <tr><td>Pre-construction</td><td>Jul 2028</td><td>Mobilisation / site set-up</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:0.75rem;font-size:0.85rem">
+        Report §13.4: Optimisation possible (D&amp;B from Stage 4, overlapping procurement) — programme may compress; commercial impact not quantified in FS.
+      </p>
+    </section>
+
+    <!-- 11 Recommendations -->
+    <section class="slide" data-i="10">
+      <h1>Recommendations for COO / CFO</h1>
+      <h2>Decision-ready actions — no fabricated financial metrics</h2>
+      <ul>
+        <li><strong>Approve conditional Stage 2</strong> — proceed to Concept Design; planning consent remains external gate to main works.</li>
+        <li><strong>Budget envelope</strong> — Plan dialogue using <strong>£78.1M OOM</strong>; hold top-up for client-direct equipment, inflation, and tax per group policy.</li>
+        <li><strong>Mandate reconciliation</strong> — Client-purchased equipment vs £23.25M process line before Concept cost plan sign-off.</li>
+        <li><strong>Procurement strategy</strong> — Close risk #18 (ownership/timing) before long-lead orders (Hastelloy vessels, filter dryers).</li>
+        <li><strong>Schedule alignment</strong> — Resolve Q3 2028 aspiration vs May 2030 baseline; approve acceleration only with priced D&amp;B/overlap strategy.</li>
+        <li><strong>Request from Scitech</strong> — Stage-gated fee quote, cash-flow curve, and updated OOM at Concept report (Feb 2027 gate).</li>
+      </ul>
+    </section>
+
+    <!-- 12 Source -->
+    <section class="slide title-slide" data-i="11">
+      <h1>Data Sources &amp; Audit Trail</h1>
+      <p style="text-align:left;max-width:720px;margin:1.5rem auto;font-size:0.9rem;color:var(--text)">
+        <strong>Primary documents (repository):</strong><br/><br/>
+        300291-RE-0001 — Asymchem PDF Extension Feasibility Report (A1, 22-May-26)<br/>
+        300291-CM-0001 — Feasibility Cost Plan — 4 Floor Building<br/>
+        300291-PM-PR-0002 — Next Stage Programme<br/>
+        300291-PM-RA-0001 — Project Risk Register<br/>
+        Option Appraisal Matrix · Equipment List · Utility Assessment<br/><br/>
+        <strong>Meeting context:</strong> 05-27 Feasibility walkthrough transcript (non-cost data).<br/><br/>
+        <strong>Not presented:</strong> RMB amounts, NPV/IRR, fabricated FEED fees, or inflation-adjusted totals.
+      </p>
+    </section>
+  </div>
+
+  <div class="footer">
+    <span>Asymchem UK · B902 PDF Extension · Management Briefing</span>
+    <span id="counter">1 / 12</span>
+  </div>
+  <div class="nav-hint">← → or Space to navigate</div>
+
+  <script>
+    const DATA = {
+      stack: {
+        labels: ["OOM composition"],
+        datasets: [
+          { label: "Direct works", data: [41968226], backgroundColor: "#0f2b46" },
+          { label: "Preliminaries & OH&P", data: [7591742], backgroundColor: "#1a4a6e" },
+          { label: "Other project costs", data: [4062357], backgroundColor: "#009688" },
+          { label: "Risk & contingency (+ register)", data: [26453763], backgroundColor: "#c9a227" }
+        ]
+      },
+      works: {
+        labels: [
+          "Process equip.", "Building services", "External", "Superstructure",
+          "Substructure", "Other works"
+        ],
+        data: [23249083, 9532716, 1859520, 3942636, 1499680, 2720049]
+      },
+      programme: {
+        labels: ["RIBA 2 Concept", "RIBA 3 Scheme", "RIBA 4 Detail", "Planning window", "Construction", "Commission/validate"],
+        months: [8, 8, 8, 6, 16, 6]
+      }
+    };
+
+    const slides = document.querySelectorAll(".slide");
+    let idx = 0;
+    const counter = document.getElementById("counter");
+    let chartsBuilt = false;
+
+    function show(n) {
+      idx = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+      counter.textContent = `${idx + 1} / ${slides.length}`;
+      if (idx === 5 && !chartsBuilt) { buildCharts(); chartsBuilt = true; }
+    }
+
+    function buildCharts() {
+      new Chart(document.getElementById("chartStack"), {
+        type: "bar",
+        data: DATA.stack,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" },
+            tooltip: {
+              callbacks: {
+                label: (c) => c.dataset.label + ": £" + c.raw.toLocaleString()
+              }
+            }
+          },
+          scales: {
+            x: { stacked: true },
+            y: {
+              stacked: true,
+              ticks: { callback: (v) => "£" + (v/1e6).toFixed(1) + "M" }
+            }
+          }
+        }
+      });
+      new Chart(document.getElementById("chartWorks"), {
+        type: "doughnut",
+        data: {
+          labels: DATA.works.labels,
+          datasets: [{ data: DATA.works.data, backgroundColor: [
+            "#0f2b46","#1a4a6e","#2e6da4","#009688","#4db6ac","#90a4ae"
+          ]}]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "right", labels: { boxWidth: 12, font: { size: 10 } } },
+            tooltip: {
+              callbacks: {
+                label: (c) => {
+                  const t = DATA.works.data.reduce((a,b)=>a+b,0);
+                  return c.label + ": £" + c.raw.toLocaleString() + " (" + (c.raw/t*100).toFixed(1) + "%)";
+                }
+              }
+            }
+          }
+        }
+      });
+      new Chart(document.getElementById("chartProgramme"), {
+        type: "bar",
+        data: {
+          labels: DATA.programme.labels,
+          datasets: [{
+            label: "Indicative duration (months)",
+            data: DATA.programme.months,
+            backgroundColor: "#009688"
+          }]
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { title: { display: true, text: "Months (rounded from programme)" } } }
+        }
+      });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); show(idx + 1); }
+      if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(idx - 1); }
+    });
+    show(0);
+  </script>
+</body>
+</html>
