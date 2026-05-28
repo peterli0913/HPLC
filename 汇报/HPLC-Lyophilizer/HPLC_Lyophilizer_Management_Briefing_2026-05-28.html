@@ -69,7 +69,7 @@ zh:{
 footer:"凯莱英 UK · PDF 制备与冻干改造",
 nav:"← → 翻页",
 tag:"内部汇报",
-s1t:"PDF 厂房 HPLC 与冻干机改造",s1s:"进展 · 投资 · 周期",s1m:"RBPC 可行性研究（P01）· Discovery Park Sandwich · 2026年5月",
+s1t:"PDF 厂房 HPLC 与冻干机改造",s1s:"进展 · 投资 · 周期",s1m:"",
 s2t:"执行摘要",s2s:"",
 k1:"技术可行",k1d:"HPLC 与冻干机均可落地",
 k2:"£3.78M",k2d:"可行性阶段 Capex 估算（±50%）",
@@ -93,7 +93,7 @@ s7k1:"冻干机制造",s7k1d:"8–10 个月",
 s7k2:"HPLC 供货",s7k2d:"约 18 周（DQ+商务后）",
 s7k3:"FEED",s7k3d:"12–14 周",
 s7k4:"详细设计",s7k4d:"18–20 周",
-ganttSub:"",
+ganttSub:"项目进度计划（高阶）",
 gFs:"FS 完成",gFeed:"FEED",gDd:"详细设计",gLyOrder:"冻干下单窗口",gLyLead:"冻干制造周期",gHplcLead:"HPLC 周期",gPg12:"土建改造",gHplc:"HPLC 可用",gLy:"冻干投运",
 legDone:"已完成",legPlan:"设计",legBuild:"施工/到货",legMile:"关键路径",today:"约今",
 s7note:"",
@@ -120,7 +120,7 @@ en:{
 footer:"Asymchem UK · PDF Prep & Lyophilizer",
 nav:"← → to navigate",
 tag:"Internal briefing",
-s1t:"PDF HPLC & Lyophilizer Scheme",s1s:"Progress · Investment · Programme",s1m:"RBPC Feasibility Study (P01) · Discovery Park Sandwich · May 2026",
+s1t:"PDF HPLC & Lyophilizer Scheme",s1s:"Progress · Investment · Programme",s1m:"",
 s2t:"Executive Summary",s2s:"",
 k1:"Technically feasible",k1d:"HPLC and lyophilizer can be delivered",
 k2:"£3.78M",k2d:"Feasibility-stage Capex (±50%)",
@@ -144,7 +144,7 @@ s7k1:"Lyophilizer mfg",s7k1d:"8–10 months",
 s7k2:"HPLC supply",s7k2d:"~18 weeks (post DQ)",
 s7k3:"FEED",s7k3d:"12–14 weeks",
 s7k4:"Detailed design",s7k4d:"18–20 weeks",
-ganttSub:"",
+ganttSub:"High-level project programme",
 gFs:"FS complete",gFeed:"FEED",gDd:"Detailed design",gLyOrder:"Lyoph order window",gLyLead:"Lyoph lead time",gHplcLead:"HPLC lead",gPg12:"Civils / enabling",gHplc:"HPLC available",gLy:"Lyoph operational",
 legDone:"Complete",legPlan:"Design",legBuild:"Build/delivery",legMile:"Critical path",today:"~Today",
 s7note:"",
@@ -184,7 +184,7 @@ rows+=`<div class="gantt-row"><div class="gantt-label">${t(key)}</div><div class
 <div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${d0} – ${d1}"></div>
 </div><div class="gantt-dates">${d0}–${d1}</div></div>`;
 });
-return `<div class="gantt-wrap">${t("ganttSub")?`<div class="chart-title">${t("ganttSub")}</div>`:""}
+return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
 <div class="gantt-axis">${t("axis").map(y=>`<span>${y}</span>`).join("")}</div>
 <div class="gantt-body">${rows}</div>
 <div class="gantt-legend"><span><i style="background:var(--teal)"></i>${t("legDone")}</span>
@@ -196,9 +196,9 @@ function deckHTML(){
 const R=I18N[lang].costRows;
 return `
 <section class="slide active title-slide"><p><span class="tag">${t("tag")}</span></p>
-<h1>${t("s1t")}</h1><h2>${t("s1s")}</h2><p style="color:var(--muted);margin-top:1rem;font-size:.9rem">${t("s1m")}</p></section>
+<h1>${t("s1t")}</h1><h2>${t("s1s")}</h2>${t("s1m")?`<p style="color:var(--muted);margin-top:1rem;font-size:.9rem">${t("s1m")}</p>`:""}</section>
 
-<section class="slide"><h1>${t("s2t")}</h1>${t("s2s")?`<h2>${t("s2s")}</h2>`:""}
+<section class="slide"><h1>${t("s2t")}</h1>
 <div class="kpi-row">
 <div class="kpi"><div class="val">${t("k1")}</div><div class="lbl">${t("k1d")}</div></div>
 <div class="kpi"><div class="val">${t("k2")}</div><div class="lbl">${t("k2d")}</div></div>
@@ -206,12 +206,12 @@ return `
 <div class="kpi"><div class="val">${t("k4")}</div><div class="lbl">${t("k4d")}</div></div></div>
 <ul><li>${t("s2b1")}</li><li>${t("s2b2")}</li><li>${t("s2b3")}</li></ul></section>
 
-<section class="slide"><h1>${t("s3t")}</h1>${t("s3s")?`<h2>${t("s3s")}</h2>`:""}
+<section class="slide"><h1>${t("s3t")}</h1>
 <div class="scope-grid">
 <div class="card"><h3>${t("hplcT")}</h3><ul style="margin-top:.4rem;font-size:.82rem"><li>${t("hplc1")}</li><li>${t("hplc2")}</li><li>${t("hplc3")}</li></ul></div>
 <div class="card"><h3>${t("lyoT")}</h3><ul style="margin-top:.4rem;font-size:.82rem"><li>${t("lyo1")}</li><li>${t("lyo2")}</li><li>${t("lyo3")}</li></ul></div></div></section>
 
-<section class="slide"><h1>${t("s4t")}</h1>${t("s4s")?`<h2>${t("s4s")}</h2>`:""}
+<section class="slide"><h1>${t("s4t")}</h1>
 <div class="grid-2"><div class="card"><div class="chart-title">${t("chartLeft")}</div><div class="chart-wrap"><canvas id="c1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("chartRight")}</div><div class="chart-wrap"><canvas id="c2"></canvas></div></div></div>
 <p class="note">${t("s4acc")}</p>
@@ -252,7 +252,7 @@ ${ganttHTML()}
 </section>
 
 
-<section class="slide"><h1>${t("s9t")}</h1>${t("s9s")?`<h2>${t("s9s")}</h2>`:""}
+<section class="slide"><h1>${t("s9t")}</h1>
 <ul class="decision-list"><li>${t("s9d1")}</li><li>${t("s9d2")}</li></ul></section>
 
 <section class="slide title-slide"><h1>${t("s10t")}</h1></section>`;
