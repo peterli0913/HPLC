@@ -1,826 +1,416 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Asymchem UK B902 PDF Extension — Management Briefing</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <style>
-    :root {
-      --navy: #0f2b46;
-      --teal: #009688;
-      --accent: #c9a227;
-      --bg: #f4f6f8;
-      --card: #ffffff;
-      --text: #2c3e50;
-      --muted: #5a6a7a;
-      --warn: #b43a2a;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow: hidden;
-      height: 100vh;
-    }
-    .deck { height: 100vh; position: relative; }
-    .slide {
-      display: none;
-      height: 100vh;
-      padding: 2.2rem 3rem 3.5rem;
-      flex-direction: column;
-      animation: fade 0.3s ease;
-    }
-    .slide.active { display: flex; }
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .top-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, var(--navy), var(--teal));
-      z-index: 100;
-    }
-    .lang-switch {
-      position: fixed;
-      top: 1rem;
-      right: 1.5rem;
-      z-index: 101;
-      display: flex;
-      gap: 0;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-      border: 1px solid #dde3e8;
-    }
-    .lang-switch button {
-      border: none;
-      padding: 0.4rem 0.85rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-      background: #fff;
-      color: var(--muted);
-      font-weight: 600;
-    }
-    .lang-switch button.active {
-      background: var(--navy);
-      color: #fff;
-    }
-    h1 {
-      font-size: 1.75rem;
-      color: var(--navy);
-      font-weight: 700;
-      margin-bottom: 0.3rem;
-      line-height: 1.3;
-    }
-    h2 {
-      font-size: 0.98rem;
-      color: var(--muted);
-      font-weight: 400;
-      margin-bottom: 1rem;
-    }
-    .tag {
-      display: inline-block;
-      background: var(--navy);
-      color: #fff;
-      font-size: 0.68rem;
-      padding: 0.18rem 0.5rem;
-      border-radius: 3px;
-      margin-right: 0.3rem;
-    }
-    ul { margin-left: 1.15rem; line-height: 1.6; font-size: 0.92rem; }
-    li { margin-bottom: 0.4rem; }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      flex: 1;
-      min-height: 0;
-    }
-    .card {
-      background: var(--card);
-      border-radius: 10px;
-      padding: 1.1rem 1.2rem;
-      box-shadow: 0 4px 18px rgba(15,43,70,0.07);
-      border: 1px solid #e8ecf0;
-    }
-    .kpi-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.85rem;
-      margin-bottom: 1rem;
-    }
-    .kpi {
-      background: var(--card);
-      border-radius: 10px;
-      padding: 0.85rem 1rem;
-      border-left: 4px solid var(--teal);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    .kpi .val { font-size: 1.28rem; font-weight: 700; color: var(--navy); }
-    .kpi .lbl { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.35; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-    th, td { text-align: left; padding: 0.4rem 0.55rem; border-bottom: 1px solid #eef1f4; }
-    th { color: var(--navy); font-weight: 600; }
-    .warn-box {
-      background: #fef6f4;
-      border-left: 4px solid var(--warn);
-      padding: 0.65rem 0.9rem;
-      font-size: 0.82rem;
-      margin-top: 0.85rem;
-      border-radius: 0 6px 6px 0;
-      line-height: 1.5;
-    }
-    .footer {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      padding: 0.45rem 3rem;
-      font-size: 0.7rem;
-      color: var(--muted);
-      background: rgba(255,255,255,0.95);
-      border-top: 1px solid #e8ecf0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .nav-hint { opacity: 0.75; }
-    .title-slide { justify-content: center; text-align: center; padding-top: 3rem; }
-    .title-slide h1 { font-size: 2rem; }
-    .chart-wrap { position: relative; height: 260px; }
-    strong { color: var(--navy); }
-
-    /* Gantt timeline */
-    .gantt-wrap {
-      background: var(--card);
-      border-radius: 10px;
-      padding: 1rem 1.1rem 0.75rem;
-      border: 1px solid #e8ecf0;
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-    .gantt-title {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 0.6rem;
-    }
-    .gantt-axis {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.68rem;
-      color: var(--muted);
-      padding: 0 0 0.35rem 8.5rem;
-      border-bottom: 1px solid #dde3e8;
-      margin-bottom: 0.35rem;
-    }
-    .gantt-body { flex: 1; overflow-y: auto; }
-    .gantt-row {
-      display: grid;
-      grid-template-columns: 8rem 1fr 5.5rem;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.45rem;
-      min-height: 28px;
-    }
-    .gantt-label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--navy);
-      line-height: 1.2;
-      text-align: right;
-      padding-right: 0.25rem;
-    }
-    .gantt-track {
-      position: relative;
-      height: 22px;
-      background: #eef2f6;
-      border-radius: 4px;
-    }
-    .gantt-bar {
-      position: absolute;
-      top: 2px;
-      height: 18px;
-      border-radius: 3px;
-      min-width: 2px;
-    }
-    .gantt-bar.done { background: var(--teal); }
-    .gantt-bar.plan { background: #1a4a6e; }
-    .gantt-bar.warn { background: var(--accent); }
-    .gantt-bar.build { background: #2e6da4; }
-    .gantt-dates {
-      font-size: 0.65rem;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-    .gantt-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 0.5rem;
-      font-size: 0.68rem;
-      color: var(--muted);
-    }
-    .gantt-legend span::before {
-      content: "";
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      margin-right: 0.25rem;
-      vertical-align: middle;
-    }
-    .leg-done::before { background: var(--teal); }
-    .leg-plan::before { background: #1a4a6e; }
-    .leg-build::before { background: #2e6da4; }
-    .leg-mile::before { background: var(--accent); }
-    .today-line {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--warn);
-      z-index: 2;
-      pointer-events: none;
-    }
-    .today-tag {
-      position: absolute;
-      top: -14px;
-      font-size: 0.6rem;
-      color: var(--warn);
-      transform: translateX(-50%);
-      white-space: nowrap;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Asymchem UK B902 PDF Extension</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0f2b46;--teal:#009688;--accent:#c9a227;--bg:#f4f6f8;--card:#fff;--text:#2c3e50;--muted:#5a6a7a;--warn:#b43a2a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
+.slide{display:none;height:100vh;padding:2rem 2.8rem 3.2rem;flex-direction:column;animation:fade .3s ease}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.top-bar{position:fixed;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--navy),var(--teal));z-index:100}
+.lang-switch{position:fixed;top:.9rem;right:1.2rem;z-index:101;display:flex;border-radius:6px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.12);border:1px solid #dde3e8}
+.lang-switch button{border:none;padding:.38rem .8rem;font-size:.78rem;cursor:pointer;background:#fff;color:var(--muted);font-weight:600}
+.lang-switch button.active{background:var(--navy);color:#fff}
+h1{font-size:1.7rem;color:var(--navy);font-weight:700;margin-bottom:.28rem}
+h2{font-size:.94rem;color:var(--muted);font-weight:400;margin-bottom:.8rem}
+.tag{display:inline-block;background:var(--navy);color:#fff;font-size:.66rem;padding:.16rem .48rem;border-radius:3px}
+ul{margin-left:1.1rem;line-height:1.55;font-size:.9rem} li{margin-bottom:.36rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;flex:1;min-height:0}
+.card{background:var(--card);border-radius:10px;padding:1rem;border:1px solid #e8ecf0;box-shadow:0 2px 12px rgba(15,43,70,.06)}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:.85rem}
+.kpi{background:var(--card);border-radius:10px;padding:.75rem .9rem;border-left:4px solid var(--teal)}
+.kpi .val{font-size:1.2rem;font-weight:700;color:var(--navy)} .kpi .lbl{font-size:.7rem;color:var(--muted);margin-top:.15rem}
+table{width:100%;border-collapse:collapse;font-size:.8rem} th,td{padding:.36rem .5rem;border-bottom:1px solid #eef1f4;text-align:left} th{color:var(--navy)}
+.footer{position:fixed;bottom:0;left:0;right:0;padding:.4rem 2.8rem;font-size:.68rem;color:var(--muted);background:rgba(255,255,255,.96);border-top:1px solid #e8ecf0;display:flex;justify-content:space-between}
+.title-slide{justify-content:center;text-align:center;padding-top:2.5rem} .title-slide h1{font-size:1.9rem}
+.chart-wrap{height:248px;position:relative}
+.cost-scroll{flex:1;overflow-y:auto;min-height:0}
+.cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.5rem .7rem;display:flex;justify-content:space-between;font-weight:700;margin-bottom:.45rem;font-size:.88rem}
+.cost-item{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:.3rem;background:#fff}
+.cost-item>summary{display:flex;align-items:center;padding:.4rem .6rem;cursor:pointer;list-style:none;font-size:.8rem}
+.cost-item>summary::-webkit-details-marker{display:none}
+.cost-label{flex:1;font-weight:600;color:var(--navy)} .cost-amt{font-weight:700}
+.cost-children{padding:0 .55rem .45rem .75rem;border-top:1px solid #f0f2f5}
+.cost-leaf{display:flex;justify-content:space-between;font-size:.74rem;padding:.22rem 0;color:var(--muted)}
+.cost-sub summary{display:flex;justify-content:space-between;font-size:.76rem;padding:.3rem 0;cursor:pointer;list-style:none;color:var(--muted)}
+.cost-sub ul{list-style:none;padding:0 0 .2rem} .cost-sub li{display:flex;justify-content:space-between;font-size:.7rem;padding:.12rem 0}
+.gantt-wrap{flex:1;min-height:0;background:var(--card);border-radius:10px;padding:.85rem;border:1px solid #e8ecf0;display:flex;flex-direction:column}
+.gantt-axis{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);padding:0 0 .28rem 8rem;border-bottom:1px solid #dde3e8;margin-bottom:.28rem}
+.gantt-body{flex:1;overflow-y:auto}
+.gantt-row{display:grid;grid-template-columns:7.8rem 1fr 5rem;gap:.4rem;margin-bottom:.38rem;align-items:center}
+.gantt-label{font-size:.68rem;font-weight:600;color:var(--navy);text-align:right;line-height:1.15}
+.gantt-track{position:relative;height:22px;background:#eef2f6;border-radius:4px}
+.gantt-bar{position:absolute;top:2px;height:18px;border-radius:3px;min-width:3px;cursor:pointer}
+.gantt-bar.done{background:var(--teal)} .gantt-bar.plan{background:#1a4a6e}
+.gantt-bar.warn{background:var(--accent)} .gantt-bar.build{background:#2e6da4}
+.gantt-dates{font-size:.62rem;color:var(--muted)}
+.gantt-legend{font-size:.64rem;color:var(--muted);margin-top:.4rem;display:flex;gap:.7rem;flex-wrap:wrap}
+.gantt-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:.2rem;vertical-align:middle}
+.today-line{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);z-index:2;pointer-events:none}
+.today-tag{position:absolute;top:-12px;font-size:.57rem;color:var(--warn);transform:translateX(-50%);white-space:nowrap}
+#tip{position:fixed;z-index:300;max-width:340px;background:var(--navy);color:#fff;padding:.5rem .65rem;border-radius:8px;font-size:.74rem;line-height:1.45;pointer-events:none;opacity:0;transition:opacity .12s;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+#tip.show{opacity:1} #tip .td{color:#8ecec6;font-size:.67rem;margin-bottom:.2rem}
+.mitigate-box{background:#f8fafb;border:1px solid #e8ecf0;border-radius:8px;padding:.7rem .85rem;font-size:.8rem;line-height:1.5;margin-top:.45rem}
+.mitigate-box h4{font-size:.84rem;color:var(--navy);margin-bottom:.3rem}
+.decision-list{list-style:none;margin:0;padding:0}
+.decision-list li{border:1px solid #e8ecf0;border-left:4px solid var(--teal);padding:.8rem 1rem;margin-bottom:.55rem;border-radius:0 8px 8px 0;font-size:.92rem;background:var(--card)}
+</style>
 </head>
 <body>
-  <div class="top-bar"></div>
-  <div class="lang-switch">
-    <button type="button" id="btnZh" class="active">中文</button>
-    <button type="button" id="btnEn">EN</button>
-  </div>
+<div class="top-bar"></div>
+<div class="lang-switch"><button id="btnZh" class="active" type="button">中文</button><button id="btnEn" type="button">EN</button></div>
+<div id="tip"><div class="td"></div><div class="tb"></div></div>
+<div id="deck"></div>
+<div class="footer"><span id="footerText"></span><span id="navHint"></span><span id="counter"></span></div>
+<script>
+const GANTT_DATA = [["gFs", "2026-05-01", "2026-05-31", "done", "RIBA 1 Feasibility complete. Report A1: 22 May 2026.", "RIBA 1 \u53ef\u884c\u6027\u7814\u7a76\u5b8c\u6210\uff1b\u62a5\u544a A1\uff1a2026-05-22\u3002"], ["gR2", "2026-07-15", "2027-02-23", "plan", "RIBA 2 Concept Design (160 days). Concept report & stage gate Feb 2027.", "RIBA 2 \u6982\u5ff5\u8bbe\u8ba1\uff08160 \u5929\uff09\uff1b2027-02 \u6982\u5ff5\u62a5\u544a\u4e0e\u9636\u6bb5\u8bc4\u5ba1\u3002"], ["gR3", "2027-02-17", "2027-09-28", "plan", "RIBA 3 Scheme Design (8 months).", "RIBA 3 \u65b9\u6848\u8bbe\u8ba1\uff088 \u4e2a\u6708\uff09\u3002"], ["gPlan", "2027-10-26", "2028-03-21", "warn", "Planning: submission Dec 2027, statutory period, consent target 21 Mar 2028.", "\u89c4\u5212\uff1a2027-12 \u63d0\u4ea4\uff0c\u6cd5\u5b9a\u5ba1\u6279\u671f\uff0c\u76ee\u6807\u8bb8\u53ef 2028-03-21\u3002"], ["gR4", "2027-10-27", "2028-06-06", "plan", "RIBA 4 Detailed Design. Long-lead procurement from Mar 2028 (18 mo).", "RIBA 4 \u8be6\u7ec6\u8bbe\u8ba1\uff1b\u957f\u5468\u671f\u8bbe\u5907 2028-03 \u8d77\uff0818 \u4e2a\u6708\uff09\u3002"], ["gPre", "2028-07-05", "2028-08-01", "plan", "Pre-construction mobilisation & site set-up.", "\u65bd\u5de5\u524d\u52a8\u5458\u4e0e\u73b0\u573a\u4e34\u5efa\u3002"], ["gR5", "2028-08-02", "2029-11-13", "build", "RIBA 5 Construction (335 days): enabling, piling, structure, fit-out.", "RIBA 5 \u65bd\u5de5\uff08335 \u5929\uff09\uff1a\u62c6\u9664\u4e34\u5efa\u3001\u6869\u57fa\u3001\u7ed3\u6784\u3001\u88c5\u4fee\u673a\u7535\u3002"], ["gComm", "2029-11-14", "2029-12-18", "build", "Commissioning & setting to work (programme \u00a71.13).", "\u8c03\u8bd5\u4e0e\u6295\u8fd0\u51c6\u5907\uff08\u8fdb\u5ea6\u8ba1\u5212 \u00a71.13\uff09\u3002"], ["gEnd", "2029-12-19", "2030-05-07", "warn", "Validation, handover, project complete (07 May 2030).", "\u786e\u8ba4\u9a8c\u8bc1\u3001\u79fb\u4ea4\uff1b\u9879\u76ee\u5b8c\u6210 2030-05-07\u3002"]];
+const T0=new Date("2026-07-01"),T1=new Date("2030-05-07"),RANGE=T1-T0;
+function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
+const I18N={
+zh:{
+footer:"凯莱英 UK · B902 PDF 扩建",
+nav:"← → 翻页",
+tag:"内部汇报",
+s1t:"凯莱英 UK · B902 PDF 厂房扩建",s1s:"投资与周期汇报",s1m:"可行性研究（RIBA Stage 1）· Sandwich · 2026年5月",
+s2t:"执行摘要",s2s:"Scitech 可行性研究成果（2026-05-22）",
+k1:"可行性研究报告（FS）",k1d:"RIBA Stage 1 已完成",
+k2:"£78.1M",k2d:"项目总投资 OOM",
+k3:"2030年5月",k3d:"项目完成（总控计划）",
+s2b1:"范围：东侧扩建 — 10 台反应釜、2500 L 加氢釜、3 套过滤干燥机及公用工程。",
+s2b2:"投资：OOM £78,108,089 — 非最终 Capex；不含通胀、税、汇率、业主项目管理。",
+s2b3:"进展：FS 已完成；RIBA 2 概念设计计划 2026-07-01 启动。",
+s3t:"项目进展与阶段",s3s:"资本项目当前阶段",
+s3done:"已完成",s3next:"进行中 / 下一步",
+s3d1:"可行性报告及附录（费用、风险、进度、设备清单）",s3d2:"BREEAM 预评估约 62.93%",
+s3n1:"RIBA 2 概念设计 2026-07-01",s3n2:"概念设计完成 2027-02-16（计划）",
+s3n3:"待明确：采购分工、Stage 2 报价",
+s3warn:"Stage 2/3 设计费未在 FS 中单列，需向 Scitech 索取阶段报价。",
+s4t:"范围与设计基线",s4s:"Option 1 — 方案比选得分最高",
+s4b1:"占地约 600 m²；4 层 + 设备夹层",s4b2:"前提：拆除/迁址原加氢厂房",s4b3:"消防：第二疏散梯；加氢区泄压板",
+s4th1:"楼层",s4th2:"面积 m²",s4gf:"首层",s41f:"一层",s42f:"二层",s43f:"三层+夹层",s4tot:"合计 GIFA",
+s5t:"投资总览（OOM）",s5s:"300291-CM-0001 · 基准日 2026-05-22",
+s5oom:"OOM 总价（可行性量级）",
+s6t:"投资结构",s6s:"总包构成与直接工程费",
+s7t:"预备费与风险",s7s:"可行性阶段（报告 §14）",
+s7h:"何谓「缓解」？（据可行性报告与风险登记册）",
+s7m1:"风险登记册对每项风险列出建议措施（如：勘查、设计阶段确认、纳入 OOM 估算、阶段评审等），并区分 Mitigate / Accept / Avoid 等响应方式。",
+s7m2:"缓解前：登记册汇总的预估影响（报告 §14.3）— 成本约 £2.64m（加权 £1.76m）；进度累计 182 周（加权 131.8 周）。",
+s7m3:"缓解后：实施上述措施及 FS 中已纳入的假设与费用预留后的预期影响 — 成本约 £1.13m（加权 £626k）；进度 107 周（加权 60.6 周）。",
+s7m4:"报告 §14.4：部分风险（如电气升级、公用工程、冷却、应急电源等）已在 OOM 费用计划中计入 allowances，技术风险仍须在后续设计阶段关闭。",
+s7c1:"设计发展准备金 (15%)",s7c2:"施工与设备风险 (25%)",s7c3:"业主预备费 (10%)",s7c4:"风险登记册（量化）",
+s8t:"Capex 口径",s8s:"费用计划假设要点",
+s8in:"已纳入 OOM",s8out:"未纳入 / 基准不含",
+s8in1:"扩建及既有厂改造范围内的工程内容",s8in2:"预备费、承包商管理费与利润、设计费",
+s8in3:"可行性阶段风险与预备费块",s8in4:"工艺设备费用计划分项（£23.25M）",
+s8out1:"业主自购工艺设备（费用计划 excluded）",s8out2:"通胀、汇率、税费",
+s8out3:"业主项目管理、运营、耗材",s8out4:"超出勘测 allowances 的治理费用",
+s8disc:"OOM 仅供指引，不得直接用于最终 Capex；Concept 阶段更新估算。",
+s9t:"整体周期与进度",s9s:"300291-PM-PR-0002 · 1,005 天（2026-07-01 — 2030-05-07）",
+ganttSub:"时间轴（条块长度按日历比例；悬停查看说明）",
+gFs:"可行性 RIBA 1",gR2:"概念 RIBA 2",gR3:"方案 RIBA 3",gPlan:"规划审批",
+gR4:"详细 RIBA 4",gPre:"施工准备",gR5:"施工 RIBA 5",gComm:"调试",gEnd:"验证/竣工",
+legDone:"已完成",legPlan:"设计",legBuild:"施工/调试",legMile:"节点",today:"约今",
+s10t:"设计—竣工阶段节奏",s10s:"2028 年 8 月开工前的关键阶段",
+s10th1:"阶段",s10th2:"时间",s10th3:"说明",
+s10r1p:"RIBA 2 概念",s10r1t:"2026-07 — 2027-02",s10r1n:"含勘测预算；设计费在 £3.81M 总包内",
+s10r2p:"RIBA 3 方案",s10r2t:"2027-02 — 2027-09",s10r2n:"阶段间约 1 个月业主评审",
+s10r3p:"规划",s10r3t:"2027-10 — 2028-03",s10r3n:"法定审批 65 天",
+s10r4p:"RIBA 4 详细",s10r4t:"2027-10 — 2028-06",s10r4n:"长周期采购 2028-03 起",
+s10r5p:"施工准备",s10r5t:"2028-07",s10r5n:"动员/临建",
+s10r6p:"施工 RIBA 5",s10r6t:"2028-08 — 2029-11",s10r6n:"土建、结构、装修机电（335 天）",
+s10r7p:"调试",s10r7t:"2029-11 — 2029-12",s10r7n:"调试与投运准备",
+s10r8p:"验证/竣工",s10r8t:"2029-12 — 2030-05",s10r8n:"验证、移交、项目完成",
+s11t:"决策清单",s11s:"提请领导审议",
+s11d1:"是否批准进入 RIBA 2（概念设计阶段）？",
+s11d2:"是否推进模块化工厂设计（Modular / Design-for-Modularity）及对应方案比选？",
+s12t:"谢谢",s12s:"Q & A",
+axis:["2026","2027","2028","2029","2030"],
+costLabels:{
+w0:"0 促动/拆除",w1:"1 下部结构",w2:"2 上部结构",w3:"3 内装",w4:"4 装置器具",
+w5:"5 建筑机电",w51:"5.1 预留洞/BWIC",w52:"5.2 暖通",w53:"5.3 电气",w54:"5.4 EMS",w55:"5.5 过程控制",w56:"5.6 工艺设备",
+w7:"7 既有厂改造",w8:"8 外部工程",wsum:"工程费小计",
+pre:"预备费 (8%)",ohp:"承包商管理费与利润 (5%)",base:"基础建造成本",
+oth:"其他项目费",od:"设计费 (8%)",ob:"BREEAM",os:"勘测",op:"规划规费",
+rr:"风险登记册",cont:"风险与预备费合计",c15:"设计发展 (15%)",c25:"施工设备 (25%)",c10:"业主 (10%)",tot:"OOM 总价"
+}
+},
+en:{
+footer:"Asymchem UK · B902 PDF Extension",
+nav:"← → to navigate",
+tag:"Internal briefing",
+s1t:"Asymchem UK · B902 PDF Extension",s1s:"Investment & Programme Briefing",s1m:"Feasibility (RIBA 1) · Sandwich · May 2026",
+s2t:"Executive Summary",s2s:"Scitech feasibility deliverables (22 May 2026)",
+k1:"Feasibility Study (FS)",k1d:"RIBA Stage 1 complete",
+k2:"£78.1M",k2d:"Total project OOM",
+k3:"May 2030",k3d:"Project complete (programme)",
+s2b1:"Scope: East extension — 10 reactors, 2,500 L H₂ reactor, 3 filter dryers, utilities.",
+s2b2:"Investment: OOM £78,108,089 — not final Capex; excl. inflation, tax, FX, client project management.",
+s2b3:"Progress: FS complete; RIBA 2 Concept from 1 Jul 2026.",
+s3t:"Progress & Stages",s3s:"Current capital project position",
+s3done:"Completed",s3next:"In progress / Next",
+s3d1:"Feasibility report & appendices (cost, risk, programme, equipment)",s3d2:"BREEAM pre-assessment ~62.93%",
+s3n1:"RIBA 2 Concept Design 1 Jul 2026",s3n2:"Concept design complete 16 Feb 2027 (planned)",
+s3n3:"To confirm: procurement split, Stage 2 quotation",
+s3warn:"RIBA 2/3 design fees not split in FS — request staged quote from Scitech.",
+s4t:"Scope & Baseline",s4s:"Option 1 — highest appraisal score",
+s4b1:"~600 m² footprint; 4 floors + plant mezzanine",s4b2:"Prerequisite: remove/relocate H₂ building",
+s4b3:"Fire: second escape stair; blast panels at H₂ suite",
+s4th1:"Floor",s4th2:"Area m²",s4gf:"Ground",s41f:"First",s42f:"Second",s43f:"Third + mezz",s4tot:"Total GIFA",
+s5t:"Investment (OOM)",s5s:"300291-CM-0001 · Base 22 May 2026",
+s5oom:"Total OOM (feasibility magnitude)",
+s6t:"Investment Structure",s6s:"OOM build-up & direct works",
+s7t:"Contingency & Risk",s7s:"Feasibility stage (report §14)",
+s7h:"What does “mitigation” mean? (per report & risk register)",
+s7m1:"The risk register lists proposed actions per risk (surveys, early confirmation, OOM allowances, stage reviews) with Mitigate / Accept / Avoid responses.",
+s7m2:"Pre-mitigation: aggregated register exposure (§14.3) — ~£2.64m cost (£1.76m factored); 182 weeks programme (131.8 weeks factored).",
+s7m3:"Post-mitigation: after those actions and FS assumptions/allowances — ~£1.13m (£626k factored); 107 weeks (60.6 weeks factored).",
+s7m4:"§14.4: some risks (power, utilities, cooling, emergency power, etc.) are partially allowed in the OOM; technical risks remain live through later design.",
+s7c1:"Design development (15%)",s7c2:"Construction & equipment (25%)",s7c3:"Client contingency (10%)",s7c4:"Risk register (factored)",
+s8t:"Capex Scope",s8s:"Cost plan assumptions",
+s8in:"In OOM",s8out:"Out of base",
+s8in1:"Extension & existing-building works in scope",s8in2:"Prelims, contractor OH&P, design fees",
+s8in3:"Feasibility risk & contingency blocks",s8in4:"Process equipment line in cost plan (£23.25M)",
+s8out1:"Client-purchased process equipment (excluded per cost plan)",s8out2:"Inflation, FX, tax",
+s8out3:"Client project management, operations, consumables",s8out4:"Survey remediation beyond allowances",
+s8disc:"OOM for guidance only — not final Capex; updated at Concept.",
+s9t:"Overall Cycle & Programme",s9s:"300291-PM-PR-0002 · 1,005 days (01 Jul 2026 – 07 May 2030)",
+ganttSub:"Timeline (bar length ∝ calendar duration; hover for detail)",
+gFs:"Feasibility RIBA 1",gR2:"Concept RIBA 2",gR3:"Scheme RIBA 3",gPlan:"Planning",
+gR4:"Detailed RIBA 4",gPre:"Pre-construction",gR5:"Construction RIBA 5",gComm:"Commissioning",gEnd:"Validation / complete",
+legDone:"Complete",legPlan:"Design",legBuild:"Construction",legMile:"Milestone",today:"~Today",
+s10t:"Stage Rhythm to Completion",s10s:"Key phases through handover",
+s10th1:"Phase",s10th2:"Period",s10th3:"Notes",
+s10r1p:"RIBA 2 Concept",s10r1t:"Jul 2026 – Feb 2027",s10r1n:"Surveys allowance; design fee in £3.81M pot",
+s10r2p:"RIBA 3 Scheme",s10r2t:"Feb 2027 – Sep 2027",s10r2n:"~1 month client review between stages",
+s10r3p:"Planning",s10r3t:"Oct 2027 – Mar 2028",s10r3n:"65-day statutory period",
+s10r4p:"RIBA 4 Detailed",s10r4t:"Oct 2027 – Jun 2028",s10r4n:"Long-lead from Mar 2028",
+s10r5p:"Pre-construction",s10r5t:"Jul 2028",s10r5n:"Mobilisation",
+s10r6p:"RIBA 5 Construction",s10r6t:"Aug 2028 – Nov 2029",s10r6n:"335 days — civils, structure, fit-out",
+s10r7p:"Commissioning",s10r7t:"Nov – Dec 2029",s10r7n:"Testing & setting to work",
+s10r8p:"Validation / handover",s10r8t:"Dec 2029 – May 2030",s10r8n:"Validation, handover, project complete",
+s11t:"Decision Checklist",s11s:"For leadership review",
+s11d1:"Approve progression to RIBA 2 (Concept Design)?",
+s11d2:"Proceed with modular facility design approach and related option studies?",
+s12t:"Thank you",s12s:"Q & A",
+axis:["2026","2027","2028","2029","2030"],
+costLabels:{
+w0:"0 Facilitating",w1:"1 Substructure",w2:"2 Superstructure",w3:"3 Internal finishes",w4:"4 Fittings",
+w5:"5 Building services",w51:"5.1 BWIC",w52:"5.2 HVAC",w53:"5.3 Electrical",w54:"5.4 EMS",w55:"5.5 Controls",w56:"5.6 Process equipment",
+w7:"7 Existing bldg",w8:"8 External works",wsum:"Works subtotal",
+pre:"Preliminaries (8%)",ohp:"Contractor OH&P (5%)",base:"Base construction",
+oth:"Other project costs",od:"Design (8%)",ob:"BREEAM",os:"Surveys",op:"Planning",
+rr:"Risk register",cont:"Risk & contingency",c15:"Design dev. (15%)",c25:"Constr./equip. (25%)",c10:"Client (10%)",tot:"Total OOM"
+}
+}
+};
+let lang="zh",idx=0,chartsBuilt=false;
+function t(k){return I18N[lang][k]||k;}
+function tc(k){return I18N[lang].costLabels[k];}
+function fm(n){return "£"+n.toLocaleString("en-GB");}
 
-  <div class="deck" id="deck"></div>
+function costHTML(){
+const L=I18N[lang].costLabels;
+return `<div class="cost-total-bar"><span>${t("s5oom")}</span><span>${fm(78108089)}</span></div>
+<details class="cost-item" open><summary><span class="cost-label">${L.wsum}</span><span class="cost-amt">${fm(41968226)}</span></summary>
+<div class="cost-children">
+<details class="cost-sub"><summary><span>${L.w0}</span><span>${fm(254960)}</span></summary><ul>
+<li><span>Demolition / enabling</span><span>${fm(154960)}</span></li>
+<li><span>LN tank removal</span><span>${fm(50000)}</span></li>
+<li><span>H₂ plant removal</span><span>${fm(50000)}</span></li></ul></details>
+<details class="cost-sub"><summary><span>${L.w1}</span><span>${fm(1499680)}</span></summary><ul>
+<li><span>Piles, foundations, GF slab</span><span>${fm(1239680)}</span></li>
+<li><span>Equipment slabs</span><span>${fm(150000)}</span></li>
+<li><span>Chiller pads</span><span>${fm(40000)}</span></li>
+<li><span>Steps / ramps</span><span>${fm(70000)}</span></li></ul></details>
+<div class="cost-leaf"><span>${L.w2}</span><span>${fm(3942636)}</span></div>
+<div class="cost-leaf"><span>${L.w3}</span><span>${fm(1270672)}</span></div>
+<div class="cost-leaf"><span>${L.w4}</span><span>${fm(154960)}</span></div>
+<details class="cost-sub" open><summary><span>${L.w5}</span><span>${fm(9532716)}</span></summary><ul>
+<li><span>${L.w51}</span><span>${fm(166808)}</span></li>
+<li><span>${L.w52}</span><span>${fm(4165824)}</span></li>
+<li><span>${L.w53}</span><span>${fm(2506484)}</span></li>
+<li><span>${L.w54}</span><span>${fm(627200)}</span></li>
+<li><span>${L.w55}</span><span>${fm(1966400)}</span></li>
+<li><span>${L.w56}</span><span>${fm(23249083)}</span></li></ul></details>
+<div class="cost-leaf"><span>${L.w7}</span><span>${fm(204000)}</span></div>
+<div class="cost-leaf"><span>${L.w8}</span><span>${fm(1859520)}</span></div>
+</div></details>
+<div class="cost-leaf" style="padding:.35rem .6rem"><span>${L.pre}</span><span>${fm(3357458)}</span></div>
+<div class="cost-leaf" style="padding:.35rem .6rem"><span>${L.ohp}</span><span>${fm(2266284)}</span></div>
+<details class="cost-item" open><summary><span class="cost-label">${L.base}</span><span class="cost-amt">${fm(47591969)}</span></summary></details>
+<details class="cost-item"><summary><span class="cost-label">${L.oth}</span><span class="cost-amt">${fm(4062357)}</span></summary>
+<div class="cost-children">
+<div class="cost-leaf"><span>${L.od}</span><span>${fm(3807357)}</span></div>
+<div class="cost-leaf"><span>${L.ob}</span><span>${fm(150000)}</span></div>
+<div class="cost-leaf"><span>${L.os}</span><span>${fm(80000)}</span></div>
+<div class="cost-leaf"><span>${L.op}</span><span>${fm(25000)}</span></div>
+</div></details>
+<div class="cost-leaf" style="padding:.35rem .6rem"><span>${L.rr}</span><span>${fm(626600)}</span></div>
+<details class="cost-item"><summary><span class="cost-label">${L.cont}</span><span class="cost-amt">${fm(25827163)}</span></summary>
+<div class="cost-children">
+<div class="cost-leaf"><span>${L.c15}</span><span>${fm(7748149)}</span></div>
+<div class="cost-leaf"><span>${L.c25}</span><span>${fm(12913581)}</span></div>
+<div class="cost-leaf"><span>${L.c10}</span><span>${fm(5165433)}</span></div>
+</div></details>`;
+}
 
-  <div class="footer">
-    <span data-i18n="footerProject">凯莱英 UK · B902 PDF 扩建 · 管理层汇报</span>
-    <span class="nav-hint" data-i18n="navHint">← → 或空格翻页</span>
-    <span id="counter">1 / 11</span>
-  </div>
-
-  <script>
-    const T0 = new Date("2026-07-01");
-    const T1 = new Date("2030-05-07");
-    const RANGE = T1 - T0;
-
-    function pct(dateStr) {
-      const d = new Date(dateStr);
-      return Math.max(0, Math.min(100, ((d - T0) / RANGE) * 100));
-    }
-    function barStyle(start, end, cls) {
-      const left = pct(start);
-      const right = pct(end);
-      const w = Math.max(0.4, right - left);
-      return `style="left:${left}%;width:${w}%" class="gantt-bar ${cls}"`;
-    }
-
-    const GANTT_ROWS = [
-      { key: "gFs", start: "2026-05-01", end: "2026-05-31", cls: "done" },
-      { key: "gR2", start: "2026-07-15", end: "2027-02-23", cls: "plan" },
-      { key: "gR3", start: "2027-02-17", end: "2027-09-28", cls: "plan" },
-      { key: "gPlan", start: "2027-10-26", end: "2028-03-21", cls: "warn" },
-      { key: "gR4", start: "2027-10-27", end: "2028-06-06", cls: "plan" },
-      { key: "gPre", start: "2028-07-05", end: "2028-08-01", cls: "plan" },
-      { key: "gR5", start: "2028-08-02", end: "2029-11-13", cls: "build" },
-      { key: "gEnd", start: "2030-04-10", end: "2030-05-07", cls: "warn" },
-    ];
-
-    const I18N = {
-      zh: {
-        footerProject: "凯莱英 UK · B902 PDF 扩建 · 管理层汇报",
-        navHint: "← → 或空格翻页",
-        tagConf: "内部汇报材料",
-        s1t: "凯莱英 UK · B902 PDF 厂房扩建",
-        s1s: "投资与周期汇报 · 管理层",
-        s1m: "可行性研究（RIBA Stage 1）· Discovery Park, Sandwich · 2026年5月",
-        s2t: "执行摘要",
-        s2s: "基于 Scitech 可行性研究成果（2026-05-22 发版）",
-        kFeas: "可行*",
-        kFeasD: "*以规划批准为前提",
-        kInv: "£78.1M",
-        kInvD: "项目总投资 OOM（2026年5月基准）",
-        kArea: "3,099 m²",
-        kAreaD: "GIFA（可行性面积表）",
-        kEnd: "2030年5月",
-        kEndD: "项目完成（总控计划）",
-        s2b1: "范围：B902 东侧扩建 — 10 台反应釜、2500 L 加氢釜、3 套过滤干燥机及公用工程。",
-        s2b2: "投资：OOM 总价 £78,108,089 — 非最终 Capex；不含通胀、税、汇率、业主 PM。",
-        s2b3: "进展：RIBA 1 已完成；RIBA 2 概念设计计划 2026-07-01 启动。",
-        s2b4: "建议：有条件批准进入概念设计，并确认基线方案 Option 1（拆除原加氢厂房）。",
-        s3t: "项目进展与阶段门",
-        s3s: "资本项目生命周期当前位置",
-        s3done: "已完成",
-        s3next: "进行中 / 下一步",
-        s3d1: "可行性报告 300291-RE-0001（72 页及附录）",
-        s3d2: "费用计划、风险登记册、进度计划、方案比选、设备清单",
-        s3d3: "2026-05-27 UK 可行性讲解会议",
-        s3d4: "BREEAM 预评估约 62.93%（Very Good 门槛 55%）",
-        s3n1: "Pre-planning 报批文件编制中",
-        s3n2: "RIBA 2 概念设计 — 任命日 2026-07-01",
-        s3n3: "概念阶段门 — 2027-02-16（计划）",
-        s3n4: "待补：B902 运行数据、采购分工、Stage 2 商务合同",
-        s3warn: "说明：RIBA 2/3 分期设计费未在 FS 包中单列，需向 Scitech 索取阶段报价以做现金流规划。",
-        s4t: "范围与设计基线",
-        s4s: "Option 1 — 可行性方案比选得分最高",
-        s4b1: "占地约 600 m²；4 层主体 + 设备夹层",
-        s4b2: "前提：拆除/迁址现有加氢小厂房",
-        s4b3: "消防：新建第二疏散梯；加氢区防爆泄压板",
-        s4thA: "楼层",
-        s4thB: "面积 m²",
-        s4gf: "首层", s41f: "二层", s42f: "三层", s43f: "三层+夹层", s4tot: "GIFA 合计",
-        s5t: "投资总览（OOM）",
-        s5s: "300291-CM-0001 · 基准日 2026-05-22 · 英镑净值不含税",
-        s5th1: "构成", s5th2: "金额 (GBP)", s5th3: "说明",
-        s5r1n: "工程费小计", s5r1d: "含工艺设备行 5.6",
-        s5r2n: "预备费 (8%)", s5r2d: "现场管理、临建",
-        s5r3n: "承包商 OH&P (5%)", s5r3d: "",
-        s5r4n: "基础建造成本", s5r4d: "",
-        s5r5n: "其他项目费", s5r5d: "设计费 8%、BREEAM、勘测、规划",
-        s5r6n: "风险登记册（量化）", s5r6d: "",
-        s5r7n: "风险与预备费合计", s5r7d: "15% 设计 + 25% 施工设备 + 10% 业主",
-        s5r8n: "OOM 总价", s5r8d: "不含通胀调升字段",
-        s6t: "投资结构分析",
-        s6s: "总包构成与直接工程费结构",
-        s7t: "预备费与风险敞口",
-        s7s: "可行性阶段治理口径（报告第 14、15 章）",
-        s7p1: "缓解前敞口（报告）：成本约 £2.64m；进度累计 182 周",
-        s7p2: "缓解后（报告）：成本约 £1.13m；进度 107 周",
-        s7p3: "主要主题：既有厂条件、规划/BREEAM、公用工程、采购、进度",
-        s7w: "财务动作：区分「预备费池」与「设计发展准备金」的动用规则，按阶段门审批。",
-        s7c1: "设计发展准备金 (15%)", s7c2: "施工与设备风险 (25%)", s7c3: "业主预备费 (10%)", s7c4: "风险登记册（量化）",
-        s8t: "Capex 口径：包含与排除",
-        s8s: "费用计划假设条款要点",
-        s8in: "已纳入公布 OOM",
-        s8out: "未纳入 / 基准不含",
-        s8in1: "扩建及既有厂改造范围内的工程内容",
-        s8in2: "预备费、OH&P、设计费（8% = £3,807,357）",
-        s8in3: "可行性阶段风险与预备费块",
-        s8in4: "工艺设备费用行 £23,249,083（works 5.6）",
-        s8out1: "业主自购工艺设备（文件写明 excluded — 须与 5.6 行在 Concept 核对）",
-        s8out2: "通胀、汇率、税费",
-        s8out3: "业主 PM、运营、耗材",
-        s8out4: "超出勘测 allowances 的治理费用",
-        s8disc: "Scitech 声明：OOM 仅供指引，不得直接用于最终 Capex 审批；Concept 阶段将更新估算。",
-        s9t: "整体周期与进度计划",
-        s9s: "300291-PM-PR-0002 · 总工期 1,005 天（2026-07-01 — 2030-05-07）",
-        s9warn: "进度张力：风险登记册 #13 指 2028 Q3 完工目标偏紧；施工至 2029-11，项目完成 2030-05。汇报前须统一「竣工 / 投料 / 验证」定义。",
-        ganttSub: "横向时间轴（2026 Q3 — 2030 Q2）— 条块长度按日历比例",
-        gFs: "可行性 RIBA 1", gR2: "概念设计 RIBA 2", gR3: "方案设计 RIBA 3",
-        gPlan: "规划审批", gR4: "详细设计 RIBA 4", gPre: "施工准备",
-        gR5: "施工 RIBA 5", gEnd: "竣工/移交",
-        legDone: "已完成", legPlan: "设计阶段", legBuild: "施工", legMile: "关键节点",
-        todayLbl: "约今",
-        s10t: "设计—施工前投资节奏",
-        s10s: "2028 年 8 月开工前的现金相关里程碑",
-        s10th1: "阶段", s10th2: "时间", s10th3: "商务说明",
-        s10r1p: "RIBA 2 概念", s10r1t: "2026-07 — 2027-02", s10r1n: "含勘测 £80k 预算；设计费在 £3.81M 总包内",
-        s10r2p: "RIBA 3 方案", s10r2t: "2027-02 — 2027-09", s10r2n: "阶段间约 1 个月业主评审",
-        s10r3p: "规划", s10r3t: "2027-10 — 2028-03", s10r3n: "法定审批期 65 天（计划内）",
-        s10r4p: "RIBA 4 详细", s10r4t: "2027-10 — 2028-06", s10r4n: "长周期设备采购 2028-03 起（18 个月）",
-        s10r5p: "施工前", s10r5t: "2028-07", s10r5n: "动员 / 临建",
-        s10note: "报告 §13.4：可采用 D&B、设计采购重叠等压缩 — 未在 FS 中量化 commercial 影响。",
-        s11t: "管理层建议动作",
-        s11s: "决策清单 — 不引入未证实财务指标",
-        s11b1: "有条件批准进入 RIBA 2；规划许可作为开工外部条件。",
-        s11b2: "预算对话以 £78.1M OOM 为信封；另预留业主自购设备、通胀、税项。",
-        s11b3: "Concept 前完成：自购设备 vs £23.25M 费用行核对。",
-        s11b4: "关闭风险 #18：采购策略与长周期设备（约 18 个月 lead time）。",
-        s11b5: "统一内部 2028 Q3 目标与 2030-05 基线；加速须有 D&B/重叠方案及报价。",
-        s11b6: "向 Scitech 索取：阶段设计费、现金流曲线、Concept 更新 OOM（2027-02 阶段门）。",
-        s12t: "谢谢",
-        s12s: "Q & A",
-        axis26: "2026", axis27: "2027", axis28: "2028", axis29: "2029", axis30: "2030",
-      },
-      en: {
-        footerProject: "Asymchem UK · B902 PDF Extension · Management Briefing",
-        navHint: "← → or Space to navigate",
-        tagConf: "Internal briefing",
-        s1t: "Asymchem UK · B902 PDF Building Extension",
-        s1s: "Investment & Programme Briefing · Management",
-        s1m: "Feasibility Study (RIBA Stage 1) · Discovery Park, Sandwich · May 2026",
-        s2t: "Executive Summary",
-        s2s: "Based on Scitech feasibility deliverables (issued 22 May 2026)",
-        kFeas: "Feasible*",
-        kFeasD: "*Subject to planning approval",
-        kInv: "£78.1M",
-        kInvD: "Total project cost OOM (May 2026 base)",
-        kArea: "3,099 m²",
-        kAreaD: "GIFA (feasibility area schedule)",
-        kEnd: "May 2030",
-        kEndD: "Project complete (master programme)",
-        s2b1: "Scope: East extension — 10 reactors, 2,500 L hydrogenation reactor, 3 filter dryers, utilities.",
-        s2b2: "Investment: OOM £78,108,089 — not final Capex; excludes inflation, tax, FX, client PM.",
-        s2b3: "Progress: RIBA 1 complete; RIBA 2 Concept Design from 1 Jul 2026.",
-        s2b4: "Ask: Conditional approval to Concept Design on Option 1 (remove existing H₂ building).",
-        s3t: "Progress & Stage Gates",
-        s3s: "Current position on the capital project lifecycle",
-        s3done: "Completed",
-        s3next: "In progress / Next",
-        s3d1: "Feasibility Report 300291-RE-0001 (72 pp + appendices)",
-        s3d2: "Cost plan, risk register, programme, option matrix, equipment list",
-        s3d3: "UK feasibility walkthrough — 27 May 2026",
-        s3d4: "BREEAM pre-assessment ~62.93% (Very Good threshold 55%)",
-        s3n1: "Pre-planning submission pack in preparation",
-        s3n2: "RIBA 2 Concept Design — appointment 1 Jul 2026",
-        s3n3: "Concept stage gate — 16 Feb 2027 (programme)",
-        s3n4: "Open: B902 operating data, procurement split, Stage 2 commercial contract",
-        s3warn: "Note: RIBA 2/3 design fees not split in FS pack — request Scitech stage quote for cash-flow planning.",
-        s4t: "Scope & Design Baseline",
-        s4s: "Option 1 — highest score in feasibility option appraisal",
-        s4b1: "Footprint ~600 m²; 4 floors + plant mezzanine",
-        s4b2: "Prerequisite: Remove/relocate existing hydrogenation building",
-        s4b3: "Fire: second escape stair; blast panels at hydrogenation suite",
-        s4thA: "Floor", s4thB: "Area m²",
-        s4gf: "Ground", s41f: "First", s42f: "Second", s43f: "Third + mezz", s4tot: "Total GIFA",
-        s5t: "Investment Overview (OOM)",
-        s5s: "300291-CM-0001 · Base date 22 May 2026 · GBP net excl. tax",
-        s5th1: "Component", s5th2: "Amount (GBP)", s5th3: "Notes",
-        s5r1n: "Works subtotal", s5r1d: "Includes process equipment line 5.6",
-        s5r2n: "Preliminaries (8%)", s5r2d: "Site mgmt, temp works",
-        s5r3n: "Contractor OH&P (5%)", s5r3d: "",
-        s5r4n: "Base construction cost", s5r4d: "",
-        s5r5n: "Other project costs", s5r5d: "Design 8%, BREEAM, surveys, planning",
-        s5r6n: "Risk register (factored)", s5r6d: "",
-        s5r7n: "Risk & contingency total", s5r7d: "15% design + 25% constr. + 10% client",
-        s5r8n: "Total OOM", s5r8d: "Escalation field excluded",
-        s6t: "Investment Structure",
-        s6s: "OOM composition & direct works mix",
-        s7t: "Contingency & Risk",
-        s7s: "Feasibility-stage governance (report §14–15)",
-        s7p1: "Pre-mitigation (report): ~£2.64m cost; 182 weeks programme (cumulative)",
-        s7p2: "Post-mitigation (report): ~£1.13m; 107 weeks",
-        s7p3: "Themes: existing site, planning/BREEAM, utilities, procurement, programme",
-        s7w: "Finance action: separate drawdown rules for contingency vs design development allowance.",
-        s7c1: "Design development (15%)", s7c2: "Construction & equipment (25%)", s7c3: "Client contingency (10%)", s7c4: "Risk register (factored)",
-        s8t: "Capex Scope: In / Out",
-        s8s: "Cost plan assumptions (key points)",
-        s8in: "Included in published OOM",
-        s8out: "Excluded / not in base",
-        s8in1: "Extension & alteration works per feasibility scope",
-        s8in2: "Prelims, OH&P, design fees (8% = £3,807,357)",
-        s8in3: "Feasibility risk & contingency blocks",
-        s8in4: "Process equipment line £23,249,083 (works 5.6)",
-        s8out1: "Client-purchased equipment (stated excluded — reconcile with 5.6 at Concept)",
-        s8out2: "Inflation, FX, tax",
-        s8out3: "Client PM, operations, consumables",
-        s8out4: "Survey remediation beyond allowances",
-        s8disc: "Scitech: OOM for guidance only — not for final Capex approval; updated estimate at Concept.",
-        s9t: "Overall Cycle & Programme",
-        s9s: "300291-PM-PR-0002 · 1,005 days (01 Jul 2026 – 07 May 2030)",
-        s9warn: "Schedule tension: Risk #13 flags Q3 2028 target as tight vs construction through Nov 2029 and complete May 2030. Align milestone definitions before setting board targets.",
-        ganttSub: "Horizontal timeline (2026 Q3 – 2030 Q2) — bar length proportional to calendar",
-        gFs: "Feasibility RIBA 1", gR2: "Concept RIBA 2", gR3: "Scheme RIBA 3",
-        gPlan: "Planning consent", gR4: "Detailed RIBA 4", gPre: "Pre-construction",
-        gR5: "Construction RIBA 5", gEnd: "Handover / complete",
-        legDone: "Complete", legPlan: "Design", legBuild: "Construction", legMile: "Milestone",
-        todayLbl: "~Today",
-        s10t: "Pre-Construction Investment Phasing",
-        s10s: "Cash-relevant milestones before Aug 2028 construction start",
-        s10th1: "Phase", s10th2: "Period", s10th3: "Commercial note",
-        s10r1p: "RIBA 2 Concept", s10r1t: "Jul 2026 – Feb 2027", s10r1n: "Surveys £80k allowance; design fee within £3.81M pot",
-        s10r2p: "RIBA 3 Scheme", s10r2t: "Feb 2027 – Sep 2027", s10r2n: "~1 month client review between stages",
-        s10r3p: "Planning", s10r3t: "Oct 2027 – Mar 2028", s10r3n: "65-day statutory period in programme",
-        s10r4p: "RIBA 4 Detailed", s10r4t: "Oct 2027 – Jun 2028", s10r4n: "Long-lead procurement from Mar 2028 (18 mo)",
-        s10r5p: "Pre-construction", s10r5t: "Jul 2028", s10r5n: "Mobilisation / site set-up",
-        s10note: "Report §13.4: D&B / overlap may compress programme — commercial impact not quantified in FS.",
-        s11t: "Recommended Management Actions",
-        s11s: "Decision list — no unverified financial metrics",
-        s11b1: "Approve conditional RIBA 2; planning consent as external gate to main works.",
-        s11b2: "Budget dialogue on £78.1M OOM envelope; separate provision for client equipment, inflation, tax.",
-        s11b3: "Before Concept: reconcile client-purchased equipment vs £23.25M line.",
-        s11b4: "Close risk #18: procurement strategy & long-lead items (~18 months).",
-        s11b5: "Align internal Q3 2028 aspiration vs May 2030 baseline; acceleration needs priced D&B/overlap plan.",
-        s11b6: "Request from Scitech: staged design fees, cash-flow curve, updated OOM at Concept gate (Feb 2027).",
-        s12t: "Thank you",
-        s12s: "Q & A",
-        axis26: "2026", axis27: "2027", axis28: "2028", axis29: "2029", axis30: "2030",
-      },
-    };
-
-    let lang = "zh";
-    let idx = 0;
-    let chartsBuilt = false;
-
-    function t(key) { return I18N[lang][key] || key; }
-
-    function ganttHTML() {
-      const todayPct = pct("2026-05-28");
-      let rows = GANTT_ROWS.map((r) => {
-        const label = t(r.key);
-        const st = barStyle(r.start, r.end, r.cls);
-        const d0 = r.start.slice(0, 7).replace("-", "/");
-        const d1 = r.end.slice(0, 7).replace("-", "/");
-        const todayLine = `<div class="today-line" style="left:${todayPct}%"><span class="today-tag">${t("todayLbl")}</span></div>`;
-        return `<div class="gantt-row">
-          <div class="gantt-label">${label}</div>
-          <div class="gantt-track">
-            ${todayLine}
-            <div ${st} title="${d0} – ${d1}"></div>
-          </div>
-          <div class="gantt-dates">${d0}–${d1}</div>
-        </div>`;
-      }).join("");
-      return `<div class="gantt-wrap">
-        <div class="gantt-title" data-i18n="ganttSub">${t("ganttSub")}</div>
-        <div class="gantt-axis">
-          <span data-i18n="axis26">${t("axis26")}</span>
-          <span data-i18n="axis27">${t("axis27")}</span>
-          <span data-i18n="axis28">${t("axis28")}</span>
-          <span data-i18n="axis29">${t("axis29")}</span>
-          <span data-i18n="axis30">${t("axis30")}</span>
-        </div>
+function ganttHTML(){
+const today=pct("2026-05-28");
+const keys=["gFs","gR2","gR3","gPlan","gR4","gPre","gR5","gComm","gEnd"];
+let rows="";
+GANTT_DATA.forEach((g,i)=>{
+const key=keys[i]||g[0];
+const l=t(key);
+const left=pct(g[1]),right=pct(g[2]),w=Math.max(.4,right-left);
+const d0=g[1].slice(0,7).replace("-","/"),d1=g[2].slice(0,7).replace("-","/");
+const tipEn=g[4],tipZh=g[5];
+rows+=`<div class="gantt-row"><div class="gantt-label">${l}</div><div class="gantt-track">
+<div class="today-line" style="left:${today}%"><span class="today-tag">${t("today")}</span></div>
+<div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${tipEn.replace(/"/g,"&quot;")}" data-zh="${tipZh.replace(/"/g,"&quot;")}" data-dates="${d0} – ${d1}"></div>
+</div><div class="gantt-dates">${d0}–${d1}</div></div>`;
+});
+return `<div class="gantt-wrap"><div class="gantt-title">${t("ganttSub")}</div>
+<div class="gantt-axis">${t("axis").map(y=>`<span>${y}</span>`).join("")}</div>
 <div class="gantt-body">${rows}</div>
-        <div class="gantt-legend">
-          <span class="leg-done" data-i18n="legDone">${t("legDone")}</span>
-          <span class="leg-plan" data-i18n="legPlan">${t("legPlan")}</span>
-          <span class="leg-build" data-i18n="legBuild">${t("legBuild")}</span>
-          <span class="leg-mile" data-i18n="legMile">${t("legMile")}</span>
-        </div>
-      </div>`;
-    }
+<div class="gantt-legend"><span><i style="background:var(--teal)"></i>${t("legDone")}</span>
+<span><i style="background:#1a4a6e"></i>${t("legPlan")}</span>
+<span><i style="background:#2e6da4"></i>${t("legBuild")}</span>
+<span><i style="background:var(--accent)"></i>${t("legMile")}</span></div></div>`;
+}
 
-    function buildSlidesHTML() {
-      return `
-    <section class="slide active title-slide">
-      <p><span class="tag" data-i18n="tagConf">${t("tagConf")}</span></p>
-      <h1 data-i18n="s1t">${t("s1t")}</h1>
-      <h2 data-i18n="s1s">${t("s1s")}</h2>
-      <p style="color:var(--muted);margin-top:1.2rem;font-size:0.92rem" data-i18n="s1m">${t("s1m")}</p>
-    </section>
+function deckHTML(){
+return `
+<section class="slide active title-slide"><p><span class="tag">${t("tag")}</span></p>
+<h1>${t("s1t")}</h1><h2>${t("s1s")}</h2><p style="color:var(--muted);margin-top:1rem;font-size:.9rem">${t("s1m")}</p></section>
 
-    <section class="slide">
-      <h1 data-i18n="s2t">${t("s2t")}</h1>
-      <h2 data-i18n="s2s">${t("s2s")}</h2>
-      <div class="kpi-row">
-        <div class="kpi"><div class="val" data-i18n="kFeas">${t("kFeas")}</div><div class="lbl" data-i18n="kFeasD">${t("kFeasD")}</div></div>
-        <div class="kpi"><div class="val" data-i18n="kInv">${t("kInv")}</div><div class="lbl" data-i18n="kInvD">${t("kInvD")}</div></div>
-        <div class="kpi"><div class="val" data-i18n="kArea">${t("kArea")}</div><div class="lbl" data-i18n="kAreaD">${t("kAreaD")}</div></div>
-        <div class="kpi"><div class="val" data-i18n="kEnd">${t("kEnd")}</div><div class="lbl" data-i18n="kEndD">${t("kEndD")}</div></div>
-      </div>
-      <ul>
-        <li data-i18n="s2b1">${t("s2b1")}</li>
-        <li data-i18n="s2b2">${t("s2b2")}</li>
-        <li data-i18n="s2b3">${t("s2b3")}</li>
-        <li data-i18n="s2b4">${t("s2b4")}</li>
-      </ul>
-    </section>
+<section class="slide"><h1>${t("s2t")}</h1><h2>${t("s2s")}</h2>
+<div class="kpi-row">
+<div class="kpi"><div class="val">${t("k1")}</div><div class="lbl">${t("k1d")}</div></div>
+<div class="kpi"><div class="val">${t("k2")}</div><div class="lbl">${t("k2d")}</div></div>
+<div class="kpi"><div class="val">${t("k3")}</div><div class="lbl">${t("k3d")}</div></div></div>
+<ul><li>${t("s2b1")}</li><li>${t("s2b2")}</li><li>${t("s2b3")}</li></ul></section>
 
-    <section class="slide">
-      <h1 data-i18n="s3t">${t("s3t")}</h1>
-      <h2 data-i18n="s3s">${t("s3s")}</h2>
-      <div class="grid-2">
-        <div class="card">
-          <h3 style="color:var(--navy);margin-bottom:0.6rem;font-size:0.95rem" data-i18n="s3done">${t("s3done")}</h3>
-          <ul style="font-size:0.86rem">
-            <li data-i18n="s3d1">${t("s3d1")}</li>
-            <li data-i18n="s3d2">${t("s3d2")}</li>
-            <li data-i18n="s3d3">${t("s3d3")}</li>
-            <li data-i18n="s3d4">${t("s3d4")}</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3 style="color:var(--navy);margin-bottom:0.6rem;font-size:0.95rem" data-i18n="s3next">${t("s3next")}</h3>
-          <ul style="font-size:0.86rem">
-            <li data-i18n="s3n1">${t("s3n1")}</li>
-            <li data-i18n="s3n2">${t("s3n2")}</li>
-            <li data-i18n="s3n3">${t("s3n3")}</li>
-            <li data-i18n="s3n4">${t("s3n4")}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="warn-box" data-i18n="s3warn">${t("s3warn")}</div>
-    </section>
+<section class="slide"><h1>${t("s3t")}</h1><h2>${t("s3s")}</h2>
+<div class="grid-2"><div class="card"><h3 style="font-size:.9rem;color:var(--navy);margin-bottom:.5rem">${t("s3done")}</h3>
+<ul style="font-size:.84rem"><li>${t("s3d1")}</li><li>${t("s3d2")}</li></ul></div>
+<div class="card"><h3 style="font-size:.9rem;color:var(--navy);margin-bottom:.5rem">${t("s3next")}</h3>
+<ul style="font-size:.84rem"><li>${t("s3n1")}</li><li>${t("s3n2")}</li><li>${t("s3n3")}</li></ul></div></div>
+<p style="font-size:.8rem;color:var(--muted);margin-top:.6rem">${t("s3warn")}</p></section>
 
-    <section class="slide">
-      <h1 data-i18n="s4t">${t("s4t")}</h1>
-      <h2 data-i18n="s4s">${t("s4s")}</h2>
-      <div class="grid-2">
-        <ul>
-          <li data-i18n="s4b1">${t("s4b1")}</li>
-          <li data-i18n="s4b2">${t("s4b2")}</li>
-          <li data-i18n="s4b3">${t("s4b3")}</li>
-        </ul>
-        <div class="card">
-          <table>
-            <thead><tr><th data-i18n="s4thA">${t("s4thA")}</th><th data-i18n="s4thB">${t("s4thB")}</th></tr></thead>
-            <tbody>
-              <tr><td data-i18n="s4gf">${t("s4gf")}</td><td>597</td></tr>
-              <tr><td data-i18n="s41f">${t("s41f")}</td><td>642</td></tr>
-              <tr><td data-i18n="s42f">${t("s42f")}</td><td>637</td></tr>
-              <tr><td data-i18n="s43f">${t("s43f")}</td><td>1,224</td></tr>
-              <tr><th data-i18n="s4tot">${t("s4tot")}</th><th>3,099</th></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+<section class="slide"><h1>${t("s4t")}</h1><h2>${t("s4s")}</h2>
+<div class="grid-2"><ul><li>${t("s4b1")}</li><li>${t("s4b2")}</li><li>${t("s4b3")}</li></ul>
+<div class="card"><table><thead><tr><th>${t("s4th1")}</th><th>${t("s4th2")}</th></tr></thead>
+<tbody><tr><td>${t("s4gf")}</td><td>597</td></tr><tr><td>${t("s41f")}</td><td>642</td></tr>
+<tr><td>${t("s42f")}</td><td>637</td></tr><tr><td>${t("s43f")}</td><td>1,224</td></tr>
+<tr><th>${t("s4tot")}</th><th>3,099</th></tr></tbody></table></div></div></section>
 
-    <section class="slide">
-      <h1 data-i18n="s5t">${t("s5t")}</h1>
-      <h2 data-i18n="s5s">${t("s5s")}</h2>
-      <div class="kpi-row">
-        <div class="kpi"><div class="val">£78.11M</div><div class="lbl">${lang === "zh" ? "OOM 总价" : "Total OOM"}</div></div>
-        <div class="kpi"><div class="val">£47.59M</div><div class="lbl">${lang === "zh" ? "基础建造" : "Base construction"}</div></div>
-        <div class="kpi"><div class="val">£41.97M</div><div class="lbl">${lang === "zh" ? "直接工程费" : "Direct works"}</div></div>
-        <div class="kpi"><div class="val">£25,205</div><div class="lbl">/ m² GIFA</div></div>
-      </div>
-      <table>
-        <thead><tr><th data-i18n="s5th1">${t("s5th1")}</th><th data-i18n="s5th2">${t("s5th2")}</th><th data-i18n="s5th3">${t("s5th3")}</th></tr></thead>
-        <tbody>
-          <tr><td data-i18n="s5r1n">${t("s5r1n")}</td><td>£41,968,226</td><td data-i18n="s5r1d">${t("s5r1d")}</td></tr>
-          <tr><td data-i18n="s5r2n">${t("s5r2n")}</td><td>£3,357,458</td><td data-i18n="s5r2d">${t("s5r2d")}</td></tr>
-          <tr><td data-i18n="s5r3n">${t("s5r3n")}</td><td>£2,266,284</td><td></td></tr>
-          <tr><td><strong data-i18n="s5r4n">${t("s5r4n")}</strong></td><td><strong>£47,591,969</strong></td><td></td></tr>
-          <tr><td data-i18n="s5r5n">${t("s5r5n")}</td><td>£4,062,357</td><td data-i18n="s5r5d">${t("s5r5d")}</td></tr>
-          <tr><td data-i18n="s5r6n">${t("s5r6n")}</td><td>£626,600</td><td></td></tr>
-          <tr><td data-i18n="s5r7n">${t("s5r7n")}</td><td>£25,827,163</td><td data-i18n="s5r7d">${t("s5r7d")}</td></tr>
-          <tr><td><strong data-i18n="s5r8n">${t("s5r8n")}</strong></td><td><strong>£78,108,089</strong></td><td data-i18n="s5r8d">${t("s5r8d")}</td></tr>
-        </tbody>
-      </table>
-    </section>
+<section class="slide"><h1>${t("s5t")}</h1><h2>${t("s5s")}</h2>
+<div class="cost-scroll">${costHTML()}</div></section>
 
-    <section class="slide">
-      <h1 data-i18n="s6t">${t("s6t")}</h1>
-      <h2 data-i18n="s6s">${t("s6s")}</h2>
-      <div class="grid-2">
-        <div class="card"><div class="chart-wrap"><canvas id="chartStack"></canvas></div></div>
-        <div class="card"><div class="chart-wrap"><canvas id="chartWorks"></canvas></div></div>
-      </div>
-    </section>
+<section class="slide"><h1>${t("s6t")}</h1><h2>${t("s6s")}</h2>
+<div class="grid-2"><div class="card"><div class="chart-wrap"><canvas id="c1"></canvas></div></div>
+<div class="card"><div class="chart-wrap"><canvas id="c2"></canvas></div></div></div></section>
 
-    <section class="slide">
-      <h1 data-i18n="s7t">${t("s7t")}</h1>
-      <h2 data-i18n="s7s">${t("s7s")}</h2>
-      <div class="grid-2">
-        <div class="card">
-          <table>
-            <tbody>
-              <tr><td data-i18n="s7c1">${t("s7c1")}</td><td>£7,748,149</td></tr>
-              <tr><td data-i18n="s7c2">${t("s7c2")}</td><td>£12,913,581</td></tr>
-              <tr><td data-i18n="s7c3">${t("s7c3")}</td><td>£5,165,433</td></tr>
-              <tr><td data-i18n="s7c4">${t("s7c4")}</td><td>£626,600</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <ul style="font-size:0.88rem">
-            <li data-i18n="s7p1">${t("s7p1")}</li>
-            <li data-i18n="s7p2">${t("s7p2")}</li>
-            <li data-i18n="s7p3">${t("s7p3")}</li>
-          </ul>
-          <div class="warn-box" data-i18n="s7w">${t("s7w")}</div>
-        </div>
-      </div>
-    </section>
+<section class="slide"><h1>${t("s7t")}</h1><h2>${t("s7s")}</h2>
+<div class="grid-2"><div class="card"><table><tbody>
+<tr><td>${t("s7c1")}</td><td>${fm(7748149)}</td></tr>
+<tr><td>${t("s7c2")}</td><td>${fm(12913581)}</td></tr>
+<tr><td>${t("s7c3")}</td><td>${fm(5165433)}</td></tr>
+<tr><td>${t("s7c4")}</td><td>${fm(626600)}</td></tr></tbody></table></div>
+<div class="mitigate-box"><h4>${t("s7h")}</h4>
+<p>${t("s7m1")}</p><p style="margin-top:.35rem">${t("s7m2")}</p>
+<p style="margin-top:.35rem">${t("s7m3")}</p><p style="margin-top:.35rem">${t("s7m4")}</p></div></div></section>
 
-    <section class="slide">
-      <h1 data-i18n="s8t">${t("s8t")}</h1>
-      <h2 data-i18n="s8s">${t("s8s")}</h2>
-      <div class="grid-2">
-        <div class="card">
-          <h3 style="font-size:0.9rem;color:var(--teal);margin-bottom:0.4rem" data-i18n="s8in">${t("s8in")}</h3>
-          <ul style="font-size:0.84rem;margin-left:1rem">
-            <li data-i18n="s8in1">${t("s8in1")}</li>
-            <li data-i18n="s8in2">${t("s8in2")}</li>
-            <li data-i18n="s8in3">${t("s8in3")}</li>
-            <li data-i18n="s8in4">${t("s8in4")}</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3 style="font-size:0.9rem;color:var(--warn);margin-bottom:0.4rem" data-i18n="s8out">${t("s8out")}</h3>
-          <ul style="font-size:0.84rem;margin-left:1rem">
-            <li data-i18n="s8out1">${t("s8out1")}</li>
-            <li data-i18n="s8out2">${t("s8out2")}</li>
-            <li data-i18n="s8out3">${t("s8out3")}</li>
-            <li data-i18n="s8out4">${t("s8out4")}</li>
-          </ul>
-        </div>
-      </div>
-      <p style="margin-top:0.65rem;font-size:0.8rem;color:var(--muted)" data-i18n="s8disc">${t("s8disc")}</p>
-    </section>
+<section class="slide"><h1>${t("s8t")}</h1><h2>${t("s8s")}</h2>
+<div class="grid-2"><div class="card"><h3 style="font-size:.88rem;color:var(--teal);margin-bottom:.35rem">${t("s8in")}</h3>
+<ul style="font-size:.82rem;margin-left:1rem"><li>${t("s8in1")}</li><li>${t("s8in2")}</li><li>${t("s8in3")}</li><li>${t("s8in4")}</li></ul></div>
+<div class="card"><h3 style="font-size:.88rem;color:var(--warn);margin-bottom:.35rem">${t("s8out")}</h3>
+<ul style="font-size:.82rem;margin-left:1rem"><li>${t("s8out1")}</li><li>${t("s8out2")}</li><li>${t("s8out3")}</li><li>${t("s8out4")}</li></ul></div></div>
+<p style="font-size:.78rem;color:var(--muted);margin-top:.5rem">${t("s8disc")}</p></section>
 
-    <section class="slide" id="slideProgramme">
-      <h1 data-i18n="s9t">${t("s9t")}</h1>
-      <h2 data-i18n="s9s">${t("s9s")}</h2>
-      ${ganttHTML()}
-      <div class="warn-box" data-i18n="s9warn">${t("s9warn")}</div>
-    </section>
+<section class="slide"><h1>${t("s9t")}</h1><h2>${t("s9s")}</h2>${ganttHTML()}</section>
 
-    <section class="slide">
-      <h1 data-i18n="s10t">${t("s10t")}</h1>
-      <h2 data-i18n="s10s">${t("s10s")}</h2>
-      <table>
-        <thead><tr><th data-i18n="s10th1">${t("s10th1")}</th><th data-i18n="s10th2">${t("s10th2")}</th><th data-i18n="s10th3">${t("s10th3")}</th></tr></thead>
-        <tbody>
-          <tr><td data-i18n="s10r1p">${t("s10r1p")}</td><td data-i18n="s10r1t">${t("s10r1t")}</td><td data-i18n="s10r1n">${t("s10r1n")}</td></tr>
-          <tr><td data-i18n="s10r2p">${t("s10r2p")}</td><td data-i18n="s10r2t">${t("s10r2t")}</td><td data-i18n="s10r2n">${t("s10r2n")}</td></tr>
-          <tr><td data-i18n="s10r3p">${t("s10r3p")}</td><td data-i18n="s10r3t">${t("s10r3t")}</td><td data-i18n="s10r3n">${t("s10r3n")}</td></tr>
-          <tr><td data-i18n="s10r4p">${t("s10r4p")}</td><td data-i18n="s10r4t">${t("s10r4t")}</td><td data-i18n="s10r4n">${t("s10r4n")}</td></tr>
-          <tr><td data-i18n="s10r5p">${t("s10r5p")}</td><td data-i18n="s10r5t">${t("s10r5t")}</td><td data-i18n="s10r5n">${t("s10r5n")}</td></tr>
-        </tbody>
-      </table>
-      <p style="margin-top:0.6rem;font-size:0.82rem;color:var(--muted)" data-i18n="s10note">${t("s10note")}</p>
-    </section>
+<section class="slide"><h1>${t("s10t")}</h1><h2>${t("s10s")}</h2>
+<table><thead><tr><th>${t("s10th1")}</th><th>${t("s10th2")}</th><th>${t("s10th3")}</th></tr></thead><tbody>
+<tr><td>${t("s10r1p")}</td><td>${t("s10r1t")}</td><td>${t("s10r1n")}</td></tr>
+<tr><td>${t("s10r2p")}</td><td>${t("s10r2t")}</td><td>${t("s10r2n")}</td></tr>
+<tr><td>${t("s10r3p")}</td><td>${t("s10r3t")}</td><td>${t("s10r3n")}</td></tr>
+<tr><td>${t("s10r4p")}</td><td>${t("s10r4t")}</td><td>${t("s10r4n")}</td></tr>
+<tr><td>${t("s10r5p")}</td><td>${t("s10r5t")}</td><td>${t("s10r5n")}</td></tr>
+<tr><td>${t("s10r6p")}</td><td>${t("s10r6t")}</td><td>${t("s10r6n")}</td></tr>
+<tr><td>${t("s10r7p")}</td><td>${t("s10r7t")}</td><td>${t("s10r7n")}</td></tr>
+<tr><td>${t("s10r8p")}</td><td>${t("s10r8t")}</td><td>${t("s10r8n")}</td></tr>
+</tbody></table></section>
 
-    <section class="slide">
-      <h1 data-i18n="s11t">${t("s11t")}</h1>
-      <h2 data-i18n="s11s">${t("s11s")}</h2>
-      <ul>
-        <li data-i18n="s11b1">${t("s11b1")}</li>
-        <li data-i18n="s11b2">${t("s11b2")}</li>
-        <li data-i18n="s11b3">${t("s11b3")}</li>
-        <li data-i18n="s11b4">${t("s11b4")}</li>
-        <li data-i18n="s11b5">${t("s11b5")}</li>
-        <li data-i18n="s11b6">${t("s11b6")}</li>
-      </ul>
-    </section>
+<section class="slide"><h1>${t("s11t")}</h1><h2>${t("s11s")}</h2>
+<ul class="decision-list"><li>${t("s11d1")}</li><li>${t("s11d2")}</li></ul></section>
 
-    <section class="slide title-slide">
-      <h1 data-i18n="s12t">${t("s12t")}</h1>
-      <h2 data-i18n="s12s">${t("s12s")}</h2>
-    </section>`;
-    }
+<section class="slide title-slide"><h1>${t("s12t")}</h1><h2>${t("s12s")}</h2></section>`;
+}
 
-    function applyLang() {
-      document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
-      const savedIdx = idx;
-      document.getElementById("deck").innerHTML = buildSlidesHTML();
-      document.getElementById("btnZh").classList.toggle("active", lang === "zh");
-      document.getElementById("btnEn").classList.toggle("active", lang === "en");
-      chartsBuilt = false;
-      show(savedIdx);
-    }
+function bindGanttTips(){
+document.querySelectorAll(".gantt-bar").forEach(el=>{
+el.addEventListener("mouseenter",e=>{
+const tip=document.getElementById("tip");
+tip.querySelector(".td").textContent=el.dataset.dates;
+tip.querySelector(".tb").textContent=lang==="zh"?el.dataset.zh:el.dataset.en;
+tip.classList.add("show");
+moveTip(e);});
+el.addEventListener("mousemove",moveTip);
+el.addEventListener("mouseleave",()=>document.getElementById("tip").classList.remove("show"));
+});
+}
+function moveTip(e){const tip=document.getElementById("tip");
+let x=e.clientX+12,y=e.clientY+12;
+if(x+340>innerWidth)x=e.clientX-320;
+if(y+80>innerHeight)y=e.clientY-70;
+tip.style.left=x+"px";tip.style.top=y+"px";}
 
-    const slides = () => document.querySelectorAll(".slide");
-    const counter = document.getElementById("counter");
+function applyLang(){
+document.documentElement.lang=lang==="zh"?"zh-CN":"en";
+const saved=idx;
+document.getElementById("deck").innerHTML=deckHTML();
+document.getElementById("footerText").textContent=t("footer");
+document.getElementById("navHint").textContent=t("nav");
+document.getElementById("btnZh").classList.toggle("active",lang==="zh");
+document.getElementById("btnEn").classList.toggle("active",lang==="en");
+chartsBuilt=false;
+bindGanttTips();
+show(saved);
+}
 
-    function show(n) {
-      const s = slides();
-      idx = (n + s.length) % s.length;
-      s.forEach((el, i) => el.classList.toggle("active", i === idx));
-      counter.textContent = `${idx + 1} / ${s.length}`;
-      if (idx === 5 && !chartsBuilt) { buildCharts(); chartsBuilt = true; }
-    }
-
-    function buildCharts() {
-      const lbl = (zh, en) => lang === "zh" ? zh : en;
-      new Chart(document.getElementById("chartStack"), {
-        type: "bar",
-        data: {
-          labels: [lbl("OOM 构成", "OOM composition")],
-          datasets: [
-            { label: lbl("直接工程费", "Direct works"), data: [41968226], backgroundColor: "#0f2b46" },
-            { label: lbl("预备费与 OH&P", "Prelims & OH&P"), data: [7591742], backgroundColor: "#1a4a6e" },
-            { label: lbl("其他项目费", "Other project costs"), data: [4062357], backgroundColor: "#009688" },
-            { label: lbl("风险与预备费", "Risk & contingency"), data: [26453763], backgroundColor: "#c9a227" },
-          ],
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { position: "bottom" } },
-          scales: {
-            x: { stacked: true },
-            y: { stacked: true, ticks: { callback: (v) => "£" + (v / 1e6).toFixed(1) + "M" } },
-          },
-        },
-      });
-      new Chart(document.getElementById("chartWorks"), {
-        type: "doughnut",
-        data: {
-          labels: [
-            lbl("工艺设备", "Process"), lbl("机电", "MEP"), lbl("外场", "External"),
-            lbl("上部结构", "Superstructure"), lbl("基础", "Substructure"), lbl("其他", "Other"),
-          ],
-          datasets: [{ data: [23249083, 9532716, 1859520, 3942636, 1499680, 2720049], backgroundColor: [
-            "#0f2b46","#1a4a6e","#2e6da4","#009688","#4db6ac","#90a4ae",
-          ]}],
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "right" } } },
-      });
-    }
-
-    document.getElementById("btnZh").onclick = () => { if (lang !== "zh") { lang = "zh"; applyLang(); } };
-    document.getElementById("btnEn").onclick = () => { if (lang !== "en") { lang = "en"; applyLang(); } };
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); show(idx + 1); }
-      if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(idx - 1); }
-    });
-
-    applyLang();
-  </script>
+function slides(){return document.querySelectorAll(".slide");}
+function show(n){
+const s=slides();idx=(n+s.length)%s.length;
+s.forEach((el,i)=>el.classList.toggle("active",i===idx));
+document.getElementById("counter").textContent=(idx+1)+" / "+s.length;
+if(idx===5&&!chartsBuilt){buildCharts();chartsBuilt=true;}
+}
+function buildCharts(){
+const zh=lang==="zh";
+new Chart(document.getElementById("c1"),{type:"bar",data:{labels:[zh?"OOM":"OOM"],datasets:[
+{label:zh?"直接工程费":"Works",data:[41968226],backgroundColor:"#0f2b46"},
+{label:zh?"预备费与OH&P":"Prelims/OH&P",data:[5623742],backgroundColor:"#1a4a6e"},
+{label:zh?"其他项目费":"Other",data:[4062357],backgroundColor:"#009688"},
+{label:zh?"风险与预备费":"Risk/cont.",data:[26453763],backgroundColor:"#c9a227"}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
+scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>"£"+(v/1e6).toFixed(1)+"M"}}}}});
+new Chart(document.getElementById("c2"),{type:"doughnut",data:{labels:[zh?"工艺设备":"Process",zh?"机电":"MEP",zh?"外场":"External",zh?"上部":"Super",zh?"基础":"Sub",zh?"其他":"Other"],
+datasets:[{data:[23249083,9532716,1859520,3942636,1499680,2720049],backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#009688","#4db6ac","#90a4ae"]}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right"}}}});
+}
+document.getElementById("btnZh").onclick=()=>{if(lang!=="zh"){lang="zh";applyLang();}};
+document.getElementById("btnEn").onclick=()=>{if(lang!=="en"){lang="en";applyLang();}};
+document.addEventListener("keydown",e=>{
+if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){e.preventDefault();show(idx+1);}
+if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();show(idx-1);}
+});
+applyLang();
+</script>
 </body>
 </html>

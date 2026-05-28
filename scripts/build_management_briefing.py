@@ -1,4 +1,43 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+"""Generate updated bilingual management briefing HTML."""
+
+import json
+from pathlib import Path
+
+OUT = Path("/workspace/汇报/PDF-Extension-COO-CFO/PDF-Extension_Management_Briefing_2026-05-28.html")
+OUT_LEGACY = Path("/workspace/汇报/PDF-Extension-COO-CFO/PDF-Extension_COO-CFO_Briefing_2026-05-28.html")
+
+GANTT_JS = [
+    ["gFs", "2026-05-01", "2026-05-31", "done",
+     "RIBA 1 Feasibility complete. Report A1: 22 May 2026.",
+     "RIBA 1 可行性研究完成；报告 A1：2026-05-22。"],
+    ["gR2", "2026-07-15", "2027-02-23", "plan",
+     "RIBA 2 Concept Design (160 days). Concept report & stage gate Feb 2027.",
+     "RIBA 2 概念设计（160 天）；2027-02 概念报告与阶段评审。"],
+    ["gR3", "2027-02-17", "2027-09-28", "plan",
+     "RIBA 3 Scheme Design (8 months).",
+     "RIBA 3 方案设计（8 个月）。"],
+    ["gPlan", "2027-10-26", "2028-03-21", "warn",
+     "Planning: submission Dec 2027, statutory period, consent target 21 Mar 2028.",
+     "规划：2027-12 提交，法定审批期，目标许可 2028-03-21。"],
+    ["gR4", "2027-10-27", "2028-06-06", "plan",
+     "RIBA 4 Detailed Design. Long-lead procurement from Mar 2028 (18 mo).",
+     "RIBA 4 详细设计；长周期设备 2028-03 起（18 个月）。"],
+    ["gPre", "2028-07-05", "2028-08-01", "plan",
+     "Pre-construction mobilisation & site set-up.",
+     "施工前动员与现场临建。"],
+    ["gR5", "2028-08-02", "2029-11-13", "build",
+     "RIBA 5 Construction (335 days): enabling, piling, structure, fit-out.",
+     "RIBA 5 施工（335 天）：拆除临建、桩基、结构、装修机电。"],
+    ["gComm", "2029-11-14", "2029-12-18", "build",
+     "Commissioning & setting to work (programme §1.13).",
+     "调试与投运准备（进度计划 §1.13）。"],
+    ["gEnd", "2029-12-19", "2030-05-07", "warn",
+     "Validation, handover, project complete (07 May 2030).",
+     "确认验证、移交；项目完成 2030-05-07。"],
+]
+
+HTML = r'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"/>
@@ -68,7 +107,7 @@ table{width:100%;border-collapse:collapse;font-size:.8rem} th,td{padding:.36rem 
 <div id="deck"></div>
 <div class="footer"><span id="footerText"></span><span id="navHint"></span><span id="counter"></span></div>
 <script>
-const GANTT_DATA = [["gFs", "2026-05-01", "2026-05-31", "done", "RIBA 1 Feasibility complete. Report A1: 22 May 2026.", "RIBA 1 \u53ef\u884c\u6027\u7814\u7a76\u5b8c\u6210\uff1b\u62a5\u544a A1\uff1a2026-05-22\u3002"], ["gR2", "2026-07-15", "2027-02-23", "plan", "RIBA 2 Concept Design (160 days). Concept report & stage gate Feb 2027.", "RIBA 2 \u6982\u5ff5\u8bbe\u8ba1\uff08160 \u5929\uff09\uff1b2027-02 \u6982\u5ff5\u62a5\u544a\u4e0e\u9636\u6bb5\u8bc4\u5ba1\u3002"], ["gR3", "2027-02-17", "2027-09-28", "plan", "RIBA 3 Scheme Design (8 months).", "RIBA 3 \u65b9\u6848\u8bbe\u8ba1\uff088 \u4e2a\u6708\uff09\u3002"], ["gPlan", "2027-10-26", "2028-03-21", "warn", "Planning: submission Dec 2027, statutory period, consent target 21 Mar 2028.", "\u89c4\u5212\uff1a2027-12 \u63d0\u4ea4\uff0c\u6cd5\u5b9a\u5ba1\u6279\u671f\uff0c\u76ee\u6807\u8bb8\u53ef 2028-03-21\u3002"], ["gR4", "2027-10-27", "2028-06-06", "plan", "RIBA 4 Detailed Design. Long-lead procurement from Mar 2028 (18 mo).", "RIBA 4 \u8be6\u7ec6\u8bbe\u8ba1\uff1b\u957f\u5468\u671f\u8bbe\u5907 2028-03 \u8d77\uff0818 \u4e2a\u6708\uff09\u3002"], ["gPre", "2028-07-05", "2028-08-01", "plan", "Pre-construction mobilisation & site set-up.", "\u65bd\u5de5\u524d\u52a8\u5458\u4e0e\u73b0\u573a\u4e34\u5efa\u3002"], ["gR5", "2028-08-02", "2029-11-13", "build", "RIBA 5 Construction (335 days): enabling, piling, structure, fit-out.", "RIBA 5 \u65bd\u5de5\uff08335 \u5929\uff09\uff1a\u62c6\u9664\u4e34\u5efa\u3001\u6869\u57fa\u3001\u7ed3\u6784\u3001\u88c5\u4fee\u673a\u7535\u3002"], ["gComm", "2029-11-14", "2029-12-18", "build", "Commissioning & setting to work (programme \u00a71.13).", "\u8c03\u8bd5\u4e0e\u6295\u8fd0\u51c6\u5907\uff08\u8fdb\u5ea6\u8ba1\u5212 \u00a71.13\uff09\u3002"], ["gEnd", "2029-12-19", "2030-05-07", "warn", "Validation, handover, project complete (07 May 2030).", "\u786e\u8ba4\u9a8c\u8bc1\u3001\u79fb\u4ea4\uff1b\u9879\u76ee\u5b8c\u6210 2030-05-07\u3002"]];
+const GANTT_DATA = ''' + json.dumps(GANTT_JS) + r''';
 const T0=new Date("2026-07-01"),T1=new Date("2030-05-07"),RANGE=T1-T0;
 function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
 const I18N={
@@ -413,4 +452,8 @@ if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();show(idx-1);}
 applyLang();
 </script>
 </body>
-</html>
+</html>'''
+
+OUT.write_text(HTML, encoding="utf-8")
+OUT_LEGACY.write_text(HTML, encoding="utf-8")
+print("Wrote", OUT, len(HTML), "bytes")
