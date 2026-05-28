@@ -136,7 +136,7 @@ s5t:"投资总览（OOM）",s5s:"300291-CM-0001 · 基准日 2026-05-22",
 s5oom:"OOM 总价（可行性量级）",
 s6t:"投资结构",s6s:"总包构成与直接工程费",
 s7t:"预备费与风险",s7s:"可行性阶段（报告 §14）",
-s7h:"何谓「缓解」？（据可行性报告与风险登记册）",
+s7h:"缓解措施",
 s7m1:"风险登记册对每项风险列出建议措施（如：勘查、设计阶段确认、纳入 OOM 估算、阶段评审等），并区分 Mitigate / Accept / Avoid 等响应方式。",
 s7m2:"缓解前：登记册汇总的预估影响（报告 §14.3）— 成本约 £2.64m（加权 £1.76m）；进度累计 182 周（加权 131.8 周）。",
 s7m3:"缓解后：实施上述措施及 FS 中已纳入的假设与费用预留后的预期影响 — 成本约 £1.13m（加权 £626k）；进度 107 周（加权 60.6 周）。",
@@ -167,7 +167,7 @@ s10r8p:"验证/竣工",s10r8t:"2029-12 — 2030-05",s10r8n:"验证、移交、�
 s11t:"决策清单",s11s:"提请领导审议",
 s11d1:"是否批准进入 RIBA 2（概念设计阶段）？",
 s11d2:"是否推进模块化工厂设计（Modular / Design-for-Modularity）及对应方案比选？",
-s12t:"谢谢",s12s:"Q & A",
+s12t:"谢谢",s12s:"",
 axis:["2026","2027","2028","2029","2030"],
 costLabels:{
 w0:"0 促动/拆除",w1:"1 下部结构",w2:"2 上部结构",w3:"3 内装",w4:"4 装置器具",
@@ -204,7 +204,7 @@ s5t:"Investment (OOM)",s5s:"300291-CM-0001 · Base 22 May 2026",
 s5oom:"Total OOM (feasibility magnitude)",
 s6t:"Investment Structure",s6s:"OOM build-up & direct works",
 s7t:"Contingency & Risk",s7s:"Feasibility stage (report §14)",
-s7h:"What does “mitigation” mean? (per report & risk register)",
+s7h:"Mitigation measures",
 s7m1:"The risk register lists proposed actions per risk (surveys, early confirmation, OOM allowances, stage reviews) with Mitigate / Accept / Avoid responses.",
 s7m2:"Pre-mitigation: aggregated register exposure (§14.3) — ~£2.64m cost (£1.76m factored); 182 weeks programme (131.8 weeks factored).",
 s7m3:"Post-mitigation: after those actions and FS assumptions/allowances — ~£1.13m (£626k factored); 107 weeks (60.6 weeks factored).",
@@ -235,7 +235,7 @@ s10r8p:"Validation / handover",s10r8t:"Dec 2029 – May 2030",s10r8n:"Validation
 s11t:"Decision Checklist",s11s:"For leadership review",
 s11d1:"Approve progression to RIBA 2 (Concept Design)?",
 s11d2:"Proceed with modular facility design approach and related option studies?",
-s12t:"Thank you",s12s:"Q & A",
+s12t:"Thank you",s12s:"",
 axis:["2026","2027","2028","2029","2030"],
 costLabels:{
 w0:"0 Facilitating",w1:"1 Substructure",w2:"2 Superstructure",w3:"3 Internal finishes",w4:"4 Fittings",
@@ -389,7 +389,7 @@ return `
 <section class="slide"><h1>${t("s11t")}</h1><h2>${t("s11s")}</h2>
 <ul class="decision-list"><li>${t("s11d1")}</li><li>${t("s11d2")}</li></ul></section>
 
-<section class="slide title-slide"><h1>${t("s12t")}</h1><h2>${t("s12s")}</h2></section>`;
+<section class="slide title-slide"><h1>${t("s12t")}</h1></section>`;
 }
 
 function bindGanttTips(){
