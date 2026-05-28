@@ -141,7 +141,7 @@ s4b1:"占地约 600 m²；4 层 + 设备夹层",s4b2:"前提：拆除/迁址原�
 s4th1:"楼层",s4th2:"面积 m²",s4gf:"首层",s41f:"一层",s42f:"二层",s43f:"三层+夹层",s4tot:"合计 GIFA",
 s5t:"投资总览（OOM）",s5s:"300291-CM-0001 · 基准日 2026-05-22",
 s5oom:"OOM 总价（可行性量级）",
-s6t:"投资结构",s6s:"总包构成与直接工程费",chartLeft:"项目总投资 OOM 构成",chartRight:"基础建造费构成（工程直接费 + 临时设施与员工设施 + 承包商管理费与利润）",
+s6t:"投资结构",s6s:"总包构成与直接工程费",chartLeft:"项目总投资 OOM 构成",chartRight:"基础建造费 £47.6M — 工程费分项（土建 / 机电 / 工艺设备）+ 临建 + OH&P",
 s7t:"预备费与风险",s7s:"可行性阶段（报告 §14）",
 s7h:"缓解措施",
 s7m1:"风险登记册对每项风险列出建议措施（如：勘查、设计阶段确认、纳入 OOM 估算、阶段评审等），并区分 Mitigate / Accept / Avoid 等响应方式。",
@@ -183,6 +183,7 @@ w0:"0 促动/拆除",w1:"1 下部结构",w2:"2 上部结构",w3:"3 内装",w4:"4
 w5:"5 建筑机电",w51:"5.1 预留洞/BWIC",w52:"5.2 暖通",w53:"5.3 电气",w54:"5.4 EMS",w55:"5.5 过程控制",w56:"5.6 工艺设备",
 w7:"7 既有厂改造",w8:"8 外部工程",wsum:"工程费小计",
 pre:"临时设施+员工设施 (8%)",ohp:"承包商管理费与利润 (5%)",base:"基础建造成本",
+chCivil:"土建与外围工程",chBme:"建筑机电（暖通/电气/自控等）",chProc:"工艺设备（费用计划 5.6）",
 oth:"其他项目费",od:"设计费 (8%)",ob:"BREEAM",os:"勘测",op:"规划规费",
 rr:"风险登记册",cont:"风险与预备费合计",c15:"设计发展 (15%)",c25:"施工设备 (25%)",c10:"业主 (10%)",tot:"OOM 总价"
 }
@@ -211,7 +212,7 @@ s4b3:"Fire: second escape stair; blast panels at H₂ suite",
 s4th1:"Floor",s4th2:"Area m²",s4gf:"Ground",s41f:"First",s42f:"Second",s43f:"Third + mezz",s4tot:"Total GIFA",
 s5t:"Investment (OOM)",s5s:"300291-CM-0001 · Base 22 May 2026",
 s5oom:"Total OOM (feasibility magnitude)",
-s6t:"Investment Structure",s6s:"OOM build-up & direct works",chartLeft:"Total OOM composition",chartRight:"Base construction breakdown (direct works + site/staff prelims + contractor OH&P)",
+s6t:"Investment Structure",s6s:"OOM build-up & direct works",chartLeft:"Total OOM composition",chartRight:"Base construction £47.6M — works split (civils / M&E / process) + prelims + OH&P",
 s7t:"Contingency & Risk",s7s:"Feasibility stage (report §14)",
 s7h:"Mitigation measures",
 s7m1:"The risk register lists proposed actions per risk (surveys, early confirmation, OOM allowances, stage reviews) with Mitigate / Accept / Avoid responses.",
@@ -253,6 +254,7 @@ w0:"0 Facilitating",w1:"1 Substructure",w2:"2 Superstructure",w3:"3 Internal fin
 w5:"5 Building services",w51:"5.1 BWIC",w52:"5.2 HVAC",w53:"5.3 Electrical",w54:"5.4 EMS",w55:"5.5 Controls",w56:"5.6 Process equipment",
 w7:"7 Existing bldg",w8:"8 External works",wsum:"Works subtotal",
 pre:"Site temp. + staff welfare (8%)",ohp:"Contractor OH&P (5%)",base:"Base construction",
+chCivil:"Civils & external works",chBme:"Building M&E (HVAC, electrical, controls)",chProc:"Process equipment (line 5.6)",
 oth:"Other project costs",od:"Design (8%)",ob:"BREEAM",os:"Surveys",op:"Planning",
 rr:"Risk register",cont:"Risk & contingency",c15:"Design dev. (15%)",c25:"Constr./equip. (25%)",c10:"Client (10%)",tot:"Total OOM"
 }
@@ -452,12 +454,12 @@ new Chart(document.getElementById("c1"),{type:"bar",data:{labels:[zh?"项目总�
 {label:zh?"风险与预备费":"Risk & contingency",data:[26453763],backgroundColor:"#c9a227"}]},
 options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
 scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>"£"+(v/1e6).toFixed(1)+"M"}}}}});
+const Lc=I18N[lang].costLabels;
+const civil=9186428,bme=9532716,proc=23249083;
 new Chart(document.getElementById("c2"),{type:"doughnut",data:{labels:[
-zh?"工程直接费（含工艺设备等）":"Direct works (incl. process equipment)",
-zh?"临时设施+员工设施 (8%)":"Site temp. + staff welfare (8%)",
-zh?"承包商管理费与利润（OH&P，5%）":"Contractor margin & profit (OH&P, 5%)"
-],datasets:[{data:[41968226,3357458,2266284],backgroundColor:["#1a4a6e","#009688","#4db6ac"]}]},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:10}}}}}});
+Lc.chCivil,Lc.chBme,Lc.chProc,Lc.pre,Lc.ohp
+],datasets:[{data:[civil,bme,proc,3357458,2266284],backgroundColor:["#1a4a6e","#2e6da4","#5a8ab8","#009688","#4db6ac"]}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:9},boxWidth:12}}}}});
 }
 document.getElementById("btnZh").onclick=()=>{if(lang!=="zh"){lang="zh";applyLang();}};
 document.getElementById("btnEn").onclick=()=>{if(lang!=="en"){lang="en";applyLang();}};
