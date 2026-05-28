@@ -27,8 +27,8 @@ GANTT_JS = [
      "HPLC lead time ~18 weeks after DQ and commercial terms (§4.3).",
      "HPLC 周期约 18 周（DQ 及商务条款完成后，§4.3）。"],
     ["gPg12", "2027-03-01", "2027-07-31", "build",
-     "PG.12 enabling / airlock / segregation — ~20 weeks (may reduce to ~14 weeks, §4.3).",
-     "PG.12 拆除临建/气闸/分区 — 约 20 周（可缩短至约 14 周，§4.3）。"],
+     "Enabling / airlock / segregation — ~20 weeks (may reduce to ~14 weeks, §4.3).",
+     "拆除临建/气闸/分区 — 约 20 周（可缩短至约 14 周，§4.3）。"],
     ["gHplc", "2027-08-01", "2027-08-31", "build",
      "HPLC available for use — August 2027, meeting Q3 beneficial use target (§4.3).",
      "HPLC 可投入使用 — 2027 年 8 月，满足 Q3 效益目标（§4.3）。"],
@@ -105,22 +105,22 @@ const T0=new Date("2026-05-01"),T1=new Date("2027-12-31"),RANGE=T1-T0;
 function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
 const I18N={
 zh:{
-footer:"凯莱英 UK · PDF 制备与冻干改造 · 项目 9802",
+footer:"凯莱英 UK · PDF 制备与冻干改造",
 nav:"← → 翻页",
 tag:"内部汇报",
 s1t:"PDF 厂房 HPLC 与冻干机改造",s1s:"进展 · 投资 · 周期",s1m:"RBPC 可行性研究（P01）· Discovery Park Sandwich · 2026年5月",
-s2t:"执行摘要",s2s:"9802-RBP-ZZ-ZZ-RP-X-100000 · 2026-05-19",
-k1:"技术可行",k1d:"HPLC（PG.05）与冻干机（PG.10–12）均可落地",
+s2t:"执行摘要",s2s:"",
+k1:"技术可行",k1d:"HPLC 与冻干机均可落地",
 k2:"£3.78M",k2d:"可行性阶段 Capex 估算（±50%）",
 k3:"2027 Q3",k3d:"HPLC 目标投运（2027年8月）",
 k4:"2027 Q4",k4d:"冻干机目标投运（2027年11月）",
-s2b1:"范围：在既有 PDF  footprint 内增设制备型 HPLC（DAC300/CP300）及冻干机（含隔离器、除湿、PSG 等），配套拆除/迁建、机电仪控与 HVAC。",
-s2b2:"投资：直接工程 £2.33M + 设计/FEED/CDM/调试 £0.82M + 20% 总 contingency £0.63M = £3.783M（费用计划 9802-RBP-ZZ-ZZ-CP-X-100001，±50%）。",
+s2b1:"范围：在既有 PDF footprint 内增设制备型 HPLC（DAC300/CP300）及冻干机（含隔离器、除湿、纯蒸汽发生器等），配套拆除/迁建、机电仪控与 HVAC。",
+s2b2:"投资：直接工程 £2.33M + 设计/FEED/CDM/调试 £0.82M + 20% 总 contingency £0.63M = £3.783M（±50%）。",
 s2b3:"周期：冻干机制造 8–10 个月为关键路径；当前排序优先采购冻干机再 HPLC，HPLC 仍可在 2027 年 8 月具备使用条件。",
-s3t:"范围与布置",s3s:"Option：既有 footprint 改造（非东侧扩建）",
-hplcT:"HPLC（PG.05）",hplc1:"DAC300 色谱柱、浆料罐、CP300 泵撬（Asymchem 供货）",hplc2:"移动头罐 2×500 L（进料）+ 3×200 L（馏分）",hplc3:"2000 L 废液暂存罐；泵组尺寸缩小后操作空间改善",
-lyoT:"冻干机（PG.10–12）",lyo1:"冻干腔、冷凝器、制冷、隔离器、双 CIP 罐、除湿机、PSG（Asymchem 供货）",lyo2:"需新增更衣室/气闸；除湿机长度待 FEED 阶段与供应商确认",lyo3:"PG.12 拆除/气闸/分区约 20 周（有望缩至约 14 周）",
-s4t:"投资总览",s4s:"9802-RBP-ZZ-ZZ-CP-X-100001 · P01 · 2026-05-15",
+s3t:"范围与布置",s3s:"",
+hplcT:"HPLC",hplc1:"DAC300 色谱柱、浆料罐、CP300 泵撬（Asymchem 供货）",hplc2:"移动头罐 2×500 L（进料）+ 3×200 L（馏分）",hplc3:"2000 L 废液暂存罐",
+lyoT:"冻干机",lyo1:"冻干腔、冷凝器、制冷、隔离器、双 CIP 罐、除湿机、纯蒸汽发生器（Asymchem 供货）",lyo2:"需新增更衣室/气闸",lyo3:"拆除/气闸/分区约 20 周（有望缩至约 14 周）",
+s4t:"投资总览",s4s:"",
 s4acc:"可行性阶段估算精度 ±50%；非最终 Capex，FEED 后更新。",
 chartLeft:"项目总投资构成（£3.783M）",chartRight:"直接工程费 £2.329M 分项",
 s5t:"主要设备采购价（费用计划）",s5s:"不含安装、土建、设计费 — 见 A 类合计 £1.575M",
@@ -132,10 +132,10 @@ s7k1:"冻干机制造",s7k1d:"8–10 个月",
 s7k2:"HPLC 供货",s7k2d:"约 18 周（DQ+商务后）",
 s7k3:"FEED",s7k3d:"12–14 周",
 s7k4:"详细设计",s7k4d:"18–20 周",
-ganttSub:"进度示意（2026-05 — 2027-12；除 8 月/11 月节点外，部分条块为逻辑示意，以 FS 批准及下单为准）",
-gFs:"FS 完成",gFeed:"FEED",gDd:"详细设计",gLyOrder:"冻干下单窗口",gLyLead:"冻干制造周期",gHplcLead:"HPLC 周期",gPg12:"PG.12 土建改造",gHplc:"HPLC 可用",gLy:"冻干投运",
+ganttSub:"",
+gFs:"FS 完成",gFeed:"FEED",gDd:"详细设计",gLyOrder:"冻干下单窗口",gLyLead:"冻干制造周期",gHplcLead:"HPLC 周期",gPg12:"土建改造",gHplc:"HPLC 可用",gLy:"冻干投运",
 legDone:"已完成",legPlan:"设计",legBuild:"施工/到货",legMile:"关键路径",today:"约今",
-s7note:"报告明确日历节点：HPLC 2027 年 8 月；冻干机 2027 年 11 月。FEED/下单起点取决于 FS 批准与资金到位。",
+s7note:"",
 s8t:"主要风险（节选）",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 2026-05-05",
 s8h:"缓解后仍须关注",
 s8r1:"进度：未在 2027 Q3 前投入效益使用（缓解后评级 10）— 尽早下单长周期设备。",
@@ -143,7 +143,7 @@ s8r2:"进度：长周期设备拖期（缓解后 10）— 与供应商排产对�
 s8r3:"合规：新废液罐排放点需环境许可变更（缓解后 5）— 提前与 EA 沟通申报。",
 s8r4:"费用：资金策略不明确（评级 12，§4.5）— 集团/现场明确 CapEx 批复路径。",
 s8r5:"运营：PG.12 拆除期 filter dryer 运行与 HPLC 区域 spray dryer 调度（评级 20→需 FEED 细化）。",
-s9t:"建议决策事项",s9s:"提请管理层审议",
+s9t:"建议决策事项",s9s:"",
 s9d1:"是否批准由可行性阶段进入 FEED，并确认 2027 Q3/Q4 效益目标仍为基准？",
 s9d2:"是否批准长周期设备（冻干机包 £967k + HPLC £358k）的早期采购资金与采购分工（总包 vs 业主自购）？",
 s9d3:"是否同意按 FS 建议优先冻干机、次 HPLC 的采购排序，并接受 PG.10–12 气闸/改造方案？",
@@ -153,25 +153,25 @@ axis:["2026 H1","2026 H2","2027 H1","2027 H2"],
 costRows:{
 direct:"直接工程 (A–E)",feed:"FEED (F, ±30%)",detail:"详细设计 (G, ±10%)",cdm:"CDM (H)",comm:"调试 (I)",cont:"Contingency (J, 20%)",tot:"可行性阶段合计"
 },
-eqH:"HPLC 主机（Hanbon）",eqL:"冻干机+隔离器+除湿+PSG",eqT:"储罐/泵组等",eqTot:"A 类设备合计"
+eqH:"HPLC 主机（Hanbon）",eqL:"冻干机+隔离器+除湿+纯蒸汽发生器",eqT:"储罐/泵组等",eqTot:"A 类设备合计"
 },
 en:{
-footer:"Asymchem UK · PDF Prep & Lyophilizer · Project 9802",
+footer:"Asymchem UK · PDF Prep & Lyophilizer",
 nav:"← → to navigate",
 tag:"Internal briefing",
 s1t:"PDF HPLC & Lyophilizer Scheme",s1s:"Progress · Investment · Programme",s1m:"RBPC Feasibility Study (P01) · Discovery Park Sandwich · May 2026",
-s2t:"Executive Summary",s2s:"9802-RBP-ZZ-ZZ-RP-X-100000 · 19 May 2026",
-k1:"Technically feasible",k1d:"HPLC (PG.05) and lyophilizer (PG.10–12) can be delivered",
+s2t:"Executive Summary",s2s:"",
+k1:"Technically feasible",k1d:"HPLC and lyophilizer can be delivered",
 k2:"£3.78M",k2d:"Feasibility-stage Capex (±50%)",
 k3:"Q3 2027",k3d:"HPLC target (August 2027)",
 k4:"Q4 2027",k4d:"Lyophilizer target (November 2027)",
-s2b1:"Scope: in-situ PDF footprint — prep HPLC (DAC300/CP300) and lyophilizer (isolator, dehumidifier, PSG, etc.) with disinvestment, MEP, EIC and HVAC.",
-s2b2:"Investment: direct works £2.33M + design/FEED/CDM/commissioning £0.82M + 20% contingency £0.63M = £3.783M (cost plan 9802-RBP-ZZ-ZZ-CP-X-100001, ±50%).",
+s2b1:"Scope: in-situ PDF footprint — prep HPLC (DAC300/CP300) and lyophilizer (isolator, dehumidifier, pure steam generator, etc.) with disinvestment, MEP, EIC and HVAC.",
+s2b2:"Investment: direct works £2.33M + design/FEED/CDM/commissioning £0.82M + 20% contingency £0.63M = £3.783M (±50%).",
 s2b3:"Programme: lyophilizer 8–10 month lead is critical; current sequence prioritises lyophilizer procurement then HPLC; August 2027 HPLC use remains achievable.",
-s3t:"Scope & Layout",s3s:"Existing footprint modification (not east extension)",
-hplcT:"HPLC (PG.05)",hplc1:"DAC300 column, slurry tank, CP300 pump skid (Asymchem supply)",hplc2:"Mobile head tanks 2×500 L feed + 3×200 L fractions",hplc3:"2,000 L waste hold tank; reduced skid size improves access",
-lyoT:"Lyophilizer (PG.10–12)",lyo1:"Dryer, condenser, refrigeration, isolator, twin CIP tanks, dehumidifier, PSG (Asymchem supply)",lyo2:"New changing/airlock required; dehumidifier length TBC at FEED",lyo3:"PG.12 enabling / airlock ~20 weeks (may reduce to ~14 weeks)",
-s4t:"Investment Overview",s4s:"9802-RBP-ZZ-ZZ-CP-X-100001 · P01 · 15 May 2026",
+s3t:"Scope & Layout",s3s:"",
+hplcT:"HPLC",hplc1:"DAC300 column, slurry tank, CP300 pump skid (Asymchem supply)",hplc2:"Mobile head tanks 2×500 L feed + 3×200 L fractions",hplc3:"2,000 L waste hold tank",
+lyoT:"Lyophilizer",lyo1:"Dryer, condenser, refrigeration, isolator, twin CIP tanks, dehumidifier, pure steam generator (Asymchem supply)",lyo2:"New changing/airlock required",lyo3:"Enabling / airlock ~20 weeks (may reduce to ~14 weeks)",
+s4t:"Investment Overview",s4s:"",
 s4acc:"Feasibility accuracy ±50%; not final Capex — update at FEED.",
 chartLeft:"Total project composition (£3.783M)",chartRight:"Direct works £2.329M breakdown",
 s5t:"Major equipment (cost plan)",s5s:"Supply only — class A total £1.575M",
@@ -183,10 +183,10 @@ s7k1:"Lyophilizer mfg",s7k1d:"8–10 months",
 s7k2:"HPLC supply",s7k2d:"~18 weeks (post DQ)",
 s7k3:"FEED",s7k3d:"12–14 weeks",
 s7k4:"Detailed design",s7k4d:"18–20 weeks",
-ganttSub:"Indicative timeline (May 2026 – Dec 2027); Aug/Nov 2027 are FS dates — other bars logical pending approval/orders",
-gFs:"FS complete",gFeed:"FEED",gDd:"Detailed design",gLyOrder:"Lyoph order window",gLyLead:"Lyoph lead time",gHplcLead:"HPLC lead",gPg12:"PG.12 civils",gHplc:"HPLC available",gLy:"Lyoph operational",
+ganttSub:"",
+gFs:"FS complete",gFeed:"FEED",gDd:"Detailed design",gLyOrder:"Lyoph order window",gLyLead:"Lyoph lead time",gHplcLead:"HPLC lead",gPg12:"Civils / enabling",gHplc:"HPLC available",gLy:"Lyoph operational",
 legDone:"Complete",legPlan:"Design",legBuild:"Build/delivery",legMile:"Critical path",today:"~Today",
-s7note:"FS calendar milestones: HPLC August 2027; lyophilizer November 2027. FEED/order start depends on FS approval and funding.",
+s7note:"",
 s8t:"Key Risks (extract)",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 05 May 2026",
 s8h:"Post-mitigation focus",
 s8r1:"Schedule: not in beneficial use by Q3 2027 (mitigated rating 10) — order long-lead items early.",
@@ -194,7 +194,7 @@ s8r2:"Schedule: long-lead slippage (mitigated 10) — supplier engagement and de
 s8r3:"Compliance: environmental permit for new waste tank vent (mitigated 5) — early EA engagement.",
 s8r4:"Cost: funding strategy unclear (rating 12, §4.5) — confirm CapEx approval path.",
 s8r5:"Operations: filter dryer during PG.12 works & spray dryer vs HPLC in PG.05 (20 mitigated — refine at FEED).",
-s9t:"Decisions for Review",s9s:"Management approval requested",
+s9t:"Decisions for Review",s9s:"",
 s9d1:"Approve progression from feasibility to FEED with Q3/Q4 2027 targets as baseline?",
 s9d2:"Approve early funding and procurement split for long-lead packages (lyoph £967k + HPLC £358k)?",
 s9d3:"Confirm procurement sequence (lyophilizer first, then HPLC) and PG.10–12 airlock/works strategy?",
@@ -204,7 +204,7 @@ axis:["2026 H1","2026 H2","2027 H1","2027 H2"],
 costRows:{
 direct:"Direct works (A–E)",feed:"FEED (F, ±30%)",detail:"Detailed design (G, ±10%)",cdm:"CDM (H)",comm:"Commissioning (I)",cont:"Contingency (J, 20%)",tot:"Feasibility-stage total"
 },
-eqH:"HPLC package (Hanbon)",eqL:"Lyoph + isolator + dehum + PSG",eqT:"Tanks & pumps",eqTot:"Class A equipment total"
+eqH:"HPLC package (Hanbon)",eqL:"Lyoph + isolator + dehum + pure steam gen.",eqT:"Tanks & pumps",eqTot:"Class A equipment total"
 }
 };
 let lang="zh",idx=0,chartsBuilt=false;
@@ -223,7 +223,7 @@ rows+=`<div class="gantt-row"><div class="gantt-label">${t(key)}</div><div class
 <div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${d0} – ${d1}"></div>
 </div><div class="gantt-dates">${d0}–${d1}</div></div>`;
 });
-return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
+return `<div class="gantt-wrap">${t("ganttSub")?`<div class="chart-title">${t("ganttSub")}</div>`:""}
 <div class="gantt-axis">${t("axis").map(y=>`<span>${y}</span>`).join("")}</div>
 <div class="gantt-body">${rows}</div>
 <div class="gantt-legend"><span><i style="background:var(--teal)"></i>${t("legDone")}</span>
@@ -237,7 +237,7 @@ return `
 <section class="slide active title-slide"><p><span class="tag">${t("tag")}</span></p>
 <h1>${t("s1t")}</h1><h2>${t("s1s")}</h2><p style="color:var(--muted);margin-top:1rem;font-size:.9rem">${t("s1m")}</p></section>
 
-<section class="slide"><h1>${t("s2t")}</h1><h2>${t("s2s")}</h2>
+<section class="slide"><h1>${t("s2t")}</h1>${t("s2s")?`<h2>${t("s2s")}</h2>`:""}
 <div class="kpi-row">
 <div class="kpi"><div class="val">${t("k1")}</div><div class="lbl">${t("k1d")}</div></div>
 <div class="kpi"><div class="val">${t("k2")}</div><div class="lbl">${t("k2d")}</div></div>
@@ -245,12 +245,12 @@ return `
 <div class="kpi"><div class="val">${t("k4")}</div><div class="lbl">${t("k4d")}</div></div></div>
 <ul><li>${t("s2b1")}</li><li>${t("s2b2")}</li><li>${t("s2b3")}</li></ul></section>
 
-<section class="slide"><h1>${t("s3t")}</h1><h2>${t("s3s")}</h2>
+<section class="slide"><h1>${t("s3t")}</h1>${t("s3s")?`<h2>${t("s3s")}</h2>`:""}
 <div class="scope-grid">
 <div class="card"><h3>${t("hplcT")}</h3><ul style="margin-top:.4rem;font-size:.82rem"><li>${t("hplc1")}</li><li>${t("hplc2")}</li><li>${t("hplc3")}</li></ul></div>
 <div class="card"><h3>${t("lyoT")}</h3><ul style="margin-top:.4rem;font-size:.82rem"><li>${t("lyo1")}</li><li>${t("lyo2")}</li><li>${t("lyo3")}</li></ul></div></div></section>
 
-<section class="slide"><h1>${t("s4t")}</h1><h2>${t("s4s")}</h2>
+<section class="slide"><h1>${t("s4t")}</h1>${t("s4s")?`<h2>${t("s4s")}</h2>`:""}
 <div class="grid-2"><div class="card"><div class="chart-title">${t("chartLeft")}</div><div class="chart-wrap"><canvas id="c1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("chartRight")}</div><div class="chart-wrap"><canvas id="c2"></canvas></div></div></div>
 <p class="note">${t("s4acc")}</p>
@@ -279,7 +279,7 @@ return `
 <tr><td>${R.cdm}</td><td>${fm(235000)}</td></tr>
 <tr><td>${R.comm}</td><td>${fm(76000)}</td></tr></tbody></table>
 <p class="note" style="margin-top:.6rem">${t("s6n1")}</p>
-<p class="note">${t("s6n2")}</p></section>
+</section>
 
 <section class="slide"><h1>${t("s7t")}</h1><h2>${t("s7s")}</h2>
 <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:.5rem">
@@ -288,14 +288,11 @@ return `
 <div class="kpi"><div class="val">${t("s7k3")}</div><div class="lbl">${t("s7k3d")}</div></div>
 <div class="kpi"><div class="val">${t("s7k4")}</div><div class="lbl">${t("s7k4d")}</div></div></div>
 ${ganttHTML()}
-<p class="note">${t("s7note")}</p></section>
+</section>
 
-<section class="slide"><h1>${t("s8t")}</h1><h2>${t("s8s")}</h2>
-<h3 style="font-size:.88rem;color:var(--navy);margin-bottom:.4rem">${t("s8h")}</h3>
-<ul style="font-size:.84rem"><li>${t("s8r1")}</li><li>${t("s8r2")}</li><li>${t("s8r3")}</li><li class="risk-high">${t("s8r4")}</li><li>${t("s8r5")}</li></ul></section>
 
-<section class="slide"><h1>${t("s9t")}</h1><h2>${t("s9s")}</h2>
-<ul class="decision-list"><li>${t("s9d1")}</li><li>${t("s9d2")}</li><li>${t("s9d3")}</li><li>${t("s9d4")}</li></ul></section>
+<section class="slide"><h1>${t("s9t")}</h1>${t("s9s")?`<h2>${t("s9s")}</h2>`:""}
+<ul class="decision-list"><li>${t("s9d1")}</li><li>${t("s9d2")}</li></ul></section>
 
 <section class="slide title-slide"><h1>${t("s10t")}</h1></section>`;
 }
