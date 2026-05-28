@@ -28,7 +28,8 @@ ul{margin-left:1.1rem;line-height:1.55;font-size:.9rem} li{margin-bottom:.36rem}
 table{width:100%;border-collapse:collapse;font-size:.8rem} th,td{padding:.36rem .5rem;border-bottom:1px solid #eef1f4;text-align:left} th{color:var(--navy)}
 .footer{position:fixed;bottom:0;left:0;right:0;padding:.4rem 2.8rem;font-size:.68rem;color:var(--muted);background:rgba(255,255,255,.96);border-top:1px solid #e8ecf0;display:flex;justify-content:space-between}
 .title-slide{justify-content:center;text-align:center;padding-top:2.5rem} .title-slide h1{font-size:1.9rem}
-.chart-wrap{height:248px;position:relative}
+.chart-title{font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:.35rem;text-align:center;line-height:1.3}
+.chart-wrap{height:220px;position:relative}
 .cost-scroll{flex:1;overflow-y:auto;min-height:0}
 .cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.5rem .7rem;display:flex;justify-content:space-between;font-weight:700;margin-bottom:.45rem;font-size:.88rem}
 .cost-item{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:.3rem;background:#fff}
@@ -68,7 +69,7 @@ table{width:100%;border-collapse:collapse;font-size:.8rem} th,td{padding:.36rem 
 <div id="deck"></div>
 <div class="footer"><span id="footerText"></span><span id="navHint"></span><span id="counter"></span></div>
 <script>
-const GANTT_DATA = [["gFs", "2026-05-01", "2026-05-31", "done", "RIBA 1 Feasibility complete. Report A1: 22 May 2026.", "RIBA 1 \u53ef\u884c\u6027\u7814\u7a76\u5b8c\u6210\uff1b\u62a5\u544a A1\uff1a2026-05-22\u3002"], ["gR2", "2026-07-15", "2027-02-23", "plan", "RIBA 2 Concept Design (160 days). Concept report & stage gate Feb 2027.", "RIBA 2 \u6982\u5ff5\u8bbe\u8ba1\uff08160 \u5929\uff09\uff1b2027-02 \u6982\u5ff5\u62a5\u544a\u4e0e\u9636\u6bb5\u8bc4\u5ba1\u3002"], ["gR3", "2027-02-17", "2027-09-28", "plan", "RIBA 3 Scheme Design (8 months).", "RIBA 3 \u65b9\u6848\u8bbe\u8ba1\uff088 \u4e2a\u6708\uff09\u3002"], ["gPlan", "2027-10-26", "2028-03-21", "warn", "Planning: submission Dec 2027, statutory period, consent target 21 Mar 2028.", "\u89c4\u5212\uff1a2027-12 \u63d0\u4ea4\uff0c\u6cd5\u5b9a\u5ba1\u6279\u671f\uff0c\u76ee\u6807\u8bb8\u53ef 2028-03-21\u3002"], ["gR4", "2027-10-27", "2028-06-06", "plan", "RIBA 4 Detailed Design. Long-lead procurement from Mar 2028 (18 mo).", "RIBA 4 \u8be6\u7ec6\u8bbe\u8ba1\uff1b\u957f\u5468\u671f\u8bbe\u5907 2028-03 \u8d77\uff0818 \u4e2a\u6708\uff09\u3002"], ["gPre", "2028-07-05", "2028-08-01", "plan", "Pre-construction mobilisation & site set-up.", "\u65bd\u5de5\u524d\u52a8\u5458\u4e0e\u73b0\u573a\u4e34\u5efa\u3002"], ["gR5", "2028-08-02", "2029-11-13", "build", "RIBA 5 Construction (335 days): enabling, piling, structure, fit-out.", "RIBA 5 \u65bd\u5de5\uff08335 \u5929\uff09\uff1a\u62c6\u9664\u4e34\u5efa\u3001\u6869\u57fa\u3001\u7ed3\u6784\u3001\u88c5\u4fee\u673a\u7535\u3002"], ["gComm", "2029-11-14", "2029-12-18", "build", "Commissioning & setting to work (programme \u00a71.13).", "\u8c03\u8bd5\u4e0e\u6295\u8fd0\u51c6\u5907\uff08\u8fdb\u5ea6\u8ba1\u5212 \u00a71.13\uff09\u3002"], ["gEnd", "2029-12-19", "2030-05-07", "warn", "Validation, handover, project complete (07 May 2030).", "\u786e\u8ba4\u9a8c\u8bc1\u3001\u79fb\u4ea4\uff1b\u9879\u76ee\u5b8c\u6210 2030-05-07\u3002"]];
+const GANTT_DATA = [["gFs", "2026-05-01", "2026-05-31", "done", "RIBA 1 Feasibility complete. Report A1: 22 May 2026.", "RIBA 1 \u53ef\u884c\u6027\u7814\u7a76\u5b8c\u6210\uff1b\u62a5\u544a A1\uff1a2026-05-22\u3002"], ["gR2", "2026-07-15", "2027-02-23", "plan", "RIBA 2 Concept Design (160 days). Concept report & stage gate Feb 2027.", "RIBA 2 \u6982\u5ff5\u8bbe\u8ba1\uff08160 \u5929\uff09\uff1b2027-02 \u6982\u5ff5\u62a5\u544a\u4e0e\u9636\u6bb5\u8bc4\u5ba1\u3002"], ["gR3", "2027-02-17", "2027-09-28", "plan", "RIBA 3 Scheme Design (8 months).", "RIBA 3 \u65b9\u6848\u8bbe\u8ba1\uff088 \u4e2a\u6708\uff09\u3002"], ["gPlan", "2027-10-26", "2028-03-21", "warn", "Planning: submission Dec 2027, statutory period, consent target 21 Mar 2028.", "\u89c4\u5212\uff1a2027-12 \u63d0\u4ea4\uff0c\u6cd5\u5b9a\u5ba1\u6279\u671f\uff0c\u76ee\u6807\u8bb8\u53ef 2028-03-21\u3002"], ["gR4", "2027-10-27", "2028-06-06", "plan", "RIBA 4 Detailed Design.", "RIBA 4 \u8be6\u7ec6\u8bbe\u8ba1\u3002"], ["gEquip", "2028-03-08", "2029-07-24", "warn", "Long-lead procurement (18 mo): Hastelloy vessels, overheads, filter dryers, etc.", "\u957f\u5468\u671f\u8bbe\u5907\u91c7\u8d2d\uff0818 \u4e2a\u6708\uff09\uff1aHastelloy \u91dc\u3001\u6865\u67b6\u3001\u8fc7\u6ee4\u5e72\u71e5\u673a\u7b49\u3002"], ["gMed", "2028-04-12", "2028-08-02", "plan", "Medium-lead procurement (4 mo): AHUs, valves, etc.", "\u4e2d\u7b49\u5468\u671f\u8bbe\u5907\u91c7\u8d2d\uff084 \u4e2a\u6708\uff09\uff1aAHU\u3001\u9600\u95e8\u7b49\u3002"], ["gPre", "2028-07-05", "2028-08-01", "plan", "Pre-construction mobilisation & site set-up.", "\u65bd\u5de5\u524d\u52a8\u5458\u4e0e\u73b0\u573a\u4e34\u5efa\u3002"], ["gR5", "2028-08-02", "2029-11-13", "build", "RIBA 5 Construction (335 days): enabling, piling, structure, fit-out.", "RIBA 5 \u65bd\u5de5\uff08335 \u5929\uff09\uff1a\u62c6\u9664\u4e34\u5efa\u3001\u6869\u57fa\u3001\u7ed3\u6784\u3001\u88c5\u4fee\u673a\u7535\u3002"], ["gComm", "2029-11-14", "2029-12-18", "build", "Commissioning & setting to work (programme \u00a71.13).", "\u8c03\u8bd5\u4e0e\u6295\u8fd0\u51c6\u5907\uff08\u8fdb\u5ea6\u8ba1\u5212 \u00a71.13\uff09\u3002"], ["gEnd", "2029-12-19", "2030-05-07", "warn", "Validation, handover, project complete (07 May 2030).", "\u786e\u8ba4\u9a8c\u8bc1\u3001\u79fb\u4ea4\uff1b\u9879\u76ee\u5b8c\u6210 2030-05-07\u3002"]];
 const T0=new Date("2026-07-01"),T1=new Date("2030-05-07"),RANGE=T1-T0;
 function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
 const I18N={
@@ -86,7 +87,7 @@ s2b2:"投资：OOM £78,108,089 — 非最终 Capex；不含通胀、税、汇�
 s2b3:"进展：FS 已完成；RIBA 2 概念设计计划 2026-07-01 启动。",
 s3t:"项目进展与阶段",s3s:"资本项目当前阶段",
 s3done:"已完成",s3next:"进行中 / 下一步",
-s3d1:"可行性报告及附录（费用、风险、进度、设备清单）",s3d2:"BREEAM 预评估约 62.93%",
+s3d1:"可行性报告及附录（费用、风险、进度、设备清单）",s3d2:"BREEAM 预评估",
 s3n1:"RIBA 2 概念设计 2026-07-01",s3n2:"概念设计完成 2027-02-16（计划）",
 s3n3:"待明确：采购分工、Stage 2 报价",
 s3warn:"Stage 2/3 设计费未在 FS 中单列，需向 Scitech 索取阶段报价。",
@@ -95,7 +96,7 @@ s4b1:"占地约 600 m²；4 层 + 设备夹层",s4b2:"前提：拆除/迁址原�
 s4th1:"楼层",s4th2:"面积 m²",s4gf:"首层",s41f:"一层",s42f:"二层",s43f:"三层+夹层",s4tot:"合计 GIFA",
 s5t:"投资总览（OOM）",s5s:"300291-CM-0001 · 基准日 2026-05-22",
 s5oom:"OOM 总价（可行性量级）",
-s6t:"投资结构",s6s:"总包构成与直接工程费",
+s6t:"投资结构",s6s:"总包构成与直接工程费",chartLeft:"项目总投资 OOM 构成",chartRight:"基础建造费构成（工程直接费 + 临时设施与员工设施 + 承包商管理费与利润）",
 s7t:"预备费与风险",s7s:"可行性阶段（报告 §14）",
 s7h:"缓解措施",
 s7m1:"风险登记册对每项风险列出建议措施（如：勘查、设计阶段确认、纳入 OOM 估算、阶段评审等），并区分 Mitigate / Accept / Avoid 等响应方式。",
@@ -107,20 +108,22 @@ s8t:"Capex 口径",s8s:"费用计划假设要点",
 s8in:"已纳入 OOM",s8out:"未纳入 / 基准不含",
 s8in1:"扩建及既有厂改造范围内的工程内容",s8in2:"预备费、承包商管理费与利润、设计费",
 s8in3:"可行性阶段风险与预备费块",s8in4:"工艺设备费用计划分项（£23.25M）",
-s8out1:"业主自购工艺设备（费用计划 excluded）",s8out2:"通胀、汇率、税费",
+s8out2:"通胀、汇率、税费",
 s8out3:"业主项目管理、运营、耗材",s8out4:"超出勘测 allowances 的治理费用",
 s8disc:"OOM 仅供指引，不得直接用于最终 Capex；Concept 阶段更新估算。",
 s9t:"整体周期与进度",s9s:"300291-PM-PR-0002 · 1,005 天（2026-07-01 — 2030-05-07）",
-ganttSub:"时间轴（条块长度按日历比例；悬停查看说明）",
+ganttSub:"时间轴（条块长度按日历比例；悬停查看说明）",s9eqNote:"设备采购：长周期 2028-03 — 2029-07（18 个月）；中等周期（AHU 等）2028-04 — 2028-08（4 个月）。",
 gFs:"可行性 RIBA 1",gR2:"概念 RIBA 2",gR3:"方案 RIBA 3",gPlan:"规划审批",
-gR4:"详细 RIBA 4",gPre:"施工准备",gR5:"施工 RIBA 5",gComm:"调试",gEnd:"验证/竣工",
+gR4:"详细 RIBA 4",gEquip:"长周期设备采购",gMed:"中等周期设备采购",gPre:"施工准备",gR5:"施工 RIBA 5",gComm:"调试",gEnd:"验证/竣工",
 legDone:"已完成",legPlan:"设计",legBuild:"施工/调试",legMile:"节点",today:"约今",
 s10t:"设计—竣工阶段节奏",s10s:"2028 年 8 月开工前的关键阶段",
 s10th1:"阶段",s10th2:"时间",s10th3:"说明",
 s10r1p:"RIBA 2 概念",s10r1t:"2026-07 — 2027-02",s10r1n:"含勘测预算；设计费在 £3.81M 总包内",
 s10r2p:"RIBA 3 方案",s10r2t:"2027-02 — 2027-09",s10r2n:"阶段间约 1 个月业主评审",
 s10r3p:"规划",s10r3t:"2027-10 — 2028-03",s10r3n:"法定审批 65 天",
-s10r4p:"RIBA 4 详细",s10r4t:"2027-10 — 2028-06",s10r4n:"长周期采购 2028-03 起",
+s10r4p:"RIBA 4 详细",s10r4t:"2027-10 — 2028-06",s10r4n:"与规划、采购并行",
+s10eqL:"长周期设备采购",s10eqT:"2028-03 — 2029-07",s10eqN:"Hastelloy 釜、桥架、过滤干燥机等（进度计划 18 个月）",
+s10eqM:"中等周期设备采购",s10eqMT:"2028-04 — 2028-08",s10eqMN:"AHU、阀门等（进度计划 4 个月）",
 s10r5p:"施工准备",s10r5t:"2028-07",s10r5n:"动员/临建",
 s10r6p:"施工 RIBA 5",s10r6t:"2028-08 — 2029-11",s10r6n:"土建、结构、装修机电（335 天）",
 s10r7p:"调试",s10r7t:"2029-11 — 2029-12",s10r7n:"调试与投运准备",
@@ -134,7 +137,7 @@ costLabels:{
 w0:"0 促动/拆除",w1:"1 下部结构",w2:"2 上部结构",w3:"3 内装",w4:"4 装置器具",
 w5:"5 建筑机电",w51:"5.1 预留洞/BWIC",w52:"5.2 暖通",w53:"5.3 电气",w54:"5.4 EMS",w55:"5.5 过程控制",w56:"5.6 工艺设备",
 w7:"7 既有厂改造",w8:"8 外部工程",wsum:"工程费小计",
-pre:"预备费 (8%)",ohp:"承包商管理费与利润 (5%)",base:"基础建造成本",
+pre:"临时设施+员工设施 (8%)",ohp:"承包商管理费与利润 (5%)",base:"基础建造成本",
 oth:"其他项目费",od:"设计费 (8%)",ob:"BREEAM",os:"勘测",op:"规划规费",
 rr:"风险登记册",cont:"风险与预备费合计",c15:"设计发展 (15%)",c25:"施工设备 (25%)",c10:"业主 (10%)",tot:"OOM 总价"
 }
@@ -153,7 +156,7 @@ s2b2:"Investment: OOM £78,108,089 — not final Capex; excl. inflation, tax, FX
 s2b3:"Progress: FS complete; RIBA 2 Concept from 1 Jul 2026.",
 s3t:"Progress & Stages",s3s:"Current capital project position",
 s3done:"Completed",s3next:"In progress / Next",
-s3d1:"Feasibility report & appendices (cost, risk, programme, equipment)",s3d2:"BREEAM pre-assessment ~62.93%",
+s3d1:"Feasibility report & appendices (cost, risk, programme, equipment)",s3d2:"BREEAM pre-assessment",
 s3n1:"RIBA 2 Concept Design 1 Jul 2026",s3n2:"Concept design complete 16 Feb 2027 (planned)",
 s3n3:"To confirm: procurement split, Stage 2 quotation",
 s3warn:"RIBA 2/3 design fees not split in FS — request staged quote from Scitech.",
@@ -163,7 +166,7 @@ s4b3:"Fire: second escape stair; blast panels at H₂ suite",
 s4th1:"Floor",s4th2:"Area m²",s4gf:"Ground",s41f:"First",s42f:"Second",s43f:"Third + mezz",s4tot:"Total GIFA",
 s5t:"Investment (OOM)",s5s:"300291-CM-0001 · Base 22 May 2026",
 s5oom:"Total OOM (feasibility magnitude)",
-s6t:"Investment Structure",s6s:"OOM build-up & direct works",
+s6t:"Investment Structure",s6s:"OOM build-up & direct works",chartLeft:"Total OOM composition",chartRight:"Base construction breakdown (direct works + site/staff prelims + contractor OH&P)",
 s7t:"Contingency & Risk",s7s:"Feasibility stage (report §14)",
 s7h:"Mitigation measures",
 s7m1:"The risk register lists proposed actions per risk (surveys, early confirmation, OOM allowances, stage reviews) with Mitigate / Accept / Avoid responses.",
@@ -175,20 +178,22 @@ s8t:"Capex Scope",s8s:"Cost plan assumptions",
 s8in:"In OOM",s8out:"Out of base",
 s8in1:"Extension & existing-building works in scope",s8in2:"Prelims, contractor OH&P, design fees",
 s8in3:"Feasibility risk & contingency blocks",s8in4:"Process equipment line in cost plan (£23.25M)",
-s8out1:"Client-purchased process equipment (excluded per cost plan)",s8out2:"Inflation, FX, tax",
+s8out2:"Inflation, FX, tax",
 s8out3:"Client project management, operations, consumables",s8out4:"Survey remediation beyond allowances",
 s8disc:"OOM for guidance only — not final Capex; updated at Concept.",
 s9t:"Overall Cycle & Programme",s9s:"300291-PM-PR-0002 · 1,005 days (01 Jul 2026 – 07 May 2030)",
-ganttSub:"Timeline (bar length ∝ calendar duration; hover for detail)",
+ganttSub:"Timeline (bar length ∝ calendar duration; hover for detail)",s9eqNote:"Procurement: long-lead Mar 2028 – Jul 2029 (18 mo); medium-lead (AHUs, etc.) Apr – Aug 2028 (4 mo).",
 gFs:"Feasibility RIBA 1",gR2:"Concept RIBA 2",gR3:"Scheme RIBA 3",gPlan:"Planning",
-gR4:"Detailed RIBA 4",gPre:"Pre-construction",gR5:"Construction RIBA 5",gComm:"Commissioning",gEnd:"Validation / complete",
+gR4:"Detailed RIBA 4",gEquip:"Long-lead equipment procurement",gMed:"Medium-lead equipment procurement",gPre:"Pre-construction",gR5:"Construction RIBA 5",gComm:"Commissioning",gEnd:"Validation / complete",
 legDone:"Complete",legPlan:"Design",legBuild:"Construction",legMile:"Milestone",today:"~Today",
 s10t:"Stage Rhythm to Completion",s10s:"Key phases through handover",
 s10th1:"Phase",s10th2:"Period",s10th3:"Notes",
 s10r1p:"RIBA 2 Concept",s10r1t:"Jul 2026 – Feb 2027",s10r1n:"Surveys allowance; design fee in £3.81M pot",
 s10r2p:"RIBA 3 Scheme",s10r2t:"Feb 2027 – Sep 2027",s10r2n:"~1 month client review between stages",
 s10r3p:"Planning",s10r3t:"Oct 2027 – Mar 2028",s10r3n:"65-day statutory period",
-s10r4p:"RIBA 4 Detailed",s10r4t:"Oct 2027 – Jun 2028",s10r4n:"Long-lead from Mar 2028",
+s10r4p:"RIBA 4 Detailed",s10r4t:"Oct 2027 – Jun 2028",s10r4n:"Parallel with planning & procurement",
+s10eqL:"Long-lead equipment procurement",s10eqT:"Mar 2028 – Jul 2029",s10eqN:"Hastelloy vessels, overheads, filter dryers, etc. (18 months per programme)",
+s10eqM:"Medium-lead equipment procurement",s10eqMT:"Apr 2028 – Aug 2028",s10eqMN:"AHUs, valves, etc. (4 months per programme)",
 s10r5p:"Pre-construction",s10r5t:"Jul 2028",s10r5n:"Mobilisation",
 s10r6p:"RIBA 5 Construction",s10r6t:"Aug 2028 – Nov 2029",s10r6n:"335 days — civils, structure, fit-out",
 s10r7p:"Commissioning",s10r7t:"Nov – Dec 2029",s10r7n:"Testing & setting to work",
@@ -202,7 +207,7 @@ costLabels:{
 w0:"0 Facilitating",w1:"1 Substructure",w2:"2 Superstructure",w3:"3 Internal finishes",w4:"4 Fittings",
 w5:"5 Building services",w51:"5.1 BWIC",w52:"5.2 HVAC",w53:"5.3 Electrical",w54:"5.4 EMS",w55:"5.5 Controls",w56:"5.6 Process equipment",
 w7:"7 Existing bldg",w8:"8 External works",wsum:"Works subtotal",
-pre:"Preliminaries (8%)",ohp:"Contractor OH&P (5%)",base:"Base construction",
+pre:"Site temp. + staff welfare (8%)",ohp:"Contractor OH&P (5%)",base:"Base construction",
 oth:"Other project costs",od:"Design (8%)",ob:"BREEAM",os:"Surveys",op:"Planning",
 rr:"Risk register",cont:"Risk & contingency",c15:"Design dev. (15%)",c25:"Constr./equip. (25%)",c10:"Client (10%)",tot:"Total OOM"
 }
@@ -261,7 +266,7 @@ return `<div class="cost-total-bar"><span>${t("s5oom")}</span><span>${fm(7810808
 
 function ganttHTML(){
 const today=pct("2026-05-28");
-const keys=["gFs","gR2","gR3","gPlan","gR4","gPre","gR5","gComm","gEnd"];
+const keys=["gFs","gR2","gR3","gPlan","gR4","gEquip","gMed","gPre","gR5","gComm","gEnd"];
 let rows="";
 GANTT_DATA.forEach((g,i)=>{
 const key=keys[i]||g[0];
@@ -313,8 +318,8 @@ return `
 <div class="cost-scroll">${costHTML()}</div></section>
 
 <section class="slide"><h1>${t("s6t")}</h1><h2>${t("s6s")}</h2>
-<div class="grid-2"><div class="card"><div class="chart-wrap"><canvas id="c1"></canvas></div></div>
-<div class="card"><div class="chart-wrap"><canvas id="c2"></canvas></div></div></div></section>
+<div class="grid-2"><div class="card"><div class="chart-title">${t("chartLeft")}</div><div class="chart-wrap"><canvas id="c1"></canvas></div></div>
+<div class="card"><div class="chart-title">${t("chartRight")}</div><div class="chart-wrap"><canvas id="c2"></canvas></div></div></div></section>
 
 <section class="slide"><h1>${t("s7t")}</h1><h2>${t("s7s")}</h2>
 <div class="grid-2"><div class="card"><table><tbody>
@@ -330,10 +335,10 @@ return `
 <div class="grid-2"><div class="card"><h3 style="font-size:.88rem;color:var(--teal);margin-bottom:.35rem">${t("s8in")}</h3>
 <ul style="font-size:.82rem;margin-left:1rem"><li>${t("s8in1")}</li><li>${t("s8in2")}</li><li>${t("s8in3")}</li><li>${t("s8in4")}</li></ul></div>
 <div class="card"><h3 style="font-size:.88rem;color:var(--warn);margin-bottom:.35rem">${t("s8out")}</h3>
-<ul style="font-size:.82rem;margin-left:1rem"><li>${t("s8out1")}</li><li>${t("s8out2")}</li><li>${t("s8out3")}</li><li>${t("s8out4")}</li></ul></div></div>
+<ul style="font-size:.82rem;margin-left:1rem"><li>${t("s8out2")}</li><li>${t("s8out3")}</li><li>${t("s8out4")}</li></ul></div></div>
 <p style="font-size:.78rem;color:var(--muted);margin-top:.5rem">${t("s8disc")}</p></section>
 
-<section class="slide"><h1>${t("s9t")}</h1><h2>${t("s9s")}</h2>${ganttHTML()}</section>
+<section class="slide"><h1>${t("s9t")}</h1><h2>${t("s9s")}</h2>${ganttHTML()}<p style="font-size:.78rem;color:var(--muted);margin-top:.45rem">${t("s9eqNote")}</p></section>
 
 <section class="slide"><h1>${t("s10t")}</h1><h2>${t("s10s")}</h2>
 <table><thead><tr><th>${t("s10th1")}</th><th>${t("s10th2")}</th><th>${t("s10th3")}</th></tr></thead><tbody>
@@ -341,6 +346,8 @@ return `
 <tr><td>${t("s10r2p")}</td><td>${t("s10r2t")}</td><td>${t("s10r2n")}</td></tr>
 <tr><td>${t("s10r3p")}</td><td>${t("s10r3t")}</td><td>${t("s10r3n")}</td></tr>
 <tr><td>${t("s10r4p")}</td><td>${t("s10r4t")}</td><td>${t("s10r4n")}</td></tr>
+<tr><td>${t("s10eqL")}</td><td>${t("s10eqT")}</td><td>${t("s10eqN")}</td></tr>
+<tr><td>${t("s10eqM")}</td><td>${t("s10eqMT")}</td><td>${t("s10eqMN")}</td></tr>
 <tr><td>${t("s10r5p")}</td><td>${t("s10r5t")}</td><td>${t("s10r5n")}</td></tr>
 <tr><td>${t("s10r6p")}</td><td>${t("s10r6t")}</td><td>${t("s10r6n")}</td></tr>
 <tr><td>${t("s10r7p")}</td><td>${t("s10r7t")}</td><td>${t("s10r7n")}</td></tr>
@@ -348,7 +355,7 @@ return `
 </tbody></table></section>
 
 <section class="slide"><h1>${t("s11t")}</h1><h2>${t("s11s")}</h2>
-<ul class="decision-list"><li>${t("s11d1")}</li><li>${t("s11d2")}</li></ul></section>
+<ul class="decision-list"><li>${t("s11d2")}</li><li>${t("s11d1")}</li></ul></section>
 
 <section class="slide title-slide"><h1>${t("s12t")}</h1></section>`;
 }
@@ -393,16 +400,19 @@ if(idx===5&&!chartsBuilt){buildCharts();chartsBuilt=true;}
 }
 function buildCharts(){
 const zh=lang==="zh";
-new Chart(document.getElementById("c1"),{type:"bar",data:{labels:[zh?"OOM":"OOM"],datasets:[
-{label:zh?"直接工程费":"Works",data:[41968226],backgroundColor:"#0f2b46"},
-{label:zh?"预备费与OH&P":"Prelims/OH&P",data:[5623742],backgroundColor:"#1a4a6e"},
-{label:zh?"其他项目费":"Other",data:[4062357],backgroundColor:"#009688"},
-{label:zh?"风险与预备费":"Risk/cont.",data:[26453763],backgroundColor:"#c9a227"}]},
+const baseConstr=47591968;
+new Chart(document.getElementById("c1"),{type:"bar",data:{labels:[zh?"项目总投资":"Total project"],datasets:[
+{label:zh?"基础建造费":"Base construction",data:[baseConstr],backgroundColor:"#0f2b46"},
+{label:zh?"其他项目费":"Other project costs",data:[4062357],backgroundColor:"#009688"},
+{label:zh?"风险与预备费":"Risk & contingency",data:[26453763],backgroundColor:"#c9a227"}]},
 options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
 scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>"£"+(v/1e6).toFixed(1)+"M"}}}}});
-new Chart(document.getElementById("c2"),{type:"doughnut",data:{labels:[zh?"工艺设备":"Process",zh?"机电":"MEP",zh?"外场":"External",zh?"上部":"Super",zh?"基础":"Sub",zh?"其他":"Other"],
-datasets:[{data:[23249083,9532716,1859520,3942636,1499680,2720049],backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#009688","#4db6ac","#90a4ae"]}]},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right"}}}});
+new Chart(document.getElementById("c2"),{type:"doughnut",data:{labels:[
+zh?"工程直接费（含工艺设备等）":"Direct works (incl. process equipment)",
+zh?"临时设施+员工设施 (8%)":"Site temp. + staff welfare (8%)",
+zh?"承包商管理费与利润（OH&P，5%）":"Contractor margin & profit (OH&P, 5%)"
+],datasets:[{data:[41968226,3357458,2266284],backgroundColor:["#1a4a6e","#009688","#4db6ac"]}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:10}}}}}});
 }
 document.getElementById("btnZh").onclick=()=>{if(lang!=="zh"){lang="zh";applyLang();}};
 document.getElementById("btnEn").onclick=()=>{if(lang!=="en"){lang="en";applyLang();}};
