@@ -1,22 +1,21 @@
-# B902 PDF Extension — COO/CFO Briefing Materials
+# B902 PDF Extension — Management Briefing (HTML)
 
-Management briefing on **investment**, **programme**, and **progress** for the Sandwich 902 east-side extension (Scitech feasibility pack only — no fabricated figures).
+中英双语管理层汇报（投资、进展、周期），数据均来自 Scitech 可行性文件（2026-05，A1）。
 
-## Files
+## 使用
 
-| File | Format | Use |
-|------|--------|-----|
-| `PDF-Extension_COO-CFO_Briefing_2026-05-28.html` | HTML slides | Browser presentation (←/→). Charts use verified GBP values. |
-| `PDF-Extension_COO-CFO_Briefing_2026-05-28.pptx` | PowerPoint | Board / offline edit. Regenerate via `generate_coo_cfo_deck.py`. |
-| `generate_coo_cfo_deck.py` | Python | Requires `python-pptx`. |
+打开 **`PDF-Extension_Management_Briefing_2026-05-28.html`**
 
-## Data sources
+- 右上角 **中文 / EN** 切换，页码与内容一一对应
+- **← →** 或空格翻页
+- 第 9 页为 **横向甘特时间图**（按日历比例）
 
-- `300291-RE-0001` Feasibility Report (22-May-26)
-- `300291-CM-0001` Feasibility Cost Plan
-- `300291-PM-PR-0002` Next Stage Programme
-- `300291-PM-RA-0001` Risk Register
+## 说明
 
-## Not included (by design)
+- 不含 COO/CFO 字样；不含 Data Source 专页
+- 不提供 PPT（请以 HTML 为准）
+- 旧文件 `PDF-Extension_COO-CFO_Briefing_2026-05-28.html` 已停用，请使用新文件名
 
-RMB conversion, NPV/IRR, FEED-only fees, inflation uplift, or any numbers not in the above documents.
+## 主要数据出处
+
+300291-RE-0001 · 300291-CM-0001 · 300291-PM-PR-0002 · 300291-PM-RA-0001
