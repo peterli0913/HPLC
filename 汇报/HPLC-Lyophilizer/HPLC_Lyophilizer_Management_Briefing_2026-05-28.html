@@ -69,7 +69,7 @@ zh:{
 footer:"凯莱英 UK · PDF 制备与冻干改造",
 nav:"← → 翻页",
 tag:"内部汇报",
-s1t:"PDF 厂房 HPLC 与冻干机改造",s1s:"进展 · 投资 · 周期",s1m:"",
+s1t:"PDF 厂房 HPLC 与冻干机改造",s1s:"进展 · 投资 · 周期",
 s2t:"执行摘要",s2s:"",
 k1:"技术可行",k1d:"HPLC 与冻干机均可落地",
 k2:"£3.78M",k2d:"可行性阶段 Capex 估算（±50%）",
@@ -120,7 +120,7 @@ en:{
 footer:"Asymchem UK · PDF Prep & Lyophilizer",
 nav:"← → to navigate",
 tag:"Internal briefing",
-s1t:"PDF HPLC & Lyophilizer Scheme",s1s:"Progress · Investment · Programme",s1m:"",
+s1t:"PDF HPLC & Lyophilizer Scheme",s1s:"Progress · Investment · Programme",
 s2t:"Executive Summary",s2s:"",
 k1:"Technically feasible",k1d:"HPLC and lyophilizer can be delivered",
 k2:"£3.78M",k2d:"Feasibility-stage Capex (±50%)",
@@ -196,7 +196,7 @@ function deckHTML(){
 const R=I18N[lang].costRows;
 return `
 <section class="slide active title-slide"><p><span class="tag">${t("tag")}</span></p>
-<h1>${t("s1t")}</h1><h2>${t("s1s")}</h2>${t("s1m")?`<p style="color:var(--muted);margin-top:1rem;font-size:.9rem">${t("s1m")}</p>`:""}</section>
+<h1>${t("s1t")}</h1><h2>${t("s1s")}</h2></section>
 
 <section class="slide"><h1>${t("s2t")}</h1>
 <div class="kpi-row">
