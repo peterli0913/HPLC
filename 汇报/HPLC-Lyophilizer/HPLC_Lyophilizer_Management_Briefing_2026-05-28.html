@@ -206,14 +206,6 @@ return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
 <span><i style="background:#2e6da4"></i>${t("legBuild")}</span>
 <span><i style="background:#6d5b95"></i>${t("legDur")}</span></div>
 <p class="gantt-foot">${t("s7foot")}</p></div>`;
-});
-return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
-<div class="gantt-axis">${t("axis").map(y=>`<span>${y}</span>`).join("")}</div>
-<div class="gantt-body">${rows}</div>
-<div class="gantt-legend"><span><i style="background:var(--teal)"></i>${t("legDone")}</span>
-<span><i style="background:#1a4a6e"></i>${t("legPlan")}</span>
-<span><i style="background:#2e6da4"></i>${t("legBuild")}</span>
-<span><i style="background:var(--accent)"></i>${t("legMile")}</span></div></div>`;
 }
 function deckHTML(){
 const R=I18N[lang].costRows;
