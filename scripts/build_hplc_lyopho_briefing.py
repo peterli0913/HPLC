@@ -6,48 +6,55 @@ from pathlib import Path
 
 OUT = Path("/workspace/汇报/HPLC-Lyophilizer/HPLC_Lyophilizer_Management_Briefing_2026-05-28.html")
 
-# Calendar dates from FS §4.4 Figure 1 (High Level Project Programme); FEED/DD durations §4.3
+# Fig. 1 dates (§4.4); FEED/DD on calendar from 2026-06-15 per §4.3 durations (assumed — see s7foot)
 GANTT_CALENDAR = [
     ["gFs", "2026-05-19", "2026-05-26", "done",
      "FS report P01 (19 May 2026); programme baseline from 26 May 2026 (Fig. 1).",
      "可行性研究 P01（2026-05-19）；进度基准自 2026-05-26 起（图 1）。"],
-    ["gLyAll", "2026-05-26", "2027-11-08", "warn",
-     "Procure lyophiliser — Asymchem: 26/05/26–08/11/27, 380 days (Fig. 1, critical path).",
-     "冻干机采购（Asymchem）：26/05/26–08/11/27，380 天（图 1，关键路径）。"],
+    ["gFeed", "2026-06-15", "2026-09-20", "assume",
+     "FEED 12–14 weeks (§4.3): assumed start 15 Jun 2026, bar shows 14 weeks for illustration.",
+     "FEED 12–14 周（§4.3）：假设 2026-06-15 启动，条块按 14 周示意。"],
+    ["gDd", "2026-09-21", "2027-02-07", "assume",
+     "Detailed design 18–20 weeks (§4.3): assumed after FEED, bar shows 20 weeks.",
+     "详细设计 18–20 周（§4.3）：假设接 FEED 后启动，条块按 20 周示意。"],
+    ["gLySpec", "2026-05-26", "2026-07-20", "warn",
+     "Lyoph spec + funding/deposit: 26/05/26–20/07/26 (Fig. 1).",
+     "冻干机规格确定和资金审批：26/05/26–20/07/26（图 1）。"],
     ["gLyMfg", "2026-07-28", "2027-04-05", "warn",
      "Lyophiliser build: 28/07/26–05/04/27, 9 months (Fig. 1).",
      "冻干机制造：28/07/26–05/04/27，9 个月（图 1）。"],
+    ["gLyFat", "2027-04-06", "2027-05-10", "warn",
+     "Lyoph FAT + remediation: 06/04/27–10/05/27 (Fig. 1).",
+     "冻干机 FAT：06/04/27–10/05/27（图 1）。"],
+    ["gLyShip", "2027-05-11", "2027-08-30", "warn",
+     "Lyoph shipping + installation: 11/05/27–30/08/27 (Fig. 1).",
+     "冻干机运输安装：11/05/27–30/08/27（图 1）。"],
     ["gLyVal", "2027-08-31", "2027-11-08", "warn",
-     "Lyoph validation (commissioning, IQ/OQ, PQ) to PQ complete 08/11/27 (Fig. 1).",
-     "冻干验证（调试、IQ/OQ、PQ）至 PQ 完成 08/11/27（图 1）。"],
-    ["gHplcAll", "2026-08-18", "2027-08-09", "plan",
-     "Procure HPLC — Asymchem: 18/08/26–09/08/27, 255 days (Fig. 1).",
-     "HPLC 采购（Asymchem）：18/08/26–09/08/27，255 天（图 1）。"],
+     "Lyoph validation to PQ complete 08/11/27 (Fig. 1).",
+     "冻干验证至 PQ 完成 08/11/27（图 1）。"],
+    ["gHplcSpec", "2026-08-18", "2026-10-12", "plan",
+     "HPLC spec + funding/deposit: 18/08/26–12/10/26 (Fig. 1).",
+     "HPLC 规格确定和资金审批：18/08/26–12/10/26（图 1）。"],
     ["gHplcMfg", "2026-10-20", "2027-02-22", "plan",
      "HPLC manufacture: 20/10/26–22/02/27, 18 weeks (Fig. 1).",
      "HPLC 制造：20/10/26–22/02/27，18 周（图 1）。"],
+    ["gHplcFat", "2027-02-23", "2027-03-22", "plan",
+     "HPLC FAT + remediation: 23/02/27–22/03/27 (Fig. 1).",
+     "HPLC FAT：23/02/27–22/03/27（图 1）。"],
+    ["gHplcShip", "2027-03-30", "2027-05-31", "plan",
+     "HPLC shipping + installation in PG.05: 30/03/27–31/05/27 (Fig. 1).",
+     "HPLC 运输安装：30/03/27–31/05/27（图 1）。"],
     ["gTanks", "2026-07-21", "2027-05-03", "plan",
      "Procure mobile head tanks — RB Plant: 21/07/26–03/05/27 (Fig. 1).",
      "移动头罐采购（RB Plant）：21/07/26–03/05/27（图 1）。"],
     ["gWaste", "2026-07-21", "2027-04-19", "plan",
      "Procure waste tank — RB Plant: 21/07/26–19/04/27 (Fig. 1).",
      "废液罐采购（RB Plant）：21/07/26–19/04/27（图 1）。"],
-    ["gDemo", "2026-12-24", "2027-04-15", "build",
-     "Demolition: relocate filter dryer, airlock, PG.12 segregation — 24/12/26–15/04/27 (Fig. 1; §4.3 ~20 wk).",
-     "拆除：迁 filter dryer、气闸、PG.12 分区 — 24/12/26–15/04/27（图 1；§4.3 约 20 周）。"],
-    ["gDemoW", "2027-01-05", "2027-04-13", "build",
-     "Demolition / airlock / segregation: 05/01/27–13/04/27, 14 weeks (Fig. 1).",
-     "拆除/气闸/分区：05/01/27–13/04/27，14 周（图 1）。"],
-    ["gHplcReady", "2027-08-01", "2027-08-09", "build",
-     "HPLC PQ complete 09/08/27; §4.3 beneficial use target August 2027.",
-     "HPLC PQ 完成 09/08/27；§4.3 效益目标 2027 年 8 月。"],
+    ["gRetrofit", "2026-12-24", "2027-04-15", "build",
+     "Retrofit / demolition / airlock — 24/12/26–15/04/27 (Fig. 1; §4.3 ~20 wk).",
+     "改造（拆除、气闸、分区等）：24/12/26–15/04/27（图 1；§4.3 约 20 周）。"],
 ]
-DURATION_ROWS = [
-    ["gFeed", 12, 14, "FEED 12–14 weeks per FS §4.3 — no calendar start/end in FS.",
-     "FEED 12–14 周（FS §4.3）— 未给出日历起止日。"],
-    ["gDd", 18, 20, "Detailed design 18–20 weeks per FS §4.3 — no calendar start/end in FS.",
-     "详细设计 18–20 周（FS §4.3）— 未给出日历起止日。"],
-]
+DURATION_ROWS = []
 
 HTML = r'''<!DOCTYPE html>
 <html lang="zh-CN">
@@ -92,7 +99,7 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .gantt-track{position:relative;height:20px;background:#eef2f6;border-radius:4px}
 .gantt-bar{position:absolute;top:2px;height:16px;border-radius:3px;min-width:3px;cursor:pointer}
 .gantt-bar.done{background:var(--teal)} .gantt-bar.plan{background:#1a4a6e}
-.gantt-bar.duration-only{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 5px,#8f7db8 5px,#8f7db8 10px)}
+.gantt-bar.duration-only,.gantt-bar.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 5px,#8f7db8 5px,#8f7db8 10px)}
 .gantt-row.duration-row .gantt-track{background:#edeaf3}
 .gantt-foot{font-size:.68rem;color:var(--muted);margin-top:.45rem;line-height:1.45;border-top:1px solid #eef1f4;padding-top:.4rem}
 .gantt-bar.warn{background:var(--accent)} .gantt-bar.build{background:#2e6da4}
@@ -149,12 +156,12 @@ s7k2:"HPLC 供货",s7k2d:"约 18 周（DQ+商务后）",
 s7k3:"FEED",s7k3d:"12–14 周",
 s7k4:"详细设计",s7k4d:"18–20 周",
 ganttSub:"FS §4.4 图 1 · High Level Project Programme",
-gFs:"FS / 进度基准",gFeed:"FEED",gDd:"详细设计",
-gLyAll:"冻干机采购（总）",gLyMfg:"冻干机制造",gLyVal:"冻干验证→PQ",
-gHplcAll:"HPLC 采购（总）",gHplcMfg:"HPLC 制造",gTanks:"移动头罐采购",gWaste:"废液罐采购",
-gDemo:"拆除与气闸（总）",gDemoW:"拆除/气闸 14周",gHplcReady:"HPLC 可用",
-legDone:"已完成",legPlan:"采购/制造",legBuild:"施工/验证",legCrit:"关键路径",legDur:"仅工期（§4.3）",today:"约今",
-s7foot:"日历条日期摘自 FS §4.4 图 1（High Level Project Programme）；金色为冻干机关键路径。紫色斜线：§4.3 仅给出 FEED 12–14 周、详细设计 18–20 周工期，未给日历起止，条宽仅示工期相对长短。§4.3 文字节点：HPLC 2027 年 8 月可用；冻干 2027 年 11 月投运（与图 1 PQ 完成日一致）。",
+gFs:"FS / 进度基准",gFeed:"FEED（示意）",gDd:"详细设计（示意）",
+gLySpec:"冻干机规格与资金",gLyMfg:"冻干机制造",gLyFat:"冻干机 FAT",gLyShip:"冻干机运输安装",gLyVal:"冻干验证→PQ",
+gHplcSpec:"HPLC 规格与资金",gHplcMfg:"HPLC 制造",gHplcFat:"HPLC FAT",gHplcShip:"HPLC 运输安装",
+gTanks:"移动头罐采购",gWaste:"废液罐采购",gRetrofit:"改造",
+legDone:"已完成",legPlan:"采购/制造",legBuild:"施工/验证",legCrit:"关键路径",legAssume:"§4.3 示意（假设 6/15 起）",today:"约今",
+s7foot:"金色/蓝色条日期摘自 FS §4.4 图 1。紫色斜线：§4.3 仅给出 FEED 12–14 周、详细设计 18–20 周工期，未给日历起止；本图假设 FEED 自 2026-06-15 启动、详细设计接续，以此示意。§4.3：HPLC 2027 年 8 月可用；冻干 2027 年 11 月投运（与图 1 一致）。",
 s7note:"",
 s8t:"主要风险（节选）",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 2026-05-05",
 s8h:"缓解后仍须关注",
@@ -204,12 +211,12 @@ s7k2:"HPLC supply",s7k2d:"~18 weeks (post DQ)",
 s7k3:"FEED",s7k3d:"12–14 weeks",
 s7k4:"Detailed design",s7k4d:"18–20 weeks",
 ganttSub:"FS §4.4 Fig. 1 · High Level Project Programme",
-gFs:"FS / baseline",gFeed:"FEED",gDd:"Detailed design",
-gLyAll:"Lyoph procurement",gLyMfg:"Lyoph build",gLyVal:"Lyoph val.→PQ",
-gHplcAll:"HPLC procurement",gHplcMfg:"HPLC build",gTanks:"Mobile tanks",gWaste:"Waste tank",
-gDemo:"Demolition (total)",gDemoW:"Demolition 14 wk",gHplcReady:"HPLC ready",
-legDone:"Complete",legPlan:"Procure / build",legBuild:"Site / validation",legCrit:"Critical path",legDur:"Duration only (§4.3)",today:"~Today",
-s7foot:"Calendar bars per FS §4.4 Figure 1; gold = lyophilizer critical path. Purple hatch: §4.3 FEED (12–14 wk) and detailed design (18–20 wk) — duration only, not scheduled dates. §4.3: HPLC August 2027; lyoph November 2027 (aligns with Fig. 1 PQ dates).",
+gFs:"FS / baseline",gFeed:"FEED (illustrative)",gDd:"Detail design (illustrative)",
+gLySpec:"Lyoph spec & funding",gLyMfg:"Lyoph build",gLyFat:"Lyoph FAT",gLyShip:"Lyoph ship & install",gLyVal:"Lyoph val.→PQ",
+gHplcSpec:"HPLC spec & funding",gHplcMfg:"HPLC build",gHplcFat:"HPLC FAT",gHplcShip:"HPLC ship & install",
+gTanks:"Mobile tanks",gWaste:"Waste tank",gRetrofit:"Retrofit",
+legDone:"Complete",legPlan:"Procure / build",legBuild:"Site / validation",legCrit:"Critical path",legAssume:"§4.3 illustrative (from 15 Jun)",today:"~Today",
+s7foot:"Gold/blue bars per FS §4.4 Figure 1. Purple hatch: §4.3 gives FEED (12–14 wk) and detailed design (18–20 wk) durations only — no calendar dates; we assume FEED from 15 Jun 2026 and sequential detail design for illustration. §4.3: HPLC August 2027; lyoph November 2027.",
 s7note:"",
 s8t:"Key Risks (extract)",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 05 May 2026",
 s8h:"Post-mitigation focus",
@@ -263,7 +270,7 @@ return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
 <span><i style="background:#1a4a6e"></i>${t("legPlan")}</span>
 <span><i style="background:#2e6da4"></i>${t("legBuild")}</span>
 <span><i style="background:var(--accent)"></i>${t("legCrit")}</span>
-<span><i style="background:#6d5b95"></i>${t("legDur")}</span></div>
+<span><i style="background:#6d5b95"></i>${t("legAssume")}</span></div>
 <p class="gantt-foot">${t("s7foot")}</p></div>`;
 }
 function deckHTML(){
