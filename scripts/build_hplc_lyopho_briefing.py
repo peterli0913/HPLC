@@ -6,17 +6,41 @@ from pathlib import Path
 
 OUT = Path("/workspace/汇报/HPLC-Lyophilizer/HPLC_Lyophilizer_Management_Briefing_2026-05-28.html")
 
-# FS §4.3 calendar milestones only; FEED/DD are duration-only (separate lane)
+# Calendar dates from FS §4.4 Figure 1 (High Level Project Programme); FEED/DD durations §4.3
 GANTT_CALENDAR = [
-    ["gFs", "2026-05-19", "2026-05-19", "done",
-     "Feasibility Study report P01 issued 19 May 2026 (FS).",
-     "可行性研究报告 P01 发版：2026-05-19（FS）。"],
-    ["gHplc", "2027-08-01", "2027-08-31", "build",
-     "HPLC available for use by August 2027 — Q3 beneficial use target (FS §4.3).",
-     "HPLC 可投入使用：2027 年 8 月（FS §4.3，Q3 效益目标）。"],
-    ["gLy", "2027-11-01", "2027-11-30", "build",
-     "Lyophiliser operational November 2027 (FS §4.3); earlier if lead time reduced.",
-     "冻干机投运：2027 年 11 月（FS §4.3）；制造周期缩短可提前。"],
+    ["gFs", "2026-05-19", "2026-05-26", "done",
+     "FS report P01 (19 May 2026); programme baseline from 26 May 2026 (Fig. 1).",
+     "可行性研究 P01（2026-05-19）；进度基准自 2026-05-26 起（图 1）。"],
+    ["gLyAll", "2026-05-26", "2027-11-08", "warn",
+     "Procure lyophiliser — Asymchem: 26/05/26–08/11/27, 380 days (Fig. 1, critical path).",
+     "冻干机采购（Asymchem）：26/05/26–08/11/27，380 天（图 1，关键路径）。"],
+    ["gLyMfg", "2026-07-28", "2027-04-05", "warn",
+     "Lyophiliser build: 28/07/26–05/04/27, 9 months (Fig. 1).",
+     "冻干机制造：28/07/26–05/04/27，9 个月（图 1）。"],
+    ["gLyVal", "2027-08-31", "2027-11-08", "warn",
+     "Lyoph validation (commissioning, IQ/OQ, PQ) to PQ complete 08/11/27 (Fig. 1).",
+     "冻干验证（调试、IQ/OQ、PQ）至 PQ 完成 08/11/27（图 1）。"],
+    ["gHplcAll", "2026-08-18", "2027-08-09", "plan",
+     "Procure HPLC — Asymchem: 18/08/26–09/08/27, 255 days (Fig. 1).",
+     "HPLC 采购（Asymchem）：18/08/26–09/08/27，255 天（图 1）。"],
+    ["gHplcMfg", "2026-10-20", "2027-02-22", "plan",
+     "HPLC manufacture: 20/10/26–22/02/27, 18 weeks (Fig. 1).",
+     "HPLC 制造：20/10/26–22/02/27，18 周（图 1）。"],
+    ["gTanks", "2026-07-21", "2027-05-03", "plan",
+     "Procure mobile head tanks — RB Plant: 21/07/26–03/05/27 (Fig. 1).",
+     "移动头罐采购（RB Plant）：21/07/26–03/05/27（图 1）。"],
+    ["gWaste", "2026-07-21", "2027-04-19", "plan",
+     "Procure waste tank — RB Plant: 21/07/26–19/04/27 (Fig. 1).",
+     "废液罐采购（RB Plant）：21/07/26–19/04/27（图 1）。"],
+    ["gDemo", "2026-12-24", "2027-04-15", "build",
+     "Demolition: relocate filter dryer, airlock, PG.12 segregation — 24/12/26–15/04/27 (Fig. 1; §4.3 ~20 wk).",
+     "拆除：迁 filter dryer、气闸、PG.12 分区 — 24/12/26–15/04/27（图 1；§4.3 约 20 周）。"],
+    ["gDemoW", "2027-01-05", "2027-04-13", "build",
+     "Demolition / airlock / segregation: 05/01/27–13/04/27, 14 weeks (Fig. 1).",
+     "拆除/气闸/分区：05/01/27–13/04/27，14 周（图 1）。"],
+    ["gHplcReady", "2027-08-01", "2027-08-09", "build",
+     "HPLC PQ complete 09/08/27; §4.3 beneficial use target August 2027.",
+     "HPLC PQ 完成 09/08/27；§4.3 效益目标 2027 年 8 月。"],
 ]
 DURATION_ROWS = [
     ["gFeed", 12, 14, "FEED 12–14 weeks per FS §4.3 — no calendar start/end in FS.",
@@ -124,10 +148,13 @@ s7k1:"冻干机制造",s7k1d:"8–10 个月",
 s7k2:"HPLC 供货",s7k2d:"约 18 周（DQ+商务后）",
 s7k3:"FEED",s7k3d:"12–14 周",
 s7k4:"详细设计",s7k4d:"18–20 周",
-ganttSub:"项目进度计划（高阶）",
-gFs:"FS 完成",gFeed:"FEED",gDd:"详细设计",gLyOrder:"冻干下单窗口",gLyLead:"冻干制造周期",gHplcLead:"HPLC 周期",gPg12:"土建改造",gHplc:"HPLC 可用",gLy:"冻干投运",
-legDone:"已完成",legPlan:"设计",legBuild:"里程碑/投运",legDur:"仅工期（FS 无日历日）",today:"约今",
-s7foot:"注：日历轴仅标示 FS 明确给出的节点（2026-05-19 可行性完成；2027-08 HPLC 可用；2027-11 冻干投运）。紫色斜线条为 FEED（12–14 周）与详细设计（18–20 周），仅表示 FS 披露的工期长短，不代表实际起止日期。冻干机制造 8–10 个月、HPLC 约 18 周、改造约 20 周等工期见上方指标，排程将在 FEED 阶段细化。",
+ganttSub:"FS §4.4 图 1 · High Level Project Programme",
+gFs:"FS / 进度基准",gFeed:"FEED",gDd:"详细设计",
+gLyAll:"冻干机采购（总）",gLyMfg:"冻干机制造",gLyVal:"冻干验证→PQ",
+gHplcAll:"HPLC 采购（总）",gHplcMfg:"HPLC 制造",gTanks:"移动头罐采购",gWaste:"废液罐采购",
+gDemo:"拆除与气闸（总）",gDemoW:"拆除/气闸 14周",gHplcReady:"HPLC 可用",
+legDone:"已完成",legPlan:"采购/制造",legBuild:"施工/验证",legCrit:"关键路径",legDur:"仅工期（§4.3）",today:"约今",
+s7foot:"日历条日期摘自 FS §4.4 图 1（High Level Project Programme）；金色为冻干机关键路径。紫色斜线：§4.3 仅给出 FEED 12–14 周、详细设计 18–20 周工期，未给日历起止，条宽仅示工期相对长短。§4.3 文字节点：HPLC 2027 年 8 月可用；冻干 2027 年 11 月投运（与图 1 PQ 完成日一致）。",
 s7note:"",
 s8t:"主要风险（节选）",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 2026-05-05",
 s8h:"缓解后仍须关注",
@@ -176,9 +203,13 @@ s7k1:"Lyophilizer mfg",s7k1d:"8–10 months",
 s7k2:"HPLC supply",s7k2d:"~18 weeks (post DQ)",
 s7k3:"FEED",s7k3d:"12–14 weeks",
 s7k4:"Detailed design",s7k4d:"18–20 weeks",
-ganttSub:"High-level project programme",
-gFs:"FS complete",gFeed:"FEED",gDd:"Detailed design",gLyOrder:"Lyoph order window",gLyLead:"Lyoph lead time",gHplcLead:"HPLC lead",gPg12:"Civils / enabling",gHplc:"HPLC available",gLy:"Lyoph operational",
-legDone:"Complete",legPlan:"Design",legBuild:"Build/delivery",legMile:"Critical path",today:"~Today",
+ganttSub:"FS §4.4 Fig. 1 · High Level Project Programme",
+gFs:"FS / baseline",gFeed:"FEED",gDd:"Detailed design",
+gLyAll:"Lyoph procurement",gLyMfg:"Lyoph build",gLyVal:"Lyoph val.→PQ",
+gHplcAll:"HPLC procurement",gHplcMfg:"HPLC build",gTanks:"Mobile tanks",gWaste:"Waste tank",
+gDemo:"Demolition (total)",gDemoW:"Demolition 14 wk",gHplcReady:"HPLC ready",
+legDone:"Complete",legPlan:"Procure / build",legBuild:"Site / validation",legCrit:"Critical path",legDur:"Duration only (§4.3)",today:"~Today",
+s7foot:"Calendar bars per FS §4.4 Figure 1; gold = lyophilizer critical path. Purple hatch: §4.3 FEED (12–14 wk) and detailed design (18–20 wk) — duration only, not scheduled dates. §4.3: HPLC August 2027; lyoph November 2027 (aligns with Fig. 1 PQ dates).",
 s7note:"",
 s8t:"Key Risks (extract)",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 05 May 2026",
 s8h:"Post-mitigation focus",
@@ -205,10 +236,9 @@ function t(k){return I18N[lang][k]||k;}
 function fm(n){return "£"+Math.round(n).toLocaleString("en-GB");}
 function ganttHTML(){
 const today=pct("2026-05-28");
-const calKeys=["gFs","gHplc","gLy"];
 let rows="";
 GANTT_CALENDAR.forEach((g,i)=>{
-const key=calKeys[i]||g[0];
+const key=g[0];
 const left=pct(g[1]),right=pct(g[2]),w=Math.max(1.2,right-left);
 const d0=g[1].slice(0,7).replace("-","/"),d1=g[2].slice(0,7).replace("-","/");
 const showToday=i===0;
@@ -230,7 +260,9 @@ return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
 <div class="gantt-axis">${t("axis").map(y=>`<span>${y}</span>`).join("")}</div>
 <div class="gantt-body">${rows}</div>
 <div class="gantt-legend"><span><i style="background:var(--teal)"></i>${t("legDone")}</span>
+<span><i style="background:#1a4a6e"></i>${t("legPlan")}</span>
 <span><i style="background:#2e6da4"></i>${t("legBuild")}</span>
+<span><i style="background:var(--accent)"></i>${t("legCrit")}</span>
 <span><i style="background:#6d5b95"></i>${t("legDur")}</span></div>
 <p class="gantt-foot">${t("s7foot")}</p></div>`;
 }
