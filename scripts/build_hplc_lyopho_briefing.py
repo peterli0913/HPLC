@@ -6,35 +6,23 @@ from pathlib import Path
 
 OUT = Path("/workspace/汇报/HPLC-Lyophilizer/HPLC_Lyophilizer_Management_Briefing_2026-05-28.html")
 
-# Programme: only calendar dates stated in FS report §1.0 / §4.3
-GANTT_JS = [
-    ["gFs", "2026-05-01", "2026-05-31", "done",
-     "Feasibility Study issued P01 (19 May 2026). CapEx estimate P01 (15 May 2026).",
-     "可行性研究 P01 发版（2026-05-19）；费用估算 P01（2026-05-15）。"],
-    ["gFeed", "2026-06-01", "2026-09-15", "plan",
-     "FEED duration 12–14 weeks (§4.3). Start assumes prompt post-FS approval — to be confirmed.",
-     "FEED 12–14 周（§4.3）。示意条：假设 FS 批准后启动，具体日期待定。"],
-    ["gDd", "2026-09-16", "2027-02-15", "plan",
-     "Detailed design 18–20 weeks (§4.3), subject to vendor information.",
-     "详细设计 18–20 周（§4.3），取决于供应商资料及时性。"],
-    ["gLyOrder", "2026-10-01", "2026-10-31", "warn",
-     "Lyophiliser procurement window — 8–10 month manufacturing lead (§4.3). Order date not fixed in FS.",
-     "冻干机采购窗口 — 制造周期 8–10 个月（§4.3）。FS 未固定下单日，条块为逻辑示意。"],
-    ["gLyLead", "2026-11-01", "2027-08-31", "warn",
-     "Lyophiliser lead time 8–10 months (critical path driver per §1.0).",
-     "冻干机长周期 8–10 个月（§1.0 关键路径驱动）。"],
-    ["gHplcLead", "2027-01-01", "2027-05-15", "plan",
-     "HPLC lead time ~18 weeks after DQ and commercial terms (§4.3).",
-     "HPLC 周期约 18 周（DQ 及商务条款完成后，§4.3）。"],
-    ["gPg12", "2027-03-01", "2027-07-31", "build",
-     "Enabling / airlock / segregation — ~20 weeks (may reduce to ~14 weeks, §4.3).",
-     "拆除临建/气闸/分区 — 约 20 周（可缩短至约 14 周，§4.3）。"],
+# FS §4.3 calendar milestones only; FEED/DD are duration-only (separate lane)
+GANTT_CALENDAR = [
+    ["gFs", "2026-05-19", "2026-05-19", "done",
+     "Feasibility Study report P01 issued 19 May 2026 (FS).",
+     "可行性研究报告 P01 发版：2026-05-19（FS）。"],
     ["gHplc", "2027-08-01", "2027-08-31", "build",
-     "HPLC available for use — August 2027, meeting Q3 beneficial use target (§4.3).",
-     "HPLC 可投入使用 — 2027 年 8 月，满足 Q3 效益目标（§4.3）。"],
+     "HPLC available for use by August 2027 — Q3 beneficial use target (FS §4.3).",
+     "HPLC 可投入使用：2027 年 8 月（FS §4.3，Q3 效益目标）。"],
     ["gLy", "2027-11-01", "2027-11-30", "build",
-     "Lyophiliser operational — November 2027 (§4.3); acceleration depends on shorter lead time.",
-     "冻干机投运 — 2027 年 11 月（§4.3）；提前取决于制造周期能否缩短。"],
+     "Lyophiliser operational November 2027 (FS §4.3); earlier if lead time reduced.",
+     "冻干机投运：2027 年 11 月（FS §4.3）；制造周期缩短可提前。"],
+]
+DURATION_ROWS = [
+    ["gFeed", 12, 14, "FEED 12–14 weeks per FS §4.3 — no calendar start/end in FS.",
+     "FEED 12–14 周（FS §4.3）— 未给出日历起止日。"],
+    ["gDd", 18, 20, "Detailed design 18–20 weeks per FS §4.3 — no calendar start/end in FS.",
+     "详细设计 18–20 周（FS §4.3）— 未给出日历起止日。"],
 ]
 
 HTML = r'''<!DOCTYPE html>
@@ -80,6 +68,9 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .gantt-track{position:relative;height:20px;background:#eef2f6;border-radius:4px}
 .gantt-bar{position:absolute;top:2px;height:16px;border-radius:3px;min-width:3px;cursor:pointer}
 .gantt-bar.done{background:var(--teal)} .gantt-bar.plan{background:#1a4a6e}
+.gantt-bar.duration-only{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 5px,#8f7db8 5px,#8f7db8 10px)}
+.gantt-row.duration-row .gantt-track{background:#edeaf3}
+.gantt-foot{font-size:.68rem;color:var(--muted);margin-top:.45rem;line-height:1.45;border-top:1px solid #eef1f4;padding-top:.4rem}
 .gantt-bar.warn{background:var(--accent)} .gantt-bar.build{background:#2e6da4}
 .gantt-dates{font-size:.6rem;color:var(--muted)}
 .gantt-legend{font-size:.62rem;color:var(--muted);margin-top:.35rem;display:flex;gap:.65rem;flex-wrap:wrap}
@@ -100,7 +91,8 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 <div id="deck"></div>
 <div class="footer"><span id="footerText"></span><span id="navHint"></span><span id="counter"></span></div>
 <script>
-const GANTT_DATA = ''' + json.dumps(GANTT_JS) + r''';
+const GANTT_CALENDAR = ''' + json.dumps(GANTT_CALENDAR) + r''';
+const DURATION_ROWS = ''' + json.dumps(DURATION_ROWS) + r''';
 const T0=new Date("2026-05-01"),T1=new Date("2027-12-31"),RANGE=T1-T0;
 function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
 const I18N={
@@ -134,7 +126,8 @@ s7k3:"FEED",s7k3d:"12–14 周",
 s7k4:"详细设计",s7k4d:"18–20 周",
 ganttSub:"项目进度计划（高阶）",
 gFs:"FS 完成",gFeed:"FEED",gDd:"详细设计",gLyOrder:"冻干下单窗口",gLyLead:"冻干制造周期",gHplcLead:"HPLC 周期",gPg12:"土建改造",gHplc:"HPLC 可用",gLy:"冻干投运",
-legDone:"已完成",legPlan:"设计",legBuild:"施工/到货",legMile:"关键路径",today:"约今",
+legDone:"已完成",legPlan:"设计",legBuild:"里程碑/投运",legDur:"仅工期（FS 无日历日）",today:"约今",
+s7foot:"注：日历轴仅标示 FS 明确给出的节点（2026-05-19 可行性完成；2027-08 HPLC 可用；2027-11 冻干投运）。紫色斜线条为 FEED（12–14 周）与详细设计（18–20 周），仅表示 FS 披露的工期长短，不代表实际起止日期。冻干机制造 8–10 个月、HPLC 约 18 周、改造约 20 周等工期见上方指标，排程将在 FEED 阶段细化。",
 s7note:"",
 s8t:"主要风险（节选）",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 2026-05-05",
 s8h:"缓解后仍须关注",
@@ -144,8 +137,8 @@ s8r3:"合规：新废液罐排放点需环境许可变更（缓解后 5）— �
 s8r4:"费用：资金策略不明确（评级 12，§4.5）— 集团/现场明确 CapEx 批复路径。",
 s8r5:"运营：PG.12 拆除期 filter dryer 运行与 HPLC 区域 spray dryer 调度（评级 20→需 FEED 细化）。",
 s9t:"建议决策事项",s9s:"",
-s9d1:"是否批准由可行性阶段进入 FEED，并确认 2027 Q3/Q4 效益目标仍为基准？",
-s9d2:"是否批准长周期设备（冻干机包 £967k + HPLC £358k）的早期采购资金与采购分工（总包 vs 业主自购）？",
+s9d1:"是否批准由可行性阶段进入 FEED？",
+s9d2:"是否批准长周期设备（冻干机包 £967k + HPLC £358k）的早期采购资金？",
 s9d3:"是否同意按 FS 建议优先冻干机、次 HPLC 的采购排序，并接受 PG.10–12 气闸/改造方案？",
 s9d4:"是否指令提前启动环境许可变更及公用工程负荷复核（FEED 输入）？",
 s10t:"谢谢",s10s:"",
@@ -195,8 +188,8 @@ s8r3:"Compliance: environmental permit for new waste tank vent (mitigated 5) —
 s8r4:"Cost: funding strategy unclear (rating 12, §4.5) — confirm CapEx approval path.",
 s8r5:"Operations: filter dryer during PG.12 works & spray dryer vs HPLC in PG.05 (20 mitigated — refine at FEED).",
 s9t:"Decisions for Review",s9s:"",
-s9d1:"Approve progression from feasibility to FEED with Q3/Q4 2027 targets as baseline?",
-s9d2:"Approve early funding and procurement split for long-lead packages (lyoph £967k + HPLC £358k)?",
+s9d1:"Approve progression from feasibility to FEED?",
+s9d2:"Approve early funding for long-lead packages (lyoph £967k + HPLC £358k)?",
 s9d3:"Confirm procurement sequence (lyophilizer first, then HPLC) and PG.10–12 airlock/works strategy?",
 s9d4:"Mandate early environmental permit change and utilities load review for FEED?",
 s10t:"Thank you",s10s:"",
@@ -212,16 +205,34 @@ function t(k){return I18N[lang][k]||k;}
 function fm(n){return "£"+Math.round(n).toLocaleString("en-GB");}
 function ganttHTML(){
 const today=pct("2026-05-28");
-const keys=["gFs","gFeed","gDd","gLyOrder","gLyLead","gHplcLead","gPg12","gHplc","gLy"];
+const calKeys=["gFs","gHplc","gLy"];
 let rows="";
-GANTT_DATA.forEach((g,i)=>{
-const key=keys[i]||g[0];
-const left=pct(g[1]),right=pct(g[2]),w=Math.max(.5,right-left);
+GANTT_CALENDAR.forEach((g,i)=>{
+const key=calKeys[i]||g[0];
+const left=pct(g[1]),right=pct(g[2]),w=Math.max(1.2,right-left);
 const d0=g[1].slice(0,7).replace("-","/"),d1=g[2].slice(0,7).replace("-","/");
+const showToday=i===0;
 rows+=`<div class="gantt-row"><div class="gantt-label">${t(key)}</div><div class="gantt-track">
-<div class="today-line" style="left:${today}%"><span class="today-tag">${t("today")}</span></div>
+${showToday?`<div class="today-line" style="left:${today}%"><span class="today-tag">${t("today")}</span></div>`:""}
 <div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${d0} – ${d1}"></div>
 </div><div class="gantt-dates">${d0}–${d1}</div></div>`;
+});
+const durMax=20;
+DURATION_ROWS.forEach(d=>{
+const key=d[0],wMin=d[1],wMax=d[2],mid=(wMin+wMax)/2;
+const wPct=Math.max(18,(mid/durMax)*88);
+const range=lang==="zh"?`${wMin}–${wMax} 周`:`${wMin}–${wMax} wk`;
+rows+=`<div class="gantt-row duration-row"><div class="gantt-label">${t(key)}</div><div class="gantt-track">
+<div class="gantt-bar duration-only" style="left:0;width:${wPct}%" data-en="${d[3].replace(/"/g,"&quot;")}" data-zh="${d[4].replace(/"/g,"&quot;")}" data-dates="${range}"></div>
+</div><div class="gantt-dates">${range}</div></div>`;
+});
+return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
+<div class="gantt-axis">${t("axis").map(y=>`<span>${y}</span>`).join("")}</div>
+<div class="gantt-body">${rows}</div>
+<div class="gantt-legend"><span><i style="background:var(--teal)"></i>${t("legDone")}</span>
+<span><i style="background:#2e6da4"></i>${t("legBuild")}</span>
+<span><i style="background:#6d5b95"></i>${t("legDur")}</span></div>
+<p class="gantt-foot">${t("s7foot")}</p></div>`;
 });
 return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
 <div class="gantt-axis">${t("axis").map(y=>`<span>${y}</span>`).join("")}</div>
