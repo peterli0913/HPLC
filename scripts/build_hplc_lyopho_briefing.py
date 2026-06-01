@@ -7,7 +7,7 @@ from pathlib import Path
 
 OUT = Path("/workspace/汇报/HPLC-Lyophilizer/HPLC_Lyophilizer_Management_Briefing_2026-05-28.html")
 
-GANTT_SHIFT_WEEKS = 4  # FEED → last row: +4 weeks vs FS Fig. 1 baseline
+GANTT_SHIFT_WEEKS = 4  # calendar offset applied to FEED → last row (not shown in UI copy)
 
 
 def _add_weeks(date_str: str, weeks: int) -> str:
@@ -20,53 +20,53 @@ def _shift_gantt_row(row: list, weeks: int = GANTT_SHIFT_WEEKS) -> list:
     return [row[0], _add_weeks(row[1], weeks), _add_weeks(row[2], weeks), *row[3:]]
 
 
-# Fig. 1 dates (§4.4); FEED/DD shifted +4 wk; engineer mobilisation Jun–Jul 2026
+# Fig. 1 dates (§4.4); engineer mobilisation Jun–Jul 2026
 _GANTT_BASE = [
     ["gFs", "2026-05-19", "2026-05-26", "done",
      "FS report P01 (19 May 2026); programme baseline from 26 May 2026 (Fig. 1).",
      "可行性研究 P01（2026-05-19）；进度基准自 2026-05-26 起（图 1）。"],
     ["gFeed", "2026-06-15", "2026-09-20", "assume",
-     "FEED 12–14 weeks (§4.3): illustrative start after engineer mobilisation (+4 wk vs prior assumption).",
-     "FEED 12–14 周（§4.3）：工程师就位后启动（较此前假设整体后移 4 周）。"],
+     "FEED 12–14 weeks (§4.3): illustrative, after engineer mobilisation.",
+     "FEED 12–14 周（§4.3）：示意，工程师就位后启动。"],
     ["gDd", "2026-09-21", "2027-02-07", "assume",
-     "Detailed design 18–20 weeks (§4.3): assumed after FEED (+4 wk shift applied).",
-     "详细设计 18–20 周（§4.3）：接 FEED 后启动（已含 +4 周后移）。"],
+     "Detailed design 18–20 weeks (§4.3): assumed after FEED, bar shows 20 weeks.",
+     "详细设计 18–20 周（§4.3）：假设接 FEED 后启动，条块按 20 周示意。"],
     ["gLySpec", "2026-05-26", "2026-07-20", "warn",
-     "Lyoph spec + funding/deposit (Fig. 1, +4 wk shift).",
-     "冻干机规格确定和资金审批（图 1，+4 周后移）。"],
+     "Lyoph spec + funding/deposit (Fig. 1).",
+     "冻干机规格确定和资金审批（图 1）。"],
     ["gLyMfg", "2026-07-28", "2027-04-05", "warn",
-     "Lyophiliser build: 9 months (Fig. 1, +4 wk shift).",
-     "冻干机制造：9 个月（图 1，+4 周后移）。"],
+     "Lyophiliser build: 9 months (Fig. 1).",
+     "冻干机制造：9 个月（图 1）。"],
     ["gLyFat", "2027-04-06", "2027-05-10", "warn",
-     "Lyoph FAT + remediation (Fig. 1, +4 wk shift).",
-     "冻干机 FAT（图 1，+4 周后移）。"],
+     "Lyoph FAT + remediation (Fig. 1).",
+     "冻干机 FAT（图 1）。"],
     ["gLyShip", "2027-05-11", "2027-08-30", "warn",
-     "Lyoph shipping + installation (Fig. 1, +4 wk shift).",
-     "冻干机运输安装（图 1，+4 周后移）。"],
+     "Lyoph shipping + installation (Fig. 1).",
+     "冻干机运输安装（图 1）。"],
     ["gLyVal", "2027-08-31", "2027-11-08", "warn",
-     "Lyoph validation to PQ complete (Fig. 1, +4 wk shift).",
-     "冻干验证至 PQ 完成（图 1，+4 周后移）。"],
+     "Lyoph validation to PQ complete (Fig. 1).",
+     "冻干验证至 PQ 完成（图 1）。"],
     ["gHplcSpec", "2026-08-18", "2026-10-12", "plan",
-     "HPLC spec + funding/deposit (Fig. 1, +4 wk shift).",
-     "HPLC 规格确定和资金审批（图 1，+4 周后移）。"],
+     "HPLC spec + funding/deposit (Fig. 1).",
+     "HPLC 规格确定和资金审批（图 1）。"],
     ["gHplcMfg", "2026-10-20", "2027-02-22", "plan",
-     "HPLC manufacture: 18 weeks (Fig. 1, +4 wk shift).",
-     "HPLC 制造：18 周（图 1，+4 周后移）。"],
+     "HPLC manufacture: 18 weeks (Fig. 1).",
+     "HPLC 制造：18 周（图 1）。"],
     ["gHplcFat", "2027-02-23", "2027-03-22", "plan",
-     "HPLC FAT + remediation (Fig. 1, +4 wk shift).",
-     "HPLC FAT（图 1，+4 周后移）。"],
+     "HPLC FAT + remediation (Fig. 1).",
+     "HPLC FAT（图 1）。"],
     ["gHplcShip", "2027-03-30", "2027-05-31", "plan",
-     "HPLC shipping + installation (Fig. 1, +4 wk shift).",
-     "HPLC 运输安装（图 1，+4 周后移）。"],
+     "HPLC shipping + installation (Fig. 1).",
+     "HPLC 运输安装（图 1）。"],
     ["gTanks", "2026-07-21", "2027-05-03", "plan",
-     "Procure mobile head tanks — RB Plant (Fig. 1, +4 wk shift).",
-     "移动头罐采购（RB Plant）（图 1，+4 周后移）。"],
+     "Procure mobile head tanks — RB Plant (Fig. 1).",
+     "移动头罐采购（RB Plant）（图 1）。"],
     ["gWaste", "2026-07-21", "2027-04-19", "plan",
-     "Procure waste tank — RB Plant (Fig. 1, +4 wk shift).",
-     "废液罐采购（RB Plant）（图 1，+4 周后移）。"],
+     "Procure waste tank — RB Plant (Fig. 1).",
+     "废液罐采购（RB Plant）（图 1）。"],
     ["gRetrofit", "2026-12-24", "2027-04-15", "build",
-     "Retrofit / demolition / airlock (Fig. 1; §4.3 ~20 wk, +4 wk shift).",
-     "改造（拆除、气闸、分区等）（图 1；§4.3 约 20 周，+4 周后移）。"],
+     "Retrofit / demolition / airlock (Fig. 1; §4.3 ~20 wk).",
+     "改造（拆除、气闸、分区等）（图 1；§4.3 约 20 周）。"],
 ]
 
 GANTT_CALENDAR = [_GANTT_BASE[0]]
