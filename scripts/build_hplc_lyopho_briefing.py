@@ -75,6 +75,15 @@ CAPEX = {
     "I": 76_000,
     "J": 631_000,
 }
+# Extension-style OOM uplift on feasibility base (CapEx total)
+RISK_ON_BASE = {
+    "base": CAPEX["total"],
+    "oom": round(CAPEX["total"] * 1.5),
+    "c15": round(CAPEX["total"] * 0.15),
+    "c25": round(CAPEX["total"] * 0.25),
+    "c10": round(CAPEX["total"] * 0.10),
+    "cont_total": round(CAPEX["total"] * 0.50),
+}
 
 HTML = r'''<!DOCTYPE html>
 <html lang="zh-CN">
@@ -110,8 +119,7 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .chart-wrap{height:210px;position:relative}
 .cost-scroll{flex:1;overflow-y:auto;min-height:0}
 .cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.5rem .7rem;margin-bottom:.45rem;font-size:.88rem}
-.cost-total-bar .row1{display:flex;justify-content:space-between;font-weight:700}
-.cost-total-bar .row2{font-size:.72rem;opacity:.92;margin-top:.2rem;font-weight:400}
+.cost-total-bar{display:flex;justify-content:space-between;align-items:center}
 .cost-item{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:.3rem;background:#fff}
 .cost-item>summary{display:flex;align-items:center;padding:.4rem .6rem;cursor:pointer;list-style:none;font-size:.8rem}
 .cost-item>summary::-webkit-details-marker{display:none}
@@ -158,6 +166,7 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 const GANTT_CALENDAR = ''' + json.dumps(GANTT_CALENDAR) + r''';
 const DURATION_ROWS = ''' + json.dumps(DURATION_ROWS) + r''';
 const CAPEX = ''' + json.dumps(CAPEX) + r''';
+const RISK = ''' + json.dumps(RISK_ON_BASE) + r''';
 const T0=new Date("2026-05-01"),T1=new Date("2027-12-31"),RANGE=T1-T0;
 function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
 const I18N={
@@ -177,9 +186,8 @@ s2b3:"周期：冻干机制造 8–10 个月为关键路径；当前排序优先
 s3t:"范围与布置",s3s:"",
 hplcT:"HPLC",hplc1:"DAC300 色谱柱、浆料罐、CP300 泵撬（Asymchem 供货）",hplc2:"移动头罐 2×500 L（进料）+ 3×200 L（馏分）",hplc3:"2000 L 废液暂存罐",
 lyoT:"冻干机",lyo1:"冻干腔、冷凝器、制冷、隔离器、双 CIP 罐、除湿机、纯蒸汽发生器（Asymchem 供货）",lyo2:"需新增更衣室/气闸",lyo3:"拆除/气闸/分区约 20 周（有望缩至约 14 周）",
-s5t:"投资总览（可行性 Capex）",s5s:"9802-RBP-ZZ-ZZ-CP-X-100001 · 基准 2026-05-15 · ±50%",
-s5oom:"可行性 Capex 总价（OOM）",
-s5disc:"与扩建 FS 相同口径：可行性阶段数量级，非最终 Capex；分项精度见费用计划（F ±30%、G ±10% 等），FEED 后更新。",
+s5t:"投资总览（OOM）",s5s:"9802-RBP-ZZ-ZZ-CP-X-100001 · 基准 2026-05-15",
+s5oom:"OOM 总价（可行性量级）",
 s6t:"投资结构",s6s:"OOM 构成与直接工程费分项",
 s6acc:"可行性阶段估算精度 ±50%（费用计划封面）；非最终 Capex。",
 chartLeft:"可行性 Capex OOM 构成",chartRight:"直接工程费 £2.329M 分项（A–E）",
@@ -213,7 +221,8 @@ axis:["2026 H1","2026 H2","2027 H1","2027 H2"],
 costLabels:{
 direct:"直接工程费 (A–E)",A:"A 设备",A1:"A1 储罐/容器",A2:"A2 泵组",A31:"A3.1 HPLC（Hanbon）",A32:"A3.2 冻干机+隔离器+除湿+纯蒸汽发生器",
 B:"B 土建",C:"C 机管",D:"D 电仪控",E:"E HVAC",
-F:"F FEED（±30%）",G:"G 详细设计（±10%）",H:"H CDM",I:"I 调试",J:"J Contingency（20%）"
+oth:"其他项目费",F:"F FEED",G:"G 详细设计",H:"H CDM",I:"I 调试",J:"J 预备金（20%）",
+base:"基础项目成本",cont:"风险与预备费合计",c15:"设计发展 (15%)",c25:"施工设备 (25%)",c10:"业主 (10%)"
 }
 },
 en:{
@@ -232,9 +241,8 @@ s2b3:"Programme: lyophilizer 8–10 month lead is critical; current sequence pri
 s3t:"Scope & Layout",s3s:"",
 hplcT:"HPLC",hplc1:"DAC300 column, slurry tank, CP300 pump skid (Asymchem supply)",hplc2:"Mobile head tanks 2×500 L feed + 3×200 L fractions",hplc3:"2,000 L waste hold tank",
 lyoT:"Lyophilizer",lyo1:"Dryer, condenser, refrigeration, isolator, twin CIP tanks, dehumidifier, pure steam generator (Asymchem supply)",lyo2:"New changing/airlock required",lyo3:"Enabling / airlock ~20 weeks (may reduce to ~14 weeks)",
-s5t:"Investment (feasibility Capex)",s5s:"9802-RBP-ZZ-ZZ-CP-X-100001 · base 15 May 2026 · ±50%",
-s5oom:"Total feasibility Capex (OOM)",
-s5disc:"Same basis as extension FS: feasibility-order-of-magnitude, not final Capex; line accuracy per cost plan (F ±30%, G ±10%, etc.).",
+s5t:"Investment (OOM)",s5s:"9802-RBP-ZZ-ZZ-CP-X-100001 · base 15 May 2026",
+s5oom:"Total OOM (feasibility magnitude)",
 s6t:"Investment structure",s6s:"OOM build-up & direct works split",
 s6acc:"Feasibility accuracy ±50% (cost plan cover); not final Capex.",
 chartLeft:"Feasibility Capex OOM composition",chartRight:"Direct works £2.329M (A–E)",
@@ -268,7 +276,8 @@ axis:["2026 H1","2026 H2","2027 H1","2027 H2"],
 costLabels:{
 direct:"Direct works (A–E)",A:"A Equipment",A1:"A1 Tanks/vessels",A2:"A2 Pumps",A31:"A3.1 HPLC (Hanbon)",A32:"A3.2 Lyoph + isolator + dehum + PSG",
 B:"B Civils",C:"C M&P",D:"D EIC",E:"E HVAC",
-F:"F FEED (±30%)",G:"G Detailed design (±10%)",H:"H CDM",I:"I Commissioning",J:"J Contingency (20%)"
+oth:"Other project costs",F:"F FEED",G:"G Detailed design",H:"H CDM",I:"I Commissioning",J:"J Contingency reserve (20%)",
+base:"Base project cost",cont:"Risk & contingency (total)",c15:"Design development (15%)",c25:"Construction & equipment (25%)",c10:"Client (10%)"
 }
 }
 };
@@ -278,10 +287,9 @@ function tc(k){return I18N[lang].costLabels[k];}
 function fm(n){return "£"+Math.round(n).toLocaleString("en-GB");}
 function fmtRange(central,pct){const lo=Math.round(central*(1-pct)),hi=Math.round(central*(1+pct));return fm(lo)+" – "+fm(hi);}
 function costHTML(){
-const L=I18N[lang].costLabels,C=CAPEX;
-return `<div class="cost-total-bar">
-<div class="row1"><span>${t("s5oom")}</span><span>${fm(C.total)}</span></div>
-<div class="row2">±50% ${lang==="zh"?"可行性区间":"feasibility range"}: ${fmtRange(C.total,0.5)}</div></div>
+const L=I18N[lang].costLabels,C=CAPEX,R=RISK;
+const otherFj=C.F+C.G+C.H+C.I+C.J;
+return `<div class="cost-total-bar"><span>${t("s5oom")}</span><span>${fm(R.oom)}</span></div>
 <details class="cost-item" open><summary><span class="cost-label">${L.direct}</span><span class="cost-amt">${fm(C.direct)}</span><span class="cost-pct">±50%</span></summary>
 <div class="cost-children">
 <details class="cost-sub" open><summary><span>${L.A}</span><span>${fm(C.A)}</span></summary><ul>
@@ -294,12 +302,21 @@ return `<div class="cost-total-bar">
 <div class="cost-leaf"><span>${L.D}</span><span>${fm(C.D)}</span></div>
 <div class="cost-leaf"><span>${L.E}</span><span>${fm(C.E)}</span></div>
 </div></details>
-<div class="cost-leaf" style="padding:.35rem .6rem"><span>${L.F}</span><span>${fm(C.F)}</span></div>
-<div class="cost-leaf" style="padding:.35rem .6rem"><span>${L.G}</span><span>${fm(C.G)}</span></div>
-<div class="cost-leaf" style="padding:.35rem .6rem"><span>${L.H}</span><span>${fm(C.H)}</span><span class="cost-pct">±50%</span></div>
-<div class="cost-leaf" style="padding:.35rem .6rem"><span>${L.I}</span><span>${fm(C.I)}</span><span class="cost-pct">±50%</span></div>
-<div class="cost-leaf" style="padding:.35rem .6rem"><span>${L.J}</span><span>${fm(C.J)}</span><span class="cost-pct">20%</span></div>
-<p class="note" style="margin:.45rem .55rem 0">${t("s5disc")}</p>`;
+<details class="cost-item"><summary><span class="cost-label">${L.oth}</span><span class="cost-amt">${fm(otherFj)}</span></summary>
+<div class="cost-children">
+<div class="cost-leaf"><span>${L.F}</span><span>${fm(C.F)}</span></div>
+<div class="cost-leaf"><span>${L.G}</span><span>${fm(C.G)}</span></div>
+<div class="cost-leaf"><span>${L.H}</span><span>${fm(C.H)}</span></div>
+<div class="cost-leaf"><span>${L.I}</span><span>${fm(C.I)}</span></div>
+<div class="cost-leaf"><span>${L.J}</span><span>${fm(C.J)}</span></div>
+</div></details>
+<details class="cost-item" open><summary><span class="cost-label">${L.base}</span><span class="cost-amt">${fm(C.total)}</span></summary></details>
+<details class="cost-item"><summary><span class="cost-label">${L.cont}</span><span class="cost-amt">${fm(R.cont_total)}</span></summary>
+<div class="cost-children">
+<div class="cost-leaf"><span>${L.c15}</span><span>${fm(R.c15)}</span></div>
+<div class="cost-leaf"><span>${L.c25}</span><span>${fm(R.c25)}</span></div>
+<div class="cost-leaf"><span>${L.c10}</span><span>${fm(R.c10)}</span></div>
+</div></details>`;
 }
 function ganttHTML(){
 const today=pct("2026-05-28");
