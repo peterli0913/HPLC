@@ -20,7 +20,7 @@ def _shift_gantt_row(row: list, weeks: int = GANTT_SHIFT_WEEKS) -> list:
     return [row[0], _add_weeks(row[1], weeks), _add_weeks(row[2], weeks), *row[3:]]
 
 
-# Fig. 1 dates (§4.4); FEED/DD shifted +4 wk; engineer mobilisation Jun–Jul 2026 (see s7foot)
+# Fig. 1 dates (§4.4); FEED/DD shifted +4 wk; engineer mobilisation Jun–Jul 2026
 _GANTT_BASE = [
     ["gFs", "2026-05-19", "2026-05-26", "done",
      "FS report P01 (19 May 2026); programme baseline from 26 May 2026 (Fig. 1).",
@@ -236,7 +236,6 @@ gLySpec:"冻干机规格与资金",gLyMfg:"冻干机制造",gLyFat:"冻干机 FA
 gHplcSpec:"HPLC 规格与资金",gHplcMfg:"HPLC 制造",gHplcFat:"HPLC FAT",gHplcShip:"HPLC 运输安装",
 gTanks:"移动头罐采购",gWaste:"废液罐采购",gRetrofit:"改造",
 legDone:"已完成",legStaff:"工程师就位",legPlan:"采购/制造",legBuild:"施工/验证",legCrit:"关键路径",legAssume:"§4.3 示意",today:"约今",
-s7foot:"金色/蓝色条：FS §4.4 图 1 基准，自 FEED 起整体后移 4 周；紫色斜线为 §4.3 工期示意。靛蓝条：等待 Keith（SW）完成连续氢化项目后转入本项目（2026-06–07）。§4.3：HPLC 2027 年 8 月可用；冻干 2027 年 11 月投运。",
 s7note:"",
 s8t:"主要风险（节选）",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 2026-05-05",
 s8h:"缓解后仍须关注",
@@ -291,7 +290,6 @@ gLySpec:"Lyoph spec & funding",gLyMfg:"Lyoph build",gLyFat:"Lyoph FAT",gLyShip:"
 gHplcSpec:"HPLC spec & funding",gHplcMfg:"HPLC build",gHplcFat:"HPLC FAT",gHplcShip:"HPLC ship & install",
 gTanks:"Mobile tanks",gWaste:"Waste tank",gRetrofit:"Retrofit",
 legDone:"Complete",legStaff:"Engineer mobilisation",legPlan:"Procure / build",legBuild:"Site / validation",legCrit:"Critical path",legAssume:"§4.3 illustrative",today:"~Today",
-s7foot:"Gold/blue: FS §4.4 Fig. 1 baseline, +4 weeks from FEED onward. Purple hatch: §4.3 durations only. Indigo: await Keith (SW) after continuous hydrogenation project (Jun–Jul 2026). §4.3: HPLC Aug 2027; lyoph Nov 2027.",
 s7note:"",
 s8t:"Key Risks (extract)",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 05 May 2026",
 s8h:"Post-mitigation focus",
@@ -383,8 +381,7 @@ return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
 <span><i style="background:#2e6da4"></i>${t("legBuild")}</span>
 <span><i style="background:var(--accent)"></i>${t("legCrit")}</span>
 <span><i style="background:#5b6eae"></i>${t("legStaff")}</span>
-<span><i style="background:#6d5b95"></i>${t("legAssume")}</span></div>
-<p class="gantt-foot">${t("s7foot")}</p></div>`;
+<span><i style="background:#6d5b95"></i>${t("legAssume")}</span></div></div>`;
 }
 function deckHTML(){
 return `
