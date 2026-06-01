@@ -2,58 +2,85 @@
 """Generate bilingual HPLC + Lyophilizer feasibility management briefing HTML."""
 
 import json
+from datetime import datetime, timedelta
 from pathlib import Path
 
 OUT = Path("/workspace/汇报/HPLC-Lyophilizer/HPLC_Lyophilizer_Management_Briefing_2026-05-28.html")
 
-# Fig. 1 dates (§4.4); FEED/DD on calendar from 2026-06-15 per §4.3 durations (assumed — see s7foot)
-GANTT_CALENDAR = [
+GANTT_SHIFT_WEEKS = 4  # FEED → last row: +4 weeks vs FS Fig. 1 baseline
+
+
+def _add_weeks(date_str: str, weeks: int) -> str:
+    return (datetime.strptime(date_str, "%Y-%m-%d") + timedelta(weeks=weeks)).strftime(
+        "%Y-%m-%d"
+    )
+
+
+def _shift_gantt_row(row: list, weeks: int = GANTT_SHIFT_WEEKS) -> list:
+    return [row[0], _add_weeks(row[1], weeks), _add_weeks(row[2], weeks), *row[3:]]
+
+
+# Fig. 1 dates (§4.4); FEED/DD shifted +4 wk; engineer mobilisation Jun–Jul 2026 (see s7foot)
+_GANTT_BASE = [
     ["gFs", "2026-05-19", "2026-05-26", "done",
      "FS report P01 (19 May 2026); programme baseline from 26 May 2026 (Fig. 1).",
      "可行性研究 P01（2026-05-19）；进度基准自 2026-05-26 起（图 1）。"],
     ["gFeed", "2026-06-15", "2026-09-20", "assume",
-     "FEED 12–14 weeks (§4.3): assumed start 15 Jun 2026, bar shows 14 weeks for illustration.",
-     "FEED 12–14 周（§4.3）：假设 2026-06-15 启动，条块按 14 周示意。"],
+     "FEED 12–14 weeks (§4.3): illustrative start after engineer mobilisation (+4 wk vs prior assumption).",
+     "FEED 12–14 周（§4.3）：工程师就位后启动（较此前假设整体后移 4 周）。"],
     ["gDd", "2026-09-21", "2027-02-07", "assume",
-     "Detailed design 18–20 weeks (§4.3): assumed after FEED, bar shows 20 weeks.",
-     "详细设计 18–20 周（§4.3）：假设接 FEED 后启动，条块按 20 周示意。"],
+     "Detailed design 18–20 weeks (§4.3): assumed after FEED (+4 wk shift applied).",
+     "详细设计 18–20 周（§4.3）：接 FEED 后启动（已含 +4 周后移）。"],
     ["gLySpec", "2026-05-26", "2026-07-20", "warn",
-     "Lyoph spec + funding/deposit: 26/05/26–20/07/26 (Fig. 1).",
-     "冻干机规格确定和资金审批：26/05/26–20/07/26（图 1）。"],
+     "Lyoph spec + funding/deposit (Fig. 1, +4 wk shift).",
+     "冻干机规格确定和资金审批（图 1，+4 周后移）。"],
     ["gLyMfg", "2026-07-28", "2027-04-05", "warn",
-     "Lyophiliser build: 28/07/26–05/04/27, 9 months (Fig. 1).",
-     "冻干机制造：28/07/26–05/04/27，9 个月（图 1）。"],
+     "Lyophiliser build: 9 months (Fig. 1, +4 wk shift).",
+     "冻干机制造：9 个月（图 1，+4 周后移）。"],
     ["gLyFat", "2027-04-06", "2027-05-10", "warn",
-     "Lyoph FAT + remediation: 06/04/27–10/05/27 (Fig. 1).",
-     "冻干机 FAT：06/04/27–10/05/27（图 1）。"],
+     "Lyoph FAT + remediation (Fig. 1, +4 wk shift).",
+     "冻干机 FAT（图 1，+4 周后移）。"],
     ["gLyShip", "2027-05-11", "2027-08-30", "warn",
-     "Lyoph shipping + installation: 11/05/27–30/08/27 (Fig. 1).",
-     "冻干机运输安装：11/05/27–30/08/27（图 1）。"],
+     "Lyoph shipping + installation (Fig. 1, +4 wk shift).",
+     "冻干机运输安装（图 1，+4 周后移）。"],
     ["gLyVal", "2027-08-31", "2027-11-08", "warn",
-     "Lyoph validation to PQ complete 08/11/27 (Fig. 1).",
-     "冻干验证至 PQ 完成 08/11/27（图 1）。"],
+     "Lyoph validation to PQ complete (Fig. 1, +4 wk shift).",
+     "冻干验证至 PQ 完成（图 1，+4 周后移）。"],
     ["gHplcSpec", "2026-08-18", "2026-10-12", "plan",
-     "HPLC spec + funding/deposit: 18/08/26–12/10/26 (Fig. 1).",
-     "HPLC 规格确定和资金审批：18/08/26–12/10/26（图 1）。"],
+     "HPLC spec + funding/deposit (Fig. 1, +4 wk shift).",
+     "HPLC 规格确定和资金审批（图 1，+4 周后移）。"],
     ["gHplcMfg", "2026-10-20", "2027-02-22", "plan",
-     "HPLC manufacture: 20/10/26–22/02/27, 18 weeks (Fig. 1).",
-     "HPLC 制造：20/10/26–22/02/27，18 周（图 1）。"],
+     "HPLC manufacture: 18 weeks (Fig. 1, +4 wk shift).",
+     "HPLC 制造：18 周（图 1，+4 周后移）。"],
     ["gHplcFat", "2027-02-23", "2027-03-22", "plan",
-     "HPLC FAT + remediation: 23/02/27–22/03/27 (Fig. 1).",
-     "HPLC FAT：23/02/27–22/03/27（图 1）。"],
+     "HPLC FAT + remediation (Fig. 1, +4 wk shift).",
+     "HPLC FAT（图 1，+4 周后移）。"],
     ["gHplcShip", "2027-03-30", "2027-05-31", "plan",
-     "HPLC shipping + installation in PG.05: 30/03/27–31/05/27 (Fig. 1).",
-     "HPLC 运输安装：30/03/27–31/05/27（图 1）。"],
+     "HPLC shipping + installation (Fig. 1, +4 wk shift).",
+     "HPLC 运输安装（图 1，+4 周后移）。"],
     ["gTanks", "2026-07-21", "2027-05-03", "plan",
-     "Procure mobile head tanks — RB Plant: 21/07/26–03/05/27 (Fig. 1).",
-     "移动头罐采购（RB Plant）：21/07/26–03/05/27（图 1）。"],
+     "Procure mobile head tanks — RB Plant (Fig. 1, +4 wk shift).",
+     "移动头罐采购（RB Plant）（图 1，+4 周后移）。"],
     ["gWaste", "2026-07-21", "2027-04-19", "plan",
-     "Procure waste tank — RB Plant: 21/07/26–19/04/27 (Fig. 1).",
-     "废液罐采购（RB Plant）：21/07/26–19/04/27（图 1）。"],
+     "Procure waste tank — RB Plant (Fig. 1, +4 wk shift).",
+     "废液罐采购（RB Plant）（图 1，+4 周后移）。"],
     ["gRetrofit", "2026-12-24", "2027-04-15", "build",
-     "Retrofit / demolition / airlock — 24/12/26–15/04/27 (Fig. 1; §4.3 ~20 wk).",
-     "改造（拆除、气闸、分区等）：24/12/26–15/04/27（图 1；§4.3 约 20 周）。"],
+     "Retrofit / demolition / airlock (Fig. 1; §4.3 ~20 wk, +4 wk shift).",
+     "改造（拆除、气闸、分区等）（图 1；§4.3 约 20 周，+4 周后移）。"],
 ]
+
+GANTT_CALENDAR = [_GANTT_BASE[0]]
+GANTT_CALENDAR.append(
+    [
+        "gEng",
+        "2026-06-01",
+        "2026-07-01",
+        "staff",
+        "Await SW engineer Keith to complete continuous hydrogenation project duties before transferring to this project.",
+        "等待 SW 工程师 Keith 完成连续氢化项目相关事务后转入本项目。",
+    ]
+)
+GANTT_CALENDAR.extend(_shift_gantt_row(r) for r in _GANTT_BASE[1:])
 DURATION_ROWS = []
 
 # 9802-RBP-ZZ-ZZ-CP-X-100001 (P01, 15 May 2026) — values in £
@@ -117,6 +144,12 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .title-slide{justify-content:center;text-align:center;padding-top:2.5rem} .title-slide h1{font-size:1.85rem}
 .chart-title{font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.35rem;text-align:center}
 .chart-wrap{height:210px;position:relative}
+.chart-wrap.tall{height:248px}
+.invest-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-bottom:.7rem}
+.invest-kpi{background:linear-gradient(160deg,#f8fafb 0%,#fff 100%);border:1px solid #e8ecf0;border-radius:10px;padding:.55rem .6rem;text-align:center;box-shadow:0 1px 8px rgba(15,43,70,.04)}
+.invest-kpi.highlight{border-color:#d4b84a;background:linear-gradient(160deg,#fffdf5 0%,#fff 100%);box-shadow:0 2px 12px rgba(201,162,39,.15)}
+.invest-kpi .ik-val{font-size:1rem;font-weight:700;color:var(--navy);letter-spacing:-.02em}
+.invest-kpi .ik-lbl{font-size:.64rem;color:var(--muted);margin-top:.18rem;line-height:1.25}
 .cost-scroll{flex:1;overflow-y:auto;min-height:0}
 .cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.5rem .7rem;margin-bottom:.45rem;font-size:.88rem}
 .cost-total-bar{display:flex;justify-content:space-between;align-items:center}
@@ -144,6 +177,7 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .gantt-row.duration-row .gantt-track{background:#edeaf3}
 .gantt-foot{font-size:.68rem;color:var(--muted);margin-top:.45rem;line-height:1.45;border-top:1px solid #eef1f4;padding-top:.4rem}
 .gantt-bar.warn{background:var(--accent)} .gantt-bar.build{background:#2e6da4}
+.gantt-bar.staff{background:#5b6eae}
 .gantt-dates{font-size:.6rem;color:var(--muted)}
 .gantt-legend{font-size:.62rem;color:var(--muted);margin-top:.35rem;display:flex;gap:.65rem;flex-wrap:wrap}
 .gantt-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:.18rem;vertical-align:middle}
@@ -189,20 +223,20 @@ lyoT:"冻干机",lyo1:"冻干腔、冷凝器、制冷、隔离器、双 CIP 罐�
 s5t:"投资总览（OOM）",s5s:"9802-RBP-ZZ-ZZ-CP-X-100001 · 基准 2026-05-15",
 s5oom:"OOM 总价（可行性量级）",
 s6t:"投资结构",s6s:"OOM 构成与直接工程费分项",
-s6acc:"可行性阶段估算精度 ±50%（费用计划封面）；非最终 Capex。",
-chartLeft:"可行性 Capex OOM 构成",chartRight:"直接工程费 £2.329M 分项（A–E）",
+s6kOom:"OOM 总价（可行性量级）",s6kBase:"基础项目成本",s6kRisk:"风险与预备费",
+chartLeft:"OOM 总价构成",chartRight:"直接工程费 £2.329M 分项（A–E）",
 s7t:"周期与关键路径",s7s:"FS §4.3–4.4 · 冻干机长周期驱动",
 s7k1:"冻干机制造",s7k1d:"8–10 个月",
 s7k2:"HPLC 供货",s7k2d:"约 18 周（DQ+商务后）",
 s7k3:"FEED",s7k3d:"12–14 周",
 s7k4:"详细设计",s7k4d:"18–20 周",
 ganttSub:"FS §4.4 图 1 · High Level Project Programme",
-gFs:"FS / 进度基准",gFeed:"FEED（示意）",gDd:"详细设计（示意）",
+gFs:"FS / 进度基准",gEng:"Engineer就位",gFeed:"FEED（示意）",gDd:"详细设计（示意）",
 gLySpec:"冻干机规格与资金",gLyMfg:"冻干机制造",gLyFat:"冻干机 FAT",gLyShip:"冻干机运输安装",gLyVal:"冻干验证→PQ",
 gHplcSpec:"HPLC 规格与资金",gHplcMfg:"HPLC 制造",gHplcFat:"HPLC FAT",gHplcShip:"HPLC 运输安装",
 gTanks:"移动头罐采购",gWaste:"废液罐采购",gRetrofit:"改造",
-legDone:"已完成",legPlan:"采购/制造",legBuild:"施工/验证",legCrit:"关键路径",legAssume:"§4.3 示意（假设 6/15 起）",today:"约今",
-s7foot:"金色/蓝色条日期摘自 FS §4.4 图 1。紫色斜线：§4.3 仅给出 FEED 12–14 周、详细设计 18–20 周工期，未给日历起止；本图假设 FEED 自 2026-06-15 启动、详细设计接续，以此示意。§4.3：HPLC 2027 年 8 月可用；冻干 2027 年 11 月投运（与图 1 一致）。",
+legDone:"已完成",legStaff:"工程师就位",legPlan:"采购/制造",legBuild:"施工/验证",legCrit:"关键路径",legAssume:"§4.3 示意",today:"约今",
+s7foot:"金色/蓝色条：FS §4.4 图 1 基准，自 FEED 起整体后移 4 周；紫色斜线为 §4.3 工期示意。靛蓝条：等待 Keith（SW）完成连续氢化项目后转入本项目（2026-06–07）。§4.3：HPLC 2027 年 8 月可用；冻干 2027 年 11 月投运。",
 s7note:"",
 s8t:"主要风险（节选）",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 2026-05-05",
 s8h:"缓解后仍须关注",
@@ -244,20 +278,20 @@ lyoT:"Lyophilizer",lyo1:"Dryer, condenser, refrigeration, isolator, twin CIP tan
 s5t:"Investment (OOM)",s5s:"9802-RBP-ZZ-ZZ-CP-X-100001 · base 15 May 2026",
 s5oom:"Total OOM (feasibility magnitude)",
 s6t:"Investment structure",s6s:"OOM build-up & direct works split",
-s6acc:"Feasibility accuracy ±50% (cost plan cover); not final Capex.",
-chartLeft:"Feasibility Capex OOM composition",chartRight:"Direct works £2.329M (A–E)",
+s6kOom:"Total OOM (feasibility magnitude)",s6kBase:"Base project cost",s6kRisk:"Risk & contingency",
+chartLeft:"Total OOM composition",chartRight:"Direct works £2.329M (A–E)",
 s7t:"Programme & Critical Path",s7s:"FS §4.3–4.4 · lyophilizer lead drives",
 s7k1:"Lyophilizer mfg",s7k1d:"8–10 months",
 s7k2:"HPLC supply",s7k2d:"~18 weeks (post DQ)",
 s7k3:"FEED",s7k3d:"12–14 weeks",
 s7k4:"Detailed design",s7k4d:"18–20 weeks",
 ganttSub:"FS §4.4 Fig. 1 · High Level Project Programme",
-gFs:"FS / baseline",gFeed:"FEED (illustrative)",gDd:"Detail design (illustrative)",
+gFs:"FS / baseline",gEng:"Engineer mobilised",gFeed:"FEED (illustrative)",gDd:"Detail design (illustrative)",
 gLySpec:"Lyoph spec & funding",gLyMfg:"Lyoph build",gLyFat:"Lyoph FAT",gLyShip:"Lyoph ship & install",gLyVal:"Lyoph val.→PQ",
 gHplcSpec:"HPLC spec & funding",gHplcMfg:"HPLC build",gHplcFat:"HPLC FAT",gHplcShip:"HPLC ship & install",
 gTanks:"Mobile tanks",gWaste:"Waste tank",gRetrofit:"Retrofit",
-legDone:"Complete",legPlan:"Procure / build",legBuild:"Site / validation",legCrit:"Critical path",legAssume:"§4.3 illustrative (from 15 Jun)",today:"~Today",
-s7foot:"Gold/blue bars per FS §4.4 Figure 1. Purple hatch: §4.3 gives FEED (12–14 wk) and detailed design (18–20 wk) durations only — no calendar dates; we assume FEED from 15 Jun 2026 and sequential detail design for illustration. §4.3: HPLC August 2027; lyoph November 2027.",
+legDone:"Complete",legStaff:"Engineer mobilisation",legPlan:"Procure / build",legBuild:"Site / validation",legCrit:"Critical path",legAssume:"§4.3 illustrative",today:"~Today",
+s7foot:"Gold/blue: FS §4.4 Fig. 1 baseline, +4 weeks from FEED onward. Purple hatch: §4.3 durations only. Indigo: await Keith (SW) after continuous hydrogenation project (Jun–Jul 2026). §4.3: HPLC Aug 2027; lyoph Nov 2027.",
 s7note:"",
 s8t:"Key Risks (extract)",s8s:"9802-RBP-ZZ-ZZ-RP-R-050000 · P01 · 05 May 2026",
 s8h:"Post-mitigation focus",
@@ -290,7 +324,7 @@ function costHTML(){
 const L=I18N[lang].costLabels,C=CAPEX,R=RISK;
 const otherFj=C.F+C.G+C.H+C.I+C.J;
 return `<div class="cost-total-bar"><span>${t("s5oom")}</span><span>${fm(R.oom)}</span></div>
-<details class="cost-item" open><summary><span class="cost-label">${L.direct}</span><span class="cost-amt">${fm(C.direct)}</span><span class="cost-pct">±50%</span></summary>
+<details class="cost-item" open><summary><span class="cost-label">${L.direct}</span><span class="cost-amt">${fm(C.direct)}</span></summary>
 <div class="cost-children">
 <details class="cost-sub" open><summary><span>${L.A}</span><span>${fm(C.A)}</span></summary><ul>
 <li><span>${L.A1}</span><span>${fm(C.A1)}</span></li>
@@ -325,11 +359,12 @@ GANTT_CALENDAR.forEach((g,i)=>{
 const key=g[0];
 const left=pct(g[1]),right=pct(g[2]),w=Math.max(1.2,right-left);
 const d0=g[1].slice(0,7).replace("-","/"),d1=g[2].slice(0,7).replace("-","/");
+const dateLbl=d0+" – "+d1;
 const showToday=i===0;
 rows+=`<div class="gantt-row"><div class="gantt-label">${t(key)}</div><div class="gantt-track">
 ${showToday?`<div class="today-line" style="left:${today}%"><span class="today-tag">${t("today")}</span></div>`:""}
 <div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${d0} – ${d1}"></div>
-</div><div class="gantt-dates">${d0}–${d1}</div></div>`;
+</div><div class="gantt-dates">${dateLbl}</div></div>`;
 });
 const durMax=20;
 DURATION_ROWS.forEach(d=>{
@@ -347,6 +382,7 @@ return `<div class="gantt-wrap"><div class="chart-title">${t("ganttSub")}</div>
 <span><i style="background:#1a4a6e"></i>${t("legPlan")}</span>
 <span><i style="background:#2e6da4"></i>${t("legBuild")}</span>
 <span><i style="background:var(--accent)"></i>${t("legCrit")}</span>
+<span><i style="background:#5b6eae"></i>${t("legStaff")}</span>
 <span><i style="background:#6d5b95"></i>${t("legAssume")}</span></div>
 <p class="gantt-foot">${t("s7foot")}</p></div>`;
 }
@@ -372,9 +408,12 @@ return `
 <div class="cost-scroll">${costHTML()}</div></section>
 
 <section class="slide"><h1>${t("s6t")}</h1><h2>${t("s6s")}</h2>
-<div class="grid-2"><div class="card"><div class="chart-title">${t("chartLeft")}</div><div class="chart-wrap"><canvas id="c1"></canvas></div></div>
-<div class="card"><div class="chart-title">${t("chartRight")}</div><div class="chart-wrap"><canvas id="c2"></canvas></div></div></div>
-<p class="note">${t("s6acc")}</p></section>
+<div class="invest-kpi-row">
+<div class="invest-kpi highlight"><div class="ik-val">${fm(RISK.oom)}</div><div class="ik-lbl">${t("s6kOom")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(CAPEX.total)}</div><div class="ik-lbl">${t("s6kBase")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(RISK.cont_total)}</div><div class="ik-lbl">${t("s6kRisk")}</div></div></div>
+<div class="grid-2"><div class="card"><div class="chart-title">${t("chartLeft")}</div><div class="chart-wrap tall"><canvas id="c1"></canvas></div></div>
+<div class="card"><div class="chart-title">${t("chartRight")}</div><div class="chart-wrap tall"><canvas id="c2"></canvas></div></div></div></section>
 
 <section class="slide"><h1>${t("s7t")}</h1><h2>${t("s7s")}</h2>
 <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:.5rem">
@@ -426,20 +465,31 @@ if(idx===4&&!chartsBuilt){buildCharts();chartsBuilt=true;}
 }
 function buildCharts(){
 const zh=lang==="zh";
-new Chart(document.getElementById("c1"),{type:"doughnut",data:{labels:[
-zh?"直接工程 A–E":"Direct works A–E",
-zh?"FEED (F)":"FEED (F)",zh?"详细设计 (G)":"Detail design (G)",
-zh?"CDM (H)":"CDM (H)",zh?"调试 (I)":"Commissioning (I)",zh?"预备费 (J)":"Contingency (J)"
-],datasets:[{data:[CAPEX.direct,CAPEX.F,CAPEX.G,CAPEX.H,CAPEX.I,CAPEX.J],backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#4a7ba8","#009688","#c9a227"]}]},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:9},boxWidth:10}}}}});
-new Chart(document.getElementById("c2"),{type:"bar",data:{labels:[zh?"费用":"Cost"],datasets:[
+const otherFj=CAPEX.F+CAPEX.G+CAPEX.H+CAPEX.I+CAPEX.J;
+const oom=RISK.oom;
+const lblDirect=zh?"直接工程费 (A–E)":"Direct works (A–E)";
+const lblOther=zh?"其他项目费":"Other project costs";
+const lblRisk=zh?"风险与预备费":"Risk & contingency";
+new Chart(document.getElementById("c1"),{type:"bar",data:{
+labels:[zh?"项目投资 OOM":"Project OOM"],
+datasets:[
+{label:lblDirect,data:[CAPEX.direct],backgroundColor:"#0f2b46",borderRadius:4},
+{label:lblOther,data:[otherFj],backgroundColor:"#009688",borderRadius:4},
+{label:lblRisk,data:[RISK.cont_total],backgroundColor:"#c9a227",borderRadius:4}
+]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+plugins:{legend:{position:"bottom",labels:{font:{size:10},padding:14,usePointStyle:true,pointStyle:"rectRounded"}},
+tooltip:{callbacks:{label:c=>{const v=c.raw,pct=(v/oom*100).toFixed(1);return c.dataset.label+": "+fm(v)+" ("+pct+"%)";}}}},
+scales:{x:{stacked:true,max:oom*1.02,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M",font:{size:10}},grid:{color:"#eef1f4"}},
+y:{stacked:true,display:false}}}});
+new Chart(document.getElementById("c2"),{type:"bar",data:{labels:[zh?"直接工程费":"Direct works"],datasets:[
 {label:zh?"设备 A":"Equipment A",data:[CAPEX.A],backgroundColor:"#0f2b46"},
 {label:zh?"土建 B":"Civils B",data:[CAPEX.B],backgroundColor:"#1a4a6e"},
 {label:zh?"机管 C":"M&P C",data:[CAPEX.C],backgroundColor:"#2e6da4"},
 {label:zh?"电仪控 D":"EIC D",data:[CAPEX.D],backgroundColor:"#4a7ba8"},
 {label:zh?"HVAC E":"HVAC E",data:[CAPEX.E],backgroundColor:"#009688"}
-]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
-scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>"£"+(v/1000).toFixed(0)+"k"}}}}});
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{font:{size:9},usePointStyle:true}}},
+tooltip:{callbacks:{label:c=>{const v=c.raw,pct=(v/CAPEX.direct*100).toFixed(1);return c.dataset.label+": "+fm(v)+" ("+pct+"%)";}}}},
+scales:{x:{stacked:true,display:false},y:{stacked:true,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M",font:{size:10}},grid:{color:"#eef1f4"}}}});
 }
 document.getElementById("btnZh").onclick=()=>{if(lang!=="zh"){lang="zh";applyLang();}};
 document.getElementById("btnEn").onclick=()=>{if(lang!=="en"){lang="en";applyLang();}};
