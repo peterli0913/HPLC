@@ -499,6 +499,7 @@ applyLang();
 </body>
 </html>'''
 
-OUT.parent.mkdir(parents=True, exist_ok=True)
-OUT.write_text(HTML, encoding="utf-8")
-print("Wrote", OUT, len(HTML), "bytes")
+if __name__ == "__main__":
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(HTML, encoding="utf-8")
+    print("Wrote", OUT, len(HTML), "bytes")
