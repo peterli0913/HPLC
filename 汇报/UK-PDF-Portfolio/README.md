@@ -14,11 +14,13 @@ python3 scripts/build_portfolio_briefing.py
 
 Sources: `scripts/build_management_briefing.py` + `scripts/build_hplc_lyopho_briefing.py` (data/constants only).
 
-## Slide map (20 pages)
+## Slide map (17 pages)
 
-1. Cover · 2. Portfolio overview · 3. Investment comparison chart  
-4–10. Extension (summary, scope, cost, charts, contingency, programme, decisions)  
-11–17. HPLC/lyoph (summary, scope, cost, charts, programme, decisions)  
-18. Portfolio decisions · 19. Thank you
+1. Cover · 2. Project overview  
+3–9. Extension (section, summary, cost, charts, contingency, programme, decisions)  
+10–16. HPLC/lyoph (section, summary, scope, cost, charts, programme, decisions)  
+17. Thank you
+
+(No investment comparison chart, extension scope baseline, or portfolio decision slide.)
 
 Individual decks remain in `汇报/PDF-Extension-COO-CFO/` and `汇报/HPLC-Lyophilizer/`.

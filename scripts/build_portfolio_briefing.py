@@ -115,20 +115,17 @@ const HPLC_RISK = ''' + json.dumps(hplc.RISK_ON_BASE) + r''';
 const EXT_OOM = ''' + str(EXT_OOM) + r''';
 const EXT_BASE = ''' + str(EXT_BASE) + r''';
 const EXT_RISK = ''' + str(EXT_RISK) + r''';
-const CHART_SLIDES = [2, 8, 15];
 let lang="zh", idx=0, chartsBuilt = {};
 
 const I18N={
 zh:{
-footer:"凯莱英 UK · Sandwich PDF 资本项目组合",
+footer:"凯莱英 UK · Sandwich PDF 资本项目",
 nav:"← → 翻页", tag:"内部汇报 · 整体汇报",
-p1t:"凯莱英 UK · Sandwich PDF", p1s:"资本项目组合汇报", p1m:"B902 东侧扩建 + 厂房内 HPLC/冻干改造 · 2026年5月",
-p2t:"组合概览", p2s:"两条独立工作流，统一为可行性阶段 OOM",
+p1t:"凯莱英 UK · Sandwich PDF", p1s:"资本项目汇报", p1m:"B902 东侧扩建 + 厂房内 HPLC/冻干改造 · 2026年5月",
+p2t:"项目概览", p2s:"两条独立工作流 · 可行性阶段 OOM",
 p2th1:"子项目", p2th2:"范围", p2th3:"OOM（可行性量级）", p2th4:"关键节点",
-p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干燥", p2r1o:"£78.1M", p2r1d:"2030-05 竣工（总控）",
-p2r2n:"HPLC + 冻干", p2r2s:"既有 PDF  footprint 改造", p2r2o:"£5.67M", p2r2d:"2027-08 HPLC / 11 月冻干",
-p2note:"两项目设计方、费用口径不同；扩建 OOM 已含大量预备费块，改造采用基础成本 + 风险预备费（15/25/10%）展示。非最终 Capex。",
-p3t:"投资对比（可行性量级）", p3s:"并列展示，不可简单相加为单一项目总价",
+p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干燥", p2r1o:"£78.1M", p2r1d:"2030-05 竣工",
+p2r2n:"HPLC + 冻干", p2r2s:"既有 PDF  footprint 改造", p2r2o:"£5.67M", p2r2d:"2027-09 HPLC / 12 月冻干",
 extTag:"扩建", hplcTag:"改造",
 extSec:"一、B902 东侧扩建", extSecs:"Scitech · RIBA Stage 1 · 300291-RE-0001",
 ext2t:"扩建 · 执行摘要", ext2s:"2026-05-22 · Issue A1",
@@ -159,8 +156,8 @@ hplcSec:"二、厂房内 HPLC + 冻干", hplcSecs:"RBPC · Project 9802 · P01",
 hplc2t:"改造 · 执行摘要", hplc2s:"9802-RBP-ZZ-ZZ-RP-X-100000",
 hplcK1:"技术可行", hplcK1d:"FS P01",
 hplcK2:"£5.67M", hplcK2d:"OOM（×1.5）",
-hplcK3:"2027 Q3", hplcK3d:"HPLC 目标",
-hplcK4:"2027 Q4", hplcK4d:"冻干目标",
+hplcK3:"2027-09", hplcK3d:"HPLC 目标",
+hplcK4:"2027-12", hplcK4d:"冻干目标",
 hplcB1:"范围：制备 HPLC（DAC300/CP300）+ 冻干机（隔离器、除湿、纯蒸汽发生器等）及配套改造。",
 hplcB2:"投资：基础 £3.78M + 风险预备费块；非最终 Capex。",
 hplcB3:"周期：冻干机长周期驱动；优先冻干后 HPLC。",
@@ -200,13 +197,11 @@ hplcCost:{direct:"直接工程费 (A–E)",A:"A 设备",A1:"A1 储罐",A2:"A2 �
 en:{
 footer:"Asymchem UK · Sandwich PDF Portfolio",
 nav:"← → navigate", tag:"Internal · Portfolio briefing",
-p1t:"Asymchem UK · Sandwich PDF", p1s:"Capital Projects Portfolio", p1m:"B902 extension + in-situ HPLC/lyoph · May 2026",
-p2t:"Portfolio overview", p2s:"Two workstreams · feasibility OOM",
+p1t:"Asymchem UK · Sandwich PDF", p1s:"Capital Projects Briefing", p1m:"B902 extension + in-situ HPLC/lyoph · May 2026",
+p2t:"Project overview", p2s:"Two workstreams · feasibility OOM",
 p2th1:"Workstream", p2th2:"Scope", p2th3:"OOM (feasibility)", p2th4:"Milestone",
 p2r1n:"B902 east extension", p2r1s:"New 4-floor + mezzanine", p2r1o:"£78.1M", p2r1d:"Complete May 2030",
-p2r2n:"HPLC + lyophilizer", p2r2s:"Retrofit in existing PDF", p2r2o:"£5.67M", p2r2d:"HPLC Aug 2027 / lyoph Nov",
-p2note:"Different designers and cost bases. Extension OOM includes large contingency blocks; retrofit shows base + 15/25/10% risk uplift. Not final Capex.",
-p3t:"Investment comparison", p3s:"Side-by-side feasibility magnitudes",
+p2r2n:"HPLC + lyophilizer", p2r2s:"Retrofit in existing PDF", p2r2o:"£5.67M", p2r2d:"HPLC Sep 2027 / lyoph Dec",
 extTag:"Extension", hplcTag:"Retrofit",
 extSec:"I. B902 East Extension", extSecs:"Scitech · RIBA 1 · 300291-RE-0001",
 ext2t:"Extension · Summary", ext2s:"22 May 2026 · A1",
@@ -237,8 +232,8 @@ hplcSec:"II. HPLC + Lyophilizer", hplcSecs:"RBPC · 9802 · P01",
 hplc2t:"Retrofit · Summary", hplc2s:"9802-RBP-ZZ-ZZ-RP-X-100000",
 hplcK1:"Feasible", hplcK1d:"FS P01",
 hplcK2:"£5.67M", hplcK2d:"OOM (×1.5)",
-hplcK3:"Q3 2027", hplcK3d:"HPLC target",
-hplcK4:"Q4 2027", hplcK4d:"Lyoph target",
+hplcK3:"Sep 2027", hplcK3d:"HPLC target",
+hplcK4:"Dec 2027", hplcK4d:"Lyoph target",
 hplcB1:"Prep HPLC + lyophilizer (isolator, dehumidifier, PSG, etc.) and enabling works.",
 hplcB2:"Base £3.78M + risk blocks; not final Capex.",
 hplcB3:"Lyophilizer lead time drives; lyoph before HPLC.",
@@ -382,11 +377,7 @@ return `
 </tr></thead><tbody>
 <tr><td><strong>${t("p2r1n")}</strong></td><td>${t("p2r1s")}</td><td>${t("p2r1o")}</td><td>${t("p2r1d")}</td></tr>
 <tr><td><strong>${t("p2r2n")}</strong></td><td>${t("p2r2s")}</td><td>${t("p2r2o")}</td><td>${t("p2r2d")}</td></tr>
-</tbody></table></div>
-<p class="note">${t("p2note")}</p></section>
-
-<section class="slide" data-charts="port"><h1>${t("p3t")}</h1><h2>${t("p3s")}</h2>
-<div class="chart-wrap tall" style="flex:1"><canvas id="cPort"></canvas></div></section>
+</tbody></table></div></section>
 
 <section class="slide section-slide"><p><span class="tag ext">${t("extTag")}</span></p>
 <h1>${t("extSec")}</h1><p>${t("extSecs")}</p></section>
@@ -397,9 +388,6 @@ return `
 <div class="kpi ext"><div class="val">${t("extK2")}</div><div class="lbl">${t("extK2d")}</div></div>
 <div class="kpi ext"><div class="val">${t("extK3")}</div><div class="lbl">${t("extK3d")}</div></div></div>
 <ul><li>${t("extB1")}</li><li>${t("extB2")}</li><li>${t("extB3")}</li></ul></section>
-
-<section class="slide"><h1>${t("ext4t")}</h1><h2>${t("ext4s")}</h2>
-<ul><li>${t("ext4b1")}</li><li>${t("ext4b2")}</li><li>${t("ext4b3")}</li></ul></section>
 
 <section class="slide"><h1>${t("ext5t")}</h1><h2>${t("ext5s")}</h2>
 <div class="cost-scroll">${extCostHTML()}</div></section>
@@ -467,10 +455,6 @@ ${ganttHTML(GANTT_HPLC,new Date("2026-05-01"),new Date("2027-12-31"),HPLC_KEYS,[
 <ul class="decision-list">
 <li class="hplc">${t("hplc9d1")}</li><li class="hplc">${t("hplc9d2")}</li></ul></section>
 
-<section class="slide"><h1>${t("pDecT")}</h1><h2>${t("pDecS")}</h2>
-<ul class="decision-list">
-<li>${t("pDec1")}</li><li class="ext">${t("pDec2")}</li><li class="hplc">${t("pDec3")}</li><li>${t("pDec4")}</li></ul></section>
-
 <section class="slide title-slide"><h1>${t("pEnd")}</h1></section>`;
 }
 
@@ -493,14 +477,6 @@ tip.style.left=x+"px";tip.style.top=y+"px";}
 
 function buildCharts(which){
 const zh=lang==="zh";
-if(which==="port"&&!chartsBuilt.port){
-new Chart(document.getElementById("cPort"),{type:"bar",data:{
-labels:[zh?t("p2r1n"):"Extension",zh?t("p2r2n"):"Retrofit"],
-datasets:[{label:zh?"OOM":"OOM",data:[EXT_OOM,HPLC_RISK.oom],backgroundColor:["#1a4a6e","#5b6eae"]}]
-},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
-tooltip:{callbacks:{label:c=>fm(c.raw)}}},scales:{y:{ticks:{callback:v=>"£"+(v/1e6).toFixed(1)+"M"}}}}});
-chartsBuilt.port=true;
-}
 if(which==="ext"&&!chartsBuilt.ext){
 new Chart(document.getElementById("cExt1"),{type:"bar",data:{labels:[zh?"项目总投资":"Total"],datasets:[
 {label:zh?"基础建造":"Base",data:[EXT_BASE],backgroundColor:"#0f2b46"},
