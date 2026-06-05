@@ -205,8 +205,16 @@ def hplc_cost_data_json() -> str:
             "otherItems": OTHER_LINE_ITEMS,
             "genItems": GEN_LINE_ITEMS,
             "chartStack": CHART_STACK,
-            "chartDonut": [i["amount"] for i in DIRECT_LINE_ITEMS if i["amount"] > 0],
-            "chartDonutIds": [i["id"] for i in DIRECT_LINE_ITEMS if i["amount"] > 0],
+            "chartDonut": [
+                i["amount"]
+                for i in DIRECT_LINE_ITEMS
+                if i["amount"] > 0 and not i["id"].endswith("price")
+            ],
+            "chartDonutIds": [
+                i["id"]
+                for i in DIRECT_LINE_ITEMS
+                if i["amount"] > 0 and not i["id"].endswith("price")
+            ],
         }
     )
 
