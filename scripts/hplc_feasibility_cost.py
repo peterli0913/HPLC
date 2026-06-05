@@ -9,9 +9,12 @@ from ext_feasibility_cost import EXT_COST_CSS
 # --- Totals (CP-X-100001) ---
 FEAS_BASE = 3_783_000
 
-DIRECT_SUB = 2_329_000
-PRICE_RISK = 465_800  # 20% of direct subtotal
-DIRECT_TOTAL = DIRECT_SUB + PRICE_RISK  # 2,794,800
+DIRECT_SUB = 2_329_000  # A–E works subtotal
+PRICE_RISK = 465_800  # F 价格风险（£2,329,000 × 20%）
+SUBTOTAL_WITH_F = DIRECT_SUB + PRICE_RISK  # 2,794,800
+DIRECT_CONT_PCT = 20
+DIRECT_CONT = round(SUBTOTAL_WITH_F * DIRECT_CONT_PCT / 100)  # 558,960
+DIRECT_TOTAL = SUBTOTAL_WITH_F + DIRECT_CONT  # 3,353,760
 
 OTHER_SUB = 825_000  # FEED + design + CDM + commissioning
 OTHER_CONT_PCT = 20
@@ -121,6 +124,7 @@ HPLC_COST_I18N_EN = {
     "secOther": "Other project costs",
     "secGen": "General risk & contingency at feasibility",
     "subtotal": "Subtotal",
+    "directCont": "Contingency (20%)",
     "otherCont": "Contingency (20%)",
     "secTotal": "Section total",
     "a1": "A1 Tanks / vessels",
@@ -212,8 +216,8 @@ const D=HPLC_COST_DATA,L=hplcCostLabels();
 let directItems=D.directItems.filter(it=>it.amount>0).map(it=>hplcCostItemHTML(it.id,it.amount)).join("");
 const directBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secDirect,D.directTotal)}</summary>
 <div class="cost-section-body">${directItems}
-<div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.directSub)}</span></div>
-${hplcCostItemHTML("fprice",D.priceRisk)}
+<div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.subtotalWithF)}</span></div>
+<div class="cost-risk-line"><span>${L.directCont}</span><span>${fm(D.directCont)}</span></div>
 <div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.directTotal)}</span></div></div></details>`;
 let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>hplcCostItemHTML(it.id,it.amount)).join("");
 const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secOther,D.otherTotal)}</summary>
