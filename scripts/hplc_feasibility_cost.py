@@ -6,24 +6,23 @@ import json
 
 from ext_feasibility_cost import EXT_COST_CSS
 
-# --- Totals (CP-X-100001; OOM ×1.5 on feasibility base) ---
+# --- Totals (CP-X-100001) ---
 FEAS_BASE = 3_783_000
-HPLC_OOM = 5_674_500
 
 DIRECT_SUB = 2_329_000
-DIRECT_CONT_PCT = 20
-DIRECT_CONT = round(DIRECT_SUB * DIRECT_CONT_PCT / 100)  # 465,800
-DIRECT_TOTAL = DIRECT_SUB + DIRECT_CONT  # 2,794,800
+PRICE_RISK = 465_800  # 20% of direct subtotal
+DIRECT_TOTAL = DIRECT_SUB + PRICE_RISK  # 2,794,800
 
-OTHER_SUB = 825_000  # F + G + H + I
+OTHER_SUB = 825_000  # FEED + design + CDM + commissioning
 OTHER_CONT_PCT = 20
 OTHER_CONT = round(OTHER_SUB * OTHER_CONT_PCT / 100)  # 165,000
 OTHER_TOTAL = OTHER_SUB + OTHER_CONT  # 990,000
 
-GEN_C15 = round(FEAS_BASE * 0.15)  # 567,450
-GEN_C25 = round(FEAS_BASE * 0.25)  # 945,750
-GEN_TOTAL = HPLC_OOM - DIRECT_TOTAL - OTHER_TOTAL  # 1,889,700
-GEN_C10 = GEN_TOTAL - GEN_C15 - GEN_C25  # 376,500
+ACCURACY_BASE = DIRECT_SUB + OTHER_SUB  # 3,154,000 (excl. contingency lines)
+ACCURACY_PCT = 30
+ACCURACY_CONT = round(ACCURACY_BASE * ACCURACY_PCT / 100)  # 946,200
+GEN_TOTAL = ACCURACY_CONT
+HPLC_OOM = DIRECT_TOTAL + OTHER_TOTAL + GEN_TOTAL  # 4,731,000
 
 CHART_STACK = {
     "direct_total": DIRECT_TOTAL,
@@ -49,11 +48,7 @@ OTHER_LINE_ITEMS = [
     {"id": "i", "amount": 76_000},
 ]
 
-GEN_LINE_ITEMS = [
-    {"id": "c15", "amount": GEN_C15},
-    {"id": "c25", "amount": GEN_C25},
-    {"id": "c10", "amount": GEN_C10},
-]
+GEN_LINE_ITEMS = [{"id": "accuracy", "amount": ACCURACY_CONT}]
 
 # Legacy dicts for portfolio imports / charts
 CAPEX = {
@@ -78,19 +73,16 @@ CAPEX = {
 RISK_ON_BASE = {
     "base": FEAS_BASE,
     "oom": HPLC_OOM,
-    "c15": GEN_C15,
-    "c25": GEN_C25,
-    "c10": GEN_C10,
+    "accuracy": ACCURACY_CONT,
     "cont_total": GEN_TOTAL,
 }
 
 HPLC_COST_I18N_ZH = {
     "oom": "项目 OOM 总价",
-    "secDirect": "直接工程费 (A–E)",
+    "secDirect": "直接工程费",
     "secOther": "其他项目费",
-    "secGen": "可行性阶段 OOM 预备费",
+    "secGen": "可行性阶段一般风险与预备费",
     "subtotal": "小计",
-    "directCont": "施工与设备预备费（20%）",
     "otherCont": "预备费（20%）",
     "secTotal": "本项合计",
     "a1": "A1 储罐/容器",
@@ -98,16 +90,15 @@ HPLC_COST_I18N_ZH = {
     "a31": "A3.1 HPLC（Hanbon）",
     "a32": "A3.2 冻干机包",
     "b": "B 土建",
-    "c": "C 机管",
-    "d": "D 电仪控",
+    "c": "C 安装及管路",
+    "d": "D 电器仪表",
     "e": "E HVAC",
+    "fprice": "F 价格风险",
     "f": "F FEED（±30%）",
     "g": "G 详细设计（±10%）",
     "h": "H CDM",
     "i": "I 调试",
-    "c15": "设计发展准备金（15%）",
-    "c25": "施工与设备预备费（25%）",
-    "c10": "业主预备费（10%）",
+    "accuracy": "Accuracy contingency（30%）",
     "bullets": {
         "a1": ["500 L 头罐×2", "200 L 头罐×3", "2000 L 废液罐"],
         "a2": ["HPLC 输送泵", "HPLC 废液泵", "冻干 CIP 泵", "冻干废液泵"],
@@ -126,11 +117,10 @@ HPLC_COST_I18N_ZH = {
 
 HPLC_COST_I18N_EN = {
     "oom": "Total project OOM",
-    "secDirect": "Direct works (A–E)",
+    "secDirect": "Direct works",
     "secOther": "Other project costs",
-    "secGen": "OOM contingency at feasibility",
+    "secGen": "General risk & contingency at feasibility",
     "subtotal": "Subtotal",
-    "directCont": "Construction & equipment contingency (20%)",
     "otherCont": "Contingency (20%)",
     "secTotal": "Section total",
     "a1": "A1 Tanks / vessels",
@@ -138,16 +128,15 @@ HPLC_COST_I18N_EN = {
     "a31": "A3.1 HPLC (Hanbon)",
     "a32": "A3.2 Lyophilizer package",
     "b": "B Civils",
-    "c": "C Mechanical & pipework",
+    "c": "C Installation & pipework",
     "d": "D Electrical & instrumentation",
     "e": "E HVAC",
+    "fprice": "F Price risk",
     "f": "F FEED study (±30%)",
     "g": "G Detailed design (±10%)",
     "h": "H CDM fees",
     "i": "I Commissioning",
-    "c15": "Design development allowance (15%)",
-    "c25": "Construction & equipment contingency (25%)",
-    "c10": "Client contingency (10%)",
+    "accuracy": "Accuracy contingency (30%)",
     "bullets": {
         "a1": ["500 L head tanks ×2", "200 L head tanks ×3", "2,000 L waste tank"],
         "a2": ["HPLC transfer", "HPLC waste", "Lyoph CIP", "Lyoph waste"],
@@ -167,14 +156,14 @@ HPLC_COST_I18N_EN = {
 CHART_I18N_ZH = {
     "stackDirect": "直接工程费",
     "stackOther": "其他项目费",
-    "stackGen": "OOM 预备费",
+    "stackGen": "一般风险与预备费",
     "donutTitle": "直接工程费分项",
 }
 
 CHART_I18N_EN = {
     "stackDirect": "Direct works",
     "stackOther": "Other project costs",
-    "stackGen": "OOM contingency",
+    "stackGen": "General risk & contingency",
     "donutTitle": "Direct works breakdown",
 }
 
@@ -185,13 +174,15 @@ def hplc_cost_data_json() -> str:
             "oom": HPLC_OOM,
             "feasBase": FEAS_BASE,
             "directSub": DIRECT_SUB,
-            "directCont": DIRECT_CONT,
+            "priceRisk": PRICE_RISK,
             "directTotal": DIRECT_TOTAL,
-            "directContPct": DIRECT_CONT_PCT,
             "otherSub": OTHER_SUB,
             "otherCont": OTHER_CONT,
             "otherTotal": OTHER_TOTAL,
             "otherContPct": OTHER_CONT_PCT,
+            "accuracyBase": ACCURACY_BASE,
+            "accuracy": ACCURACY_CONT,
+            "accuracyPct": ACCURACY_PCT,
             "genTotal": GEN_TOTAL,
             "directItems": DIRECT_LINE_ITEMS,
             "otherItems": OTHER_LINE_ITEMS,
@@ -222,7 +213,7 @@ let directItems=D.directItems.filter(it=>it.amount>0).map(it=>hplcCostItemHTML(i
 const directBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secDirect,D.directTotal)}</summary>
 <div class="cost-section-body">${directItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.directSub)}</span></div>
-<div class="cost-risk-line"><span>${L.directCont}</span><span>${fm(D.directCont)}</span></div>
+${hplcCostItemHTML("fprice",D.priceRisk)}
 <div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.directTotal)}</span></div></div></details>`;
 let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>hplcCostItemHTML(it.id,it.amount)).join("");
 const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secOther,D.otherTotal)}</summary>
