@@ -100,9 +100,9 @@ EXT_COST_I18N_ZH = {
     "prefab": "装配式建筑",
     "exist": "既有建筑改造",
     "ext": "室外工程",
-    "pre": "临建",
-    "ohp": "承包商管理费与利润",
-    "design": "设计团队费",
+    "pre": "临建 (8%)",
+    "ohp": "承包商管理费与利润 (5%)",
+    "design": "设计团队费 (8%)",
     "survey": "勘测与调查",
     "breeam": "BREEAM",
     "plan": "规划与法定费用",
@@ -149,9 +149,9 @@ EXT_COST_I18N_EN = {
     "prefab": "Prefabricated buildings",
     "exist": "Work to existing buildings",
     "ext": "External works",
-    "pre": "Preliminaries",
-    "ohp": "Contractor OH&P",
-    "design": "Design team fees",
+    "pre": "Preliminaries (8%)",
+    "ohp": "Contractor OH&P (5%)",
+    "design": "Design team fees (8%)",
     "survey": "Surveys & investigations",
     "breeam": "BREEAM",
     "plan": "Planning & statutory fees",
@@ -226,21 +226,20 @@ const L=extCostLabels();
 const bullets=extBullets(id);
 const bl=bullets.length?`<ul class="cost-bullets">${bullets.map(x=>`<li>${x}</li>`).join("")}</ul>`:"";
 const body=bl?`<div class="cost-children">${bl}</div>`:"";
-const hideAmt=amt===0?" cost-amt-zero":"";
-return `<details class="cost-item cost-item-sub"${bl?"":" data-no-body"}><summary><span class="cost-label">${L[id]}</span><span class="cost-amt${hideAmt}">${fm(amt)}</span></summary>${body}</details>`;
+return `<details class="cost-item cost-item-sub"${bl?"":" data-no-body"}><summary><span class="cost-label">${L[id]}</span><span class="cost-amt">${fm(amt)}</span></summary>${body}</details>`;
 }
 function extSectionHd(title,total){
 return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(total)}</span>`;
 }
 function extCostHTML(){
 const D=EXT_COST_DATA,L=extCostLabels();
-let baseItems=D.baseItems.map(it=>extCostItemHTML(it.id,it.amount)).join("");
+let baseItems=D.baseItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,it.amount)).join("");
 const baseBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secBase,D.baseTotal)}</summary>
 <div class="cost-section-body">${baseItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.baseSub)}</span></div>
 <div class="cost-risk-line"><span>${L.baseRisk}</span><span>${fm(D.baseRisk)}</span></div>
 <div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.baseTotal)}</span></div></div></details>`;
-let otherItems=D.otherItems.filter(it=>it.amount>0||it.id==="client").map(it=>extCostItemHTML(it.id,it.amount)).join("");
+let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,it.amount)).join("");
 const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secOther,D.otherTotal)}</summary>
 <div class="cost-section-body">${otherItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.otherSub)}</span></div>
@@ -282,11 +281,11 @@ EXT_COST_CSS = """
 .cost-item.cost-item-sub>summary{padding:.26rem .5rem .26rem .85rem;font-size:.74rem;font-weight:400;background:transparent}
 .cost-item.cost-item-sub>summary .cost-label{color:#9aa8b6;font-weight:500}
 .cost-item.cost-item-sub>summary .cost-amt{color:#8b98a6;font-weight:600;font-size:.72rem}
-.cost-item.cost-item-sub>summary .cost-amt-zero{color:#b8c2cc}
 .cost-item.cost-item-sub .cost-children{padding:.1rem .5rem .25rem 1.35rem;border-top:none}
 .cost-item.cost-item-sub[data-no-body]>summary{cursor:default}
-.cost-subtotal,.cost-risk-line{display:flex;justify-content:space-between;padding:.32rem .55rem;font-size:.74rem;color:#7a8794;border-top:1px dashed #e2e8ee;margin-top:.15rem}
-.cost-risk-line{font-style:italic}
+.cost-subtotal{display:flex;justify-content:space-between;align-items:center;padding:.4rem .6rem;margin:.2rem 0 .1rem;font-size:.78rem;font-weight:600;color:var(--navy);background:#e8eef4;border:1px solid #cfd8e3;border-radius:6px}
+.cost-subtotal span:last-child{font-weight:700}
+.cost-risk-line{display:flex;justify-content:space-between;padding:.32rem .55rem;font-size:.74rem;color:#7a8794;border-top:1px dashed #e2e8ee;margin-top:.1rem;font-style:italic}
 .cost-section-total{display:flex;justify-content:space-between;padding:.4rem .55rem;margin-top:.2rem;border-radius:6px;background:linear-gradient(90deg,#0f2b46,#1a4a6e);color:#fff;font-size:.8rem;font-weight:700}
 .cost-leaf.cost-leaf-sub{display:flex;justify-content:space-between;padding:.28rem .55rem .28rem .85rem;font-size:.74rem;color:#9aa8b6}
 .cost-leaf.cost-leaf-sub span:last-child{color:#8b98a6;font-weight:600}

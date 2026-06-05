@@ -52,11 +52,11 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .cost-item.cost-item-sub>summary{padding:.26rem .5rem .26rem .85rem;font-size:.74rem;font-weight:400;background:transparent}
 .cost-item.cost-item-sub>summary .cost-label{color:#9aa8b6;font-weight:500}
 .cost-item.cost-item-sub>summary .cost-amt{color:#8b98a6;font-weight:600;font-size:.72rem}
-.cost-item.cost-item-sub>summary .cost-amt-zero{color:#b8c2cc}
 .cost-item.cost-item-sub .cost-children{padding:.1rem .5rem .25rem 1.35rem;border-top:none}
 .cost-item.cost-item-sub[data-no-body]>summary{cursor:default}
-.cost-subtotal,.cost-risk-line{display:flex;justify-content:space-between;padding:.32rem .55rem;font-size:.74rem;color:#7a8794;border-top:1px dashed #e2e8ee;margin-top:.15rem}
-.cost-risk-line{font-style:italic}
+.cost-subtotal{display:flex;justify-content:space-between;align-items:center;padding:.4rem .6rem;margin:.2rem 0 .1rem;font-size:.78rem;font-weight:600;color:var(--navy);background:#e8eef4;border:1px solid #cfd8e3;border-radius:6px}
+.cost-subtotal span:last-child{font-weight:700}
+.cost-risk-line{display:flex;justify-content:space-between;padding:.32rem .55rem;font-size:.74rem;color:#7a8794;border-top:1px dashed #e2e8ee;margin-top:.1rem;font-style:italic}
 .cost-section-total{display:flex;justify-content:space-between;padding:.4rem .55rem;margin-top:.2rem;border-radius:6px;background:linear-gradient(90deg,#0f2b46,#1a4a6e);color:#fff;font-size:.8rem;font-weight:700}
 .cost-leaf.cost-leaf-sub{display:flex;justify-content:space-between;padding:.28rem .55rem .28rem .85rem;font-size:.74rem;color:#9aa8b6}
 .cost-leaf.cost-leaf-sub span:last-child{color:#8b98a6;font-weight:600}
@@ -125,21 +125,20 @@ const L=extCostLabels();
 const bullets=extBullets(id);
 const bl=bullets.length?`<ul class="cost-bullets">${bullets.map(x=>`<li>${x}</li>`).join("")}</ul>`:"";
 const body=bl?`<div class="cost-children">${bl}</div>`:"";
-const hideAmt=amt===0?" cost-amt-zero":"";
-return `<details class="cost-item cost-item-sub"${bl?"":" data-no-body"}><summary><span class="cost-label">${L[id]}</span><span class="cost-amt${hideAmt}">${fm(amt)}</span></summary>${body}</details>`;
+return `<details class="cost-item cost-item-sub"${bl?"":" data-no-body"}><summary><span class="cost-label">${L[id]}</span><span class="cost-amt">${fm(amt)}</span></summary>${body}</details>`;
 }
 function extSectionHd(title,total){
 return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(total)}</span>`;
 }
 function extCostHTML(){
 const D=EXT_COST_DATA,L=extCostLabels();
-let baseItems=D.baseItems.map(it=>extCostItemHTML(it.id,it.amount)).join("");
+let baseItems=D.baseItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,it.amount)).join("");
 const baseBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secBase,D.baseTotal)}</summary>
 <div class="cost-section-body">${baseItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.baseSub)}</span></div>
 <div class="cost-risk-line"><span>${L.baseRisk}</span><span>${fm(D.baseRisk)}</span></div>
 <div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.baseTotal)}</span></div></div></details>`;
-let otherItems=D.otherItems.filter(it=>it.amount>0||it.id==="client").map(it=>extCostItemHTML(it.id,it.amount)).join("");
+let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,it.amount)).join("");
 const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secOther,D.otherTotal)}</summary>
 <div class="cost-section-body">${otherItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.otherSub)}</span></div>
@@ -195,7 +194,7 @@ ext5t:"扩建 · 投资总览", ext5s:"300291-CM-0001",
 ext5oom:"OOM 总价",
 ext6t:"扩建 · 投资结构", ext6s:"OOM 构成与基础建造费分项",
 ext6kOom:"OOM 总价", ext6kBase:"基础建造成本（含 20%）", ext6kRisk:"其他费及可行性风险",
-extCost:{"oom": "项目 OOM 总价", "secBase": "基础建造成本", "secOther": "其他项目费", "secGen": "可行性阶段一般风险与预备费", "subtotal": "小计", "baseRisk": "施工与设备预备费（20%）", "otherCont": "预备费（20%）", "confidence": "信心预备费（30%）", "riskReg": "风险登记册（概率加权总和）", "secTotal": "本项合计", "fac": "开办工程", "sub": "下部结构", "sup": "上部结构", "int": "内部装修", "fit": "装置与设备", "bld": "建筑机电", "proc": "工艺设备", "prefab": "装配式建筑", "exist": "既有建筑改造", "ext": "室外工程", "pre": "临建", "ohp": "承包商管理费与利润", "design": "设计团队费", "survey": "勘测与调查", "breeam": "BREEAM", "plan": "规划与法定费用", "client": "业主直接费", "bullets": {"fac": ["拆除临建", "液氮罐移除", "加氢厂房拆除"], "sub": ["桩基基础", "设备地坪", "冷机基础", "台阶坡道"], "sup": ["框架楼板屋面", "防爆屋面墙", "楼梯钢构", "门窗"], "int": ["墙面饰面", "吊顶", "地面"], "fit": ["消毒清洁设施"], "bld": ["总包接口", "暖通空调", "电气", "EMS", "工艺控制"], "proc": ["搪玻璃釜", "过滤干燥机", "哈氏合金", "管道阀门", "真空等"], "prefab": ["本期不计"], "exist": ["烟囱加高", "钢构加固", "百叶整合"], "ext": ["场地建设、管网等"], "pre": ["现场管理临建"], "ohp": ["承包商 OH&P"], "design": ["设计团队费 8%"], "survey": ["勘测调查"], "breeam": ["BREEAM 评估"], "plan": ["规划法定费"], "client": ["可研阶段不计"]}},extChart:{"stackBase": "基础建造成本", "stackOther": "其他项目费", "stackGen": "一般风险与预备费", "donutTitle": "基础建造成本分项"},
+extCost:{"oom": "项目 OOM 总价", "secBase": "基础建造成本", "secOther": "其他项目费", "secGen": "可行性阶段一般风险与预备费", "subtotal": "小计", "baseRisk": "施工与设备预备费（20%）", "otherCont": "预备费（20%）", "confidence": "信心预备费（30%）", "riskReg": "风险登记册（概率加权总和）", "secTotal": "本项合计", "fac": "开办工程", "sub": "下部结构", "sup": "上部结构", "int": "内部装修", "fit": "装置与设备", "bld": "建筑机电", "proc": "工艺设备", "prefab": "装配式建筑", "exist": "既有建筑改造", "ext": "室外工程", "pre": "临建 (8%)", "ohp": "承包商管理费与利润 (5%)", "design": "设计团队费 (8%)", "survey": "勘测与调查", "breeam": "BREEAM", "plan": "规划与法定费用", "client": "业主直接费", "bullets": {"fac": ["拆除临建", "液氮罐移除", "加氢厂房拆除"], "sub": ["桩基基础", "设备地坪", "冷机基础", "台阶坡道"], "sup": ["框架楼板屋面", "防爆屋面墙", "楼梯钢构", "门窗"], "int": ["墙面饰面", "吊顶", "地面"], "fit": ["消毒清洁设施"], "bld": ["总包接口", "暖通空调", "电气", "EMS", "工艺控制"], "proc": ["搪玻璃釜", "过滤干燥机", "哈氏合金", "管道阀门", "真空等"], "prefab": ["本期不计"], "exist": ["烟囱加高", "钢构加固", "百叶整合"], "ext": ["场地建设、管网等"], "pre": ["现场管理临建"], "ohp": ["承包商 OH&P"], "design": ["设计团队费 8%"], "survey": ["勘测调查"], "breeam": ["BREEAM 评估"], "plan": ["规划法定费"], "client": ["可研阶段不计"]}},extChart:{"stackBase": "基础建造成本", "stackOther": "其他项目费", "stackGen": "一般风险与预备费", "donutTitle": "基础建造成本分项"},
 extChL:"项目 OOM 三板块", extChR:"基础建造成本 — 分项",
 ext7t:"扩建 · 预备费结构", ext7s:"报告 §14 · 已纳入 OOM",
 extC15:"设计发展 (15%)", extC25:"施工设备 (25%)", extC10:"业主 (10%)", extC4:"风险登记册（量化）",
@@ -271,7 +270,7 @@ ext5t:"Extension · Investment", ext5s:"300291-CM-0001",
 ext5oom:"Total OOM",
 ext6t:"Extension · Structure", ext6s:"OOM build-up",
 ext6kOom:"Total OOM", ext6kBase:"Base construction (incl. 20%)", ext6kRisk:"Other costs & feasibility risk",
-extCost:{"oom": "Total project OOM", "secBase": "Base construction cost", "secOther": "Other project costs", "secGen": "General risk & contingency at feasibility", "subtotal": "Subtotal", "baseRisk": "Construction & equipment contingency (20%)", "otherCont": "Contingency (20%)", "confidence": "Confidence contingency (30%)", "riskReg": "Risk register (probability-weighted total)", "secTotal": "Section total", "fac": "Facilitating works", "sub": "Substructure", "sup": "Superstructure", "int": "Internal finishes", "fit": "Fittings & equipment", "bld": "Building services", "proc": "Process equipment", "prefab": "Prefabricated buildings", "exist": "Work to existing buildings", "ext": "External works", "pre": "Preliminaries", "ohp": "Contractor OH&P", "design": "Design team fees", "survey": "Surveys & investigations", "breeam": "BREEAM", "plan": "Planning & statutory fees", "client": "Client direct costs", "bullets": {"fac": ["Demolition / enabling", "LN tank removal", "H₂ plant removal"], "sub": ["Piles & foundations", "Equipment slabs", "Chiller pads", "Steps / ramps"], "sup": ["Frame & envelope", "Blast roof/wall", "Stairs & steel", "Doors"], "int": ["Wall finishes", "Ceilings", "Floors"], "fit": ["Disinfection / cleaning facilities"], "bld": ["BWIC", "HVAC", "Electrical", "EMS", "Process control"], "proc": ["GL reactors", "Filter dryers", "Hastelloy", "Piping / valves", "Vacuum etc."], "prefab": ["Nil at this stage"], "exist": ["Flue extensions", "Steel support", "Louvres"], "ext": ["Site works, utilities, etc."], "pre": ["Site management & welfare"], "ohp": ["Contractor OH&P"], "design": ["Design team fees (8%)"], "survey": ["Surveys"], "breeam": ["BREEAM"], "plan": ["Planning & statutory"], "client": ["Excluded at feasibility"]}},extChart:{"stackBase": "Base construction cost", "stackOther": "Other project costs", "stackGen": "General risk & contingency", "donutTitle": "Base construction breakdown"},
+extCost:{"oom": "Total project OOM", "secBase": "Base construction cost", "secOther": "Other project costs", "secGen": "General risk & contingency at feasibility", "subtotal": "Subtotal", "baseRisk": "Construction & equipment contingency (20%)", "otherCont": "Contingency (20%)", "confidence": "Confidence contingency (30%)", "riskReg": "Risk register (probability-weighted total)", "secTotal": "Section total", "fac": "Facilitating works", "sub": "Substructure", "sup": "Superstructure", "int": "Internal finishes", "fit": "Fittings & equipment", "bld": "Building services", "proc": "Process equipment", "prefab": "Prefabricated buildings", "exist": "Work to existing buildings", "ext": "External works", "pre": "Preliminaries (8%)", "ohp": "Contractor OH&P (5%)", "design": "Design team fees (8%)", "survey": "Surveys & investigations", "breeam": "BREEAM", "plan": "Planning & statutory fees", "client": "Client direct costs", "bullets": {"fac": ["Demolition / enabling", "LN tank removal", "H₂ plant removal"], "sub": ["Piles & foundations", "Equipment slabs", "Chiller pads", "Steps / ramps"], "sup": ["Frame & envelope", "Blast roof/wall", "Stairs & steel", "Doors"], "int": ["Wall finishes", "Ceilings", "Floors"], "fit": ["Disinfection / cleaning facilities"], "bld": ["BWIC", "HVAC", "Electrical", "EMS", "Process control"], "proc": ["GL reactors", "Filter dryers", "Hastelloy", "Piping / valves", "Vacuum etc."], "prefab": ["Nil at this stage"], "exist": ["Flue extensions", "Steel support", "Louvres"], "ext": ["Site works, utilities, etc."], "pre": ["Site management & welfare"], "ohp": ["Contractor OH&P"], "design": ["Design team fees (8%)"], "survey": ["Surveys"], "breeam": ["BREEAM"], "plan": ["Planning & statutory"], "client": ["Excluded at feasibility"]}},extChart:{"stackBase": "Base construction cost", "stackOther": "Other project costs", "stackGen": "General risk & contingency", "donutTitle": "Base construction breakdown"},
 extChL:"Project OOM — three blocks", extChR:"Base construction — line items",
 ext7t:"Extension · Contingency", ext7s:"Report §14",
 extC15:"Design dev. (15%)", extC25:"Constr./equip. (25%)", extC10:"Client (10%)", extC4:"Risk register",
