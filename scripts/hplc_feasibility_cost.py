@@ -9,27 +9,27 @@ from ext_feasibility_cost import EXT_COST_CSS
 # --- Totals (CP-X-100001) ---
 FEAS_BASE = 3_783_000
 
-# Direct works (A–E + F price risk + 20% contingency on subtotal incl. F)
+# Direct works (A–E + F price risk + 25% contingency on A–E excl. price risk)
 DIRECT_SUB = 2_329_000  # A–E
 DIRECT_PRICE_RISK = 465_800  # F：£2,329,000 × 20%
 DIRECT_SUBTOTAL = DIRECT_SUB + DIRECT_PRICE_RISK  # 2,794,800
-DIRECT_CONT_PCT = 20
-DIRECT_CONT = round(DIRECT_SUBTOTAL * DIRECT_CONT_PCT / 100)  # 558,960
-DIRECT_TOTAL = DIRECT_SUBTOTAL + DIRECT_CONT  # 3,353,760
+DIRECT_CONT_PCT = 25
+DIRECT_CONT = round(DIRECT_SUB * DIRECT_CONT_PCT / 100)  # 582,250
+DIRECT_TOTAL = DIRECT_SUBTOTAL + DIRECT_CONT  # 3,377,050
 
-# Other project costs (G–J + K price risk + 20% contingency on subtotal incl. K)
+# Other project costs (G–J + K price risk + 25% contingency on G–J excl. price risk)
 OTHER_SUB = 825_000  # G + H + I + J
 OTHER_PRICE_RISK = 165_000  # K：£825,000 × 20%
 OTHER_SUBTOTAL = OTHER_SUB + OTHER_PRICE_RISK  # 990,000
-OTHER_CONT_PCT = 20
-OTHER_CONT = round(OTHER_SUBTOTAL * OTHER_CONT_PCT / 100)  # 198,000
-OTHER_TOTAL = OTHER_SUBTOTAL + OTHER_CONT  # 1,188,000
+OTHER_CONT_PCT = 25
+OTHER_CONT = round(OTHER_SUB * OTHER_CONT_PCT / 100)  # 206,250
+OTHER_TOTAL = OTHER_SUBTOTAL + OTHER_CONT  # 1,196,250
 
 ACCURACY_BASE = DIRECT_SUB + OTHER_SUB  # 3,154,000（不含各板块价格风险与预备费）
-ACCURACY_PCT = 30
-ACCURACY_CONT = round(ACCURACY_BASE * ACCURACY_PCT / 100)  # 946,200
+ACCURACY_PCT = 25
+ACCURACY_CONT = round(ACCURACY_BASE * ACCURACY_PCT / 100)  # 788,500
 GEN_TOTAL = ACCURACY_CONT
-HPLC_OOM = DIRECT_TOTAL + OTHER_TOTAL + GEN_TOTAL  # 5,487,960
+HPLC_OOM = DIRECT_TOTAL + OTHER_TOTAL + GEN_TOTAL  # 5,361,800
 
 CHART_STACK = {
     "direct_total": DIRECT_TOTAL,
@@ -89,10 +89,10 @@ HPLC_COST_I18N_ZH = {
     "oom": "项目 OOM 总价",
     "secDirect": "直接工程费",
     "secOther": "其他项目费",
-    "secGen": "可行性阶段一般风险与预备费",
+    "secGen": "一般风险与预备费",
     "subtotal": "小计",
-    "directCont": "预备费（20%）",
-    "otherCont": "预备费（20%）",
+    "directCont": "预备费（25%）",
+    "otherCont": "预备费（25%）",
     "secTotal": "本项合计",
     "a1": "A1 储罐/容器",
     "a2": "A2 泵组",
@@ -108,7 +108,7 @@ HPLC_COST_I18N_ZH = {
     "i": "I CDM",
     "j": "J 调试",
     "kprice": "K 价格风险",
-    "accuracy": "Accuracy contingency（30%）",
+    "accuracy": "Accuracy contingency（25%）",
     "bullets": {
         "a1": ["500 L 头罐×2", "200 L 头罐×3", "2000 L 废液罐"],
         "a2": ["HPLC 输送泵", "HPLC 废液泵", "冻干 CIP 泵", "冻干废液泵"],
@@ -129,10 +129,10 @@ HPLC_COST_I18N_EN = {
     "oom": "Total project OOM",
     "secDirect": "Direct works",
     "secOther": "Other project costs",
-    "secGen": "General risk & contingency at feasibility",
+    "secGen": "General risk & contingency",
     "subtotal": "Subtotal",
-    "directCont": "Contingency (20%)",
-    "otherCont": "Contingency (20%)",
+    "directCont": "Contingency (25%)",
+    "otherCont": "Contingency (25%)",
     "secTotal": "Section total",
     "a1": "A1 Tanks / vessels",
     "a2": "A2 Pumps",
@@ -148,7 +148,7 @@ HPLC_COST_I18N_EN = {
     "i": "I CDM fees",
     "j": "J Commissioning",
     "kprice": "K Price risk",
-    "accuracy": "Accuracy contingency (30%)",
+    "accuracy": "Accuracy contingency (25%)",
     "bullets": {
         "a1": ["500 L head tanks ×2", "200 L head tanks ×3", "2,000 L waste tank"],
         "a2": ["HPLC transfer", "HPLC waste", "Lyoph CIP", "Lyoph waste"],

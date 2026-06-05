@@ -7,20 +7,20 @@ import json
 # --- Totals (reconciled to OOM £78,108,089) ---
 EXT_OOM = 78_108_089
 BASE_SUBTOTAL = 47_591_969  # works + prelims + OH&P per cost plan
-BASE_RISK_PCT = 20
-BASE_RISK = round(BASE_SUBTOTAL * BASE_RISK_PCT / 100)  # 9,518,394
-BASE_TOTAL = BASE_SUBTOTAL + BASE_RISK  # 57,110,363
+BASE_RISK_PCT = 25
+BASE_RISK = round(BASE_SUBTOTAL * BASE_RISK_PCT / 100)  # 11,897,992
+BASE_TOTAL = BASE_SUBTOTAL + BASE_RISK  # 59,489,961
 
 OTHER_SUBTOTAL = 4_062_357
-OTHER_CONT_PCT = 20
-OTHER_CONTINGENCY = round(OTHER_SUBTOTAL * OTHER_CONT_PCT / 100)  # 812,471
-OTHER_TOTAL = OTHER_SUBTOTAL + OTHER_CONTINGENCY  # 4,874,828
+OTHER_CONT_PCT = 25
+OTHER_CONTINGENCY = round(OTHER_SUBTOTAL * OTHER_CONT_PCT / 100)  # 1,015,589
+OTHER_TOTAL = OTHER_SUBTOTAL + OTHER_CONTINGENCY  # 5,077,946
 
 CONFIDENCE_BASE = BASE_SUBTOTAL + OTHER_SUBTOTAL  # 51,654,326
-CONFIDENCE_PCT = 30
-CONFIDENCE_CONTINGENCY = round(CONFIDENCE_BASE * CONFIDENCE_PCT / 100)  # 15,496,298
+CONFIDENCE_PCT = 25
+CONFIDENCE_CONTINGENCY = round(CONFIDENCE_BASE * CONFIDENCE_PCT / 100)  # 12,913,582
 RISK_REGISTER = 626_600
-GENERAL_RISK_TOTAL = CONFIDENCE_CONTINGENCY + RISK_REGISTER  # 16,122,898
+GENERAL_RISK_TOTAL = CONFIDENCE_CONTINGENCY + RISK_REGISTER  # 13,540,182
 
 # Chart / KPI helpers
 CHART_STACK = {
@@ -81,18 +81,18 @@ OTHER_LINE_ITEMS = [
 
 EXT_COST_I18N_ZH = {
     "oom": "项目 OOM 总价",
-    "secBase": "基础建造成本",
+    "secBase": "直接工程费",
     "secOther": "其他项目费",
-    "secGen": "可行性阶段一般风险与预备费",
+    "secGen": "一般风险与预备费",
     "subtotal": "小计",
-    "baseRisk": "施工与设备预备费（20%）",
-    "otherCont": "预备费（20%）",
-    "confidence": "Accuracy contingency（30%）",
+    "baseRisk": "预备费（25%）",
+    "otherCont": "预备费（25%）",
+    "confidence": "Accuracy contingency（25%）",
     "riskReg": "风险登记册（概率加权总和）",
     "secTotal": "本项合计",
-    "fac": "开办工程",
-    "sub": "下部结构",
-    "sup": "上部结构",
+    "fac": "场地清理拆除",
+    "sub": "地下结构",
+    "sup": "地上结构",
     "int": "内部装修",
     "fit": "装置与设备",
     "bld": "建筑机电",
@@ -130,18 +130,18 @@ EXT_COST_I18N_ZH = {
 
 EXT_COST_I18N_EN = {
     "oom": "Total project OOM",
-    "secBase": "Base construction cost",
+    "secBase": "Direct works",
     "secOther": "Other project costs",
-    "secGen": "General risk & contingency at feasibility",
+    "secGen": "General risk & contingency",
     "subtotal": "Subtotal",
-    "baseRisk": "Construction & equipment contingency (20%)",
-    "otherCont": "Contingency (20%)",
-    "confidence": "Accuracy contingency (30%)",
+    "baseRisk": "Contingency (25%)",
+    "otherCont": "Contingency (25%)",
+    "confidence": "Accuracy contingency (25%)",
     "riskReg": "Risk register (probability-weighted total)",
     "secTotal": "Section total",
-    "fac": "Facilitating works",
-    "sub": "Substructure",
-    "sup": "Superstructure",
+    "fac": "Site clearance & demolition",
+    "sub": "Below-ground structure",
+    "sup": "Above-ground structure",
     "int": "Internal finishes",
     "fit": "Fittings & equipment",
     "bld": "Building services",
@@ -178,17 +178,17 @@ EXT_COST_I18N_EN = {
 }
 
 CHART_I18N_ZH = {
-    "stackBase": "基础建造成本",
+    "stackBase": "直接工程费",
     "stackOther": "其他项目费",
     "stackGen": "一般风险与预备费",
-    "donutTitle": "基础建造成本分项",
+    "donutTitle": "直接工程费分项",
 }
 
 CHART_I18N_EN = {
-    "stackBase": "Base construction cost",
+    "stackBase": "Direct works",
     "stackOther": "Other project costs",
     "stackGen": "General risk & contingency",
-    "donutTitle": "Base construction breakdown",
+    "donutTitle": "Direct works breakdown",
 }
 
 
