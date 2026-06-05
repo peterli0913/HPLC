@@ -9,23 +9,27 @@ from ext_feasibility_cost import EXT_COST_CSS
 # --- Totals (CP-X-100001) ---
 FEAS_BASE = 3_783_000
 
-DIRECT_SUB = 2_329_000  # A–E works subtotal
-PRICE_RISK = 465_800  # F 价格风险（£2,329,000 × 20%）
-SUBTOTAL_WITH_F = DIRECT_SUB + PRICE_RISK  # 2,794,800
+# Direct works (A–E + F price risk + 20% contingency on subtotal incl. F)
+DIRECT_SUB = 2_329_000  # A–E
+DIRECT_PRICE_RISK = 465_800  # F：£2,329,000 × 20%
+DIRECT_SUBTOTAL = DIRECT_SUB + DIRECT_PRICE_RISK  # 2,794,800
 DIRECT_CONT_PCT = 20
-DIRECT_CONT = round(SUBTOTAL_WITH_F * DIRECT_CONT_PCT / 100)  # 558,960
-DIRECT_TOTAL = SUBTOTAL_WITH_F + DIRECT_CONT  # 3,353,760
+DIRECT_CONT = round(DIRECT_SUBTOTAL * DIRECT_CONT_PCT / 100)  # 558,960
+DIRECT_TOTAL = DIRECT_SUBTOTAL + DIRECT_CONT  # 3,353,760
 
-OTHER_SUB = 825_000  # FEED + design + CDM + commissioning
+# Other project costs (G–J + K price risk + 20% contingency on subtotal incl. K)
+OTHER_SUB = 825_000  # G + H + I + J
+OTHER_PRICE_RISK = 165_000  # K：£825,000 × 20%
+OTHER_SUBTOTAL = OTHER_SUB + OTHER_PRICE_RISK  # 990,000
 OTHER_CONT_PCT = 20
-OTHER_CONT = round(OTHER_SUB * OTHER_CONT_PCT / 100)  # 165,000
-OTHER_TOTAL = OTHER_SUB + OTHER_CONT  # 990,000
+OTHER_CONT = round(OTHER_SUBTOTAL * OTHER_CONT_PCT / 100)  # 198,000
+OTHER_TOTAL = OTHER_SUBTOTAL + OTHER_CONT  # 1,188,000
 
-ACCURACY_BASE = DIRECT_SUB + OTHER_SUB  # 3,154,000 (excl. contingency lines)
+ACCURACY_BASE = DIRECT_SUB + OTHER_SUB  # 3,154,000（不含各板块价格风险与预备费）
 ACCURACY_PCT = 30
 ACCURACY_CONT = round(ACCURACY_BASE * ACCURACY_PCT / 100)  # 946,200
 GEN_TOTAL = ACCURACY_CONT
-HPLC_OOM = DIRECT_TOTAL + OTHER_TOTAL + GEN_TOTAL  # 4,731,000
+HPLC_OOM = DIRECT_TOTAL + OTHER_TOTAL + GEN_TOTAL  # 5,487,960
 
 CHART_STACK = {
     "direct_total": DIRECT_TOTAL,
@@ -42,18 +46,19 @@ DIRECT_LINE_ITEMS = [
     {"id": "c", "amount": 264_000},
     {"id": "d", "amount": 128_000},
     {"id": "e", "amount": 35_000},
+    {"id": "fprice", "amount": DIRECT_PRICE_RISK},
 ]
 
 OTHER_LINE_ITEMS = [
-    {"id": "f", "amount": 225_000},
-    {"id": "g", "amount": 289_000},
-    {"id": "h", "amount": 235_000},
-    {"id": "i", "amount": 76_000},
+    {"id": "g", "amount": 225_000},
+    {"id": "h", "amount": 289_000},
+    {"id": "i", "amount": 235_000},
+    {"id": "j", "amount": 76_000},
+    {"id": "kprice", "amount": OTHER_PRICE_RISK},
 ]
 
 GEN_LINE_ITEMS = [{"id": "accuracy", "amount": ACCURACY_CONT}]
 
-# Legacy dicts for portfolio imports / charts
 CAPEX = {
     "total": FEAS_BASE,
     "direct": DIRECT_SUB,
@@ -86,6 +91,7 @@ HPLC_COST_I18N_ZH = {
     "secOther": "其他项目费",
     "secGen": "可行性阶段一般风险与预备费",
     "subtotal": "小计",
+    "directCont": "预备费（20%）",
     "otherCont": "预备费（20%）",
     "secTotal": "本项合计",
     "a1": "A1 储罐/容器",
@@ -97,10 +103,11 @@ HPLC_COST_I18N_ZH = {
     "d": "D 电器仪表",
     "e": "E HVAC",
     "fprice": "F 价格风险",
-    "f": "F FEED（±30%）",
-    "g": "G 详细设计（±10%）",
-    "h": "H CDM",
-    "i": "I 调试",
+    "g": "G FEED（±30%）",
+    "h": "H 详细设计（±10%）",
+    "i": "I CDM",
+    "j": "J 调试",
+    "kprice": "K 价格风险",
     "accuracy": "Accuracy contingency（30%）",
     "bullets": {
         "a1": ["500 L 头罐×2", "200 L 头罐×3", "2000 L 废液罐"],
@@ -111,10 +118,10 @@ HPLC_COST_I18N_ZH = {
         "c": ["设备安装", "管道阀门", "消防 provisional"],
         "d": ["电缆桥架", "照明小动力", "仪表", "调试"],
         "e": ["风管改造", "除湿管道", "HEPA 迁移"],
-        "f": ["FEED 费估算"],
-        "g": ["详细设计费"],
-        "h": ["CDM 顾问费"],
-        "i": ["调试人工"],
+        "g": ["FEED 费估算"],
+        "h": ["详细设计费"],
+        "i": ["CDM 顾问费"],
+        "j": ["调试人工"],
     },
 }
 
@@ -136,10 +143,11 @@ HPLC_COST_I18N_EN = {
     "d": "D Electrical & instrumentation",
     "e": "E HVAC",
     "fprice": "F Price risk",
-    "f": "F FEED study (±30%)",
-    "g": "G Detailed design (±10%)",
-    "h": "H CDM fees",
-    "i": "I Commissioning",
+    "g": "G FEED study (±30%)",
+    "h": "H Detailed design (±10%)",
+    "i": "I CDM fees",
+    "j": "J Commissioning",
+    "kprice": "K Price risk",
     "accuracy": "Accuracy contingency (30%)",
     "bullets": {
         "a1": ["500 L head tanks ×2", "200 L head tanks ×3", "2,000 L waste tank"],
@@ -150,10 +158,10 @@ HPLC_COST_I18N_EN = {
         "c": ["Equipment install", "piping / valves", "fire protection PS"],
         "d": ["Cable containment", "power / lighting", "instruments", "testing"],
         "e": ["Ductwork mods", "dehum ducting", "HEPA relocation"],
-        "f": ["FEED fee estimate"],
-        "g": ["Detail design fees"],
-        "h": ["CDM consultant"],
-        "i": ["Commissioning labour"],
+        "g": ["FEED fee estimate"],
+        "h": ["Detail design fees"],
+        "i": ["CDM consultant"],
+        "j": ["Commissioning labour"],
     },
 }
 
@@ -178,12 +186,17 @@ def hplc_cost_data_json() -> str:
             "oom": HPLC_OOM,
             "feasBase": FEAS_BASE,
             "directSub": DIRECT_SUB,
-            "priceRisk": PRICE_RISK,
+            "directSubtotal": DIRECT_SUBTOTAL,
+            "directPriceRisk": DIRECT_PRICE_RISK,
+            "directCont": DIRECT_CONT,
+            "directContPct": DIRECT_CONT_PCT,
             "directTotal": DIRECT_TOTAL,
             "otherSub": OTHER_SUB,
+            "otherSubtotal": OTHER_SUBTOTAL,
+            "otherPriceRisk": OTHER_PRICE_RISK,
             "otherCont": OTHER_CONT,
-            "otherTotal": OTHER_TOTAL,
             "otherContPct": OTHER_CONT_PCT,
+            "otherTotal": OTHER_TOTAL,
             "accuracyBase": ACCURACY_BASE,
             "accuracy": ACCURACY_CONT,
             "accuracyPct": ACCURACY_PCT,
@@ -192,8 +205,8 @@ def hplc_cost_data_json() -> str:
             "otherItems": OTHER_LINE_ITEMS,
             "genItems": GEN_LINE_ITEMS,
             "chartStack": CHART_STACK,
-            "chartDonut": [i["amount"] for i in DIRECT_LINE_ITEMS],
-            "chartDonutIds": [i["id"] for i in DIRECT_LINE_ITEMS],
+            "chartDonut": [i["amount"] for i in DIRECT_LINE_ITEMS if i["amount"] > 0],
+            "chartDonutIds": [i["id"] for i in DIRECT_LINE_ITEMS if i["amount"] > 0],
         }
     )
 
@@ -203,28 +216,36 @@ function hplcCostLabels(){return I18N[lang].hplcCost;}
 function hplcBullets(id){const b=I18N[lang].hplcCost.bullets;return (b&&b[id])?b[id]:[];}
 function hplcCostItemHTML(id,amt){
 const L=hplcCostLabels();
+if(!L[id])return "";
 const bullets=hplcBullets(id);
 const bl=bullets.length?`<ul class="cost-bullets">${bullets.map(x=>`<li>${x}</li>`).join("")}</ul>`:"";
 const body=bl?`<div class="cost-children">${bl}</div>`:"";
-return `<details class="cost-item cost-item-sub"${bl?"":" data-no-body"}><summary><span class="cost-label">${L[id]}</span><span class="cost-amt">${fm(amt)}</span></summary>${body}</details>`;
+const n=Number(amt)||0;
+return `<details class="cost-item cost-item-sub"${bl?"":" data-no-body"}><summary><span class="cost-label">${L[id]}</span><span class="cost-amt">${fm(n)}</span></summary>${body}</details>`;
 }
 function hplcSectionHd(title,total){
-return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(total)}</span>`;
+return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(Number(total)||0)}</span>`;
 }
 function hplcCostHTML(){
 const D=HPLC_COST_DATA,L=hplcCostLabels();
+const directSubtotal=Number(D.directSubtotal)||0;
+const directCont=Number(D.directCont)||0;
+const directTotal=Number(D.directTotal)||0;
+const otherSubtotal=Number(D.otherSubtotal)||0;
+const otherCont=Number(D.otherCont)||0;
+const otherTotal=Number(D.otherTotal)||0;
 let directItems=D.directItems.filter(it=>it.amount>0).map(it=>hplcCostItemHTML(it.id,it.amount)).join("");
-const directBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secDirect,D.directTotal)}</summary>
+const directBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secDirect,directTotal)}</summary>
 <div class="cost-section-body">${directItems}
-<div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.subtotalWithF)}</span></div>
-<div class="cost-risk-line"><span>${L.directCont}</span><span>${fm(D.directCont)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.directTotal)}</span></div></div></details>`;
+<div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(directSubtotal)}</span></div>
+<div class="cost-risk-line"><span>${L.directCont}</span><span>${fm(directCont)}</span></div>
+<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(directTotal)}</span></div></div></details>`;
 let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>hplcCostItemHTML(it.id,it.amount)).join("");
-const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secOther,D.otherTotal)}</summary>
+const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secOther,otherTotal)}</summary>
 <div class="cost-section-body">${otherItems}
-<div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.otherSub)}</span></div>
-<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(D.otherCont)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.otherTotal)}</span></div></div></details>`;
+<div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(otherSubtotal)}</span></div>
+<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(otherCont)}</span></div>
+<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(otherTotal)}</span></div></div></details>`;
 const genLines=D.genItems.map(it=>`<div class="cost-leaf cost-leaf-sub"><span>${L[it.id]}</span><span>${fm(it.amount)}</span></div>`).join("");
 const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secGen,D.genTotal)}</summary>
 <div class="cost-section-body">${genLines}
@@ -244,7 +265,7 @@ options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend
 scales:{x:{stacked:true,max:D.oom*1.02,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M"}},y:{stacked:true,display:false}}}});
 const ids=D.chartDonutIds,amts=D.chartDonut;
 const labels=ids.map(id=>(I18N[lang].hplcCost[id]||id));
-new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#5b6eae","#4a7ba8","#009688","#4db6ac","#7eb8b0"]}]},
+new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#5b6eae","#4a7ba8","#009688","#4db6ac","#7eb8b0","#c9a227"]}]},
 options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:8},boxWidth:10}}}}});
 }
 """
