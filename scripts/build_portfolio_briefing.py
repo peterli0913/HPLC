@@ -7,8 +7,8 @@ from pathlib import Path
 
 from ext_feasibility_cost import (
     BASE_TOTAL,
-    CHART_I18N_EN,
-    CHART_I18N_ZH,
+    CHART_I18N_EN as EXT_CHART_I18N_EN,
+    CHART_I18N_ZH as EXT_CHART_I18N_ZH,
     EXT_COST_CSS,
     EXT_COST_I18N_EN,
     EXT_COST_I18N_ZH,
@@ -17,6 +17,18 @@ from ext_feasibility_cost import (
     GENERAL_RISK_TOTAL,
     OTHER_TOTAL,
     ext_cost_data_json,
+)
+from hplc_feasibility_cost import (
+    CHART_I18N_EN as HPLC_CHART_I18N_EN,
+    CHART_I18N_ZH as HPLC_CHART_I18N_ZH,
+    DIRECT_TOTAL,
+    GEN_TOTAL,
+    HPLC_COST_I18N_EN,
+    HPLC_COST_I18N_ZH,
+    HPLC_COST_RENDER_JS,
+    HPLC_OOM,
+    OTHER_TOTAL as HPLC_OTHER_TOTAL,
+    hplc_cost_data_json,
 )
 
 ROOT = Path(__file__).resolve().parent
@@ -125,9 +137,10 @@ const GANTT_EXT = ''' + json.dumps(ext.GANTT_JS) + r''';
 const GANTT_HPLC = ''' + json.dumps(hplc.GANTT_CALENDAR) + r''';
 const CAPEX = ''' + json.dumps(hplc.CAPEX) + r''';
 const HPLC_RISK = ''' + json.dumps(hplc.RISK_ON_BASE) + r''';
+const HPLC_COST_DATA = ''' + hplc_cost_data_json() + r''';
 const EXT_OOM = ''' + str(EXT_OOM) + r''';
 const EXT_COST_DATA = ''' + ext_cost_data_json() + r''';
-''' + EXT_COST_RENDER_JS + r'''
+''' + EXT_COST_RENDER_JS + HPLC_COST_RENDER_JS + r'''
 let lang="zh", idx=0, chartsBuilt = {};
 
 const I18N={
@@ -154,10 +167,8 @@ ext5t:"扩建 · 投资总览", ext5s:"300291-CM-0001",
 ext5oom:"OOM 总价",
 ext6t:"扩建 · 投资结构", ext6s:"OOM 构成与基础建造费分项",
 ext6kOom:"OOM 总价", ext6kBase:"基础建造成本（含 20%）", ext6kRisk:"其他费及可行性风险",
-extCost:''' + json.dumps(EXT_COST_I18N_ZH, ensure_ascii=False) + r''',extChart:''' + json.dumps(CHART_I18N_ZH, ensure_ascii=False) + r''',
+extCost:''' + json.dumps(EXT_COST_I18N_ZH, ensure_ascii=False) + r''',extChart:''' + json.dumps(EXT_CHART_I18N_ZH, ensure_ascii=False) + r''',
 extChL:"项目 OOM 三板块", extChR:"基础建造成本 — 分项",
-ext7t:"扩建 · 预备费结构", ext7s:"报告 §14 · 已纳入 OOM",
-extC15:"设计发展 (15%)", extC25:"施工设备 (25%)", extC10:"业主 (10%)", extC4:"风险登记册（量化）",
 ext8t:"扩建 · 整体周期", ext8s:"300291-PM-PR-0002",
 extGSub:"总控时间轴（条块长度按日历比例）",
 extGFs:"可行性 RIBA 1", extGR2:"概念 RIBA 2", extGR3:"方案 RIBA 3", extGPl:"规划",
@@ -182,9 +193,10 @@ hplcT2:"冻干机", hplcT2a:"冻干腔、隔离器、双 CIP、除湿、PSG",
 hplcT2b:"Asymchem 供货", hplcT2c:"气闸/改造约 20 周",
 hplc5t:"改造 · 投资总览", hplc5s:"9802-RBP-ZZ-ZZ-CP-X-100001",
 hplc5oom:"OOM 总价（可行性量级）",
-hplc6t:"改造 · 投资结构", hplc6s:"OOM 构成",
-hplc6kOom:"OOM 总价", hplc6kBase:"基础项目成本", hplc6kRisk:"风险与预备费",
-hplcChL:"OOM 总价构成", hplcChR:"直接工程费 A–E",
+hplc6t:"改造 · 投资结构", hplc6s:"与 CP-X-100001 一致",
+hplc6kOom:"OOM 总价", hplc6kBase:"直接工程费（含 20%）", hplc6kRisk:"其他费及 OOM 预备费",
+hplcCost:''' + json.dumps(HPLC_COST_I18N_ZH, ensure_ascii=False) + r''',hplcChart:''' + json.dumps(HPLC_CHART_I18N_ZH, ensure_ascii=False) + r''',
+hplcChL:"项目 OOM 三板块", hplcChR:"直接工程费 — 分项",
 hplc7t:"改造 · 周期", hplc7s:"FS §4.4 图 1",
 hplc7k1:"冻干制造", hplc7k1d:"8–10 月",
 hplc7k2:"HPLC 供货", hplc7k2d:"~18 周",
@@ -205,7 +217,6 @@ pDec2:"扩建：RIBA 2 与模块化比选。",
 pDec3:"改造：FEED 启动与冻干/HPLC 长周期采购。",
 pDec4:"费用对外材料需统一口径（勿直接递交设计方原报告）。",
 pEnd:"谢谢", pEnds:"",
-hplcCost:{direct:"直接工程费 (A–E)",A:"A 设备",A1:"A1 储罐",A2:"A2 泵组",A31:"A3.1 HPLC",A32:"A3.2 冻干+PSG",B:"B 土建",C:"C 机管",D:"D 电仪控",E:"E HVAC",oth:"其他项目费",F:"F FEED",G:"G 详细设计",H:"H CDM",I:"I 调试",J:"J 预备金（20%）",base:"基础项目成本",cont:"风险与预备费合计",c15:"设计发展 (15%)",c25:"施工设备 (25%)",c10:"业主 (10%)"}
 },
 en:{
 footer:"Asymchem UK · Sandwich PDF Portfolio",
@@ -230,10 +241,8 @@ ext5t:"Extension · Investment", ext5s:"300291-CM-0001",
 ext5oom:"Total OOM",
 ext6t:"Extension · Structure", ext6s:"OOM build-up",
 ext6kOom:"Total OOM", ext6kBase:"Base construction (incl. 20%)", ext6kRisk:"Other costs & feasibility risk",
-extCost:''' + json.dumps(EXT_COST_I18N_EN, ensure_ascii=False) + r''',extChart:''' + json.dumps(CHART_I18N_EN, ensure_ascii=False) + r''',
+extCost:''' + json.dumps(EXT_COST_I18N_EN, ensure_ascii=False) + r''',extChart:''' + json.dumps(EXT_CHART_I18N_EN, ensure_ascii=False) + r''',
 extChL:"Project OOM — three blocks", extChR:"Base construction — line items",
-ext7t:"Extension · Contingency", ext7s:"Report §14",
-extC15:"Design dev. (15%)", extC25:"Constr./equip. (25%)", extC10:"Client (10%)", extC4:"Risk register",
 ext8t:"Extension · Programme", ext8s:"300291-PM-PR-0002",
 extGSub:"Master programme",
 extGFs:"FS RIBA 1", extGR2:"Concept RIBA 2", extGR3:"Scheme RIBA 3", extGPl:"Planning",
@@ -258,9 +267,10 @@ hplcT2:"Lyophilizer", hplcT2a:"Dryer, isolator, twin CIP, dehumidifier, PSG",
 hplcT2b:"Asymchem supply", hplcT2c:"Airlock ~20 weeks",
 hplc5t:"Retrofit · Investment", hplc5s:"9802-CP-X-100001",
 hplc5oom:"Total OOM",
-hplc6t:"Retrofit · Structure", hplc6s:"OOM build-up",
-hplc6kOom:"Total OOM", hplc6kBase:"Base project cost", hplc6kRisk:"Risk & contingency",
-hplcChL:"OOM composition", hplcChR:"Direct works A–E",
+hplc6t:"Retrofit · Structure", hplc6s:"Aligned to CP-X-100001",
+hplc6kOom:"Total OOM", hplc6kBase:"Direct works (incl. 20%)", hplc6kRisk:"Other costs & OOM contingency",
+hplcCost:''' + json.dumps(HPLC_COST_I18N_EN, ensure_ascii=False) + r''',hplcChart:''' + json.dumps(HPLC_CHART_I18N_EN, ensure_ascii=False) + r''',
+hplcChL:"Project OOM — three blocks", hplcChR:"Direct works — line items",
 hplc7t:"Retrofit · Programme", hplc7s:"FS §4.4 Fig. 1",
 hplc7k1:"Lyoph build", hplc7k1d:"8–10 mo",
 hplc7k2:"HPLC supply", hplc7k2d:"~18 wk",
@@ -281,45 +291,11 @@ pDec2:"Extension: RIBA 2 and modular study.",
 pDec3:"Retrofit: FEED and long-lead procurement.",
 pDec4:"External packs need harmonised cost narrative (not raw consultant reports).",
 pEnd:"Thank you", pEnds:"",
-hplcCost:{direct:"Direct works (A–E)",A:"A Equipment",A1:"A1 Tanks",A2:"A2 Pumps",A31:"A3.1 HPLC",A32:"A3.2 Lyoph+PSG",B:"B Civils",C:"C M&P",D:"D EIC",E:"E HVAC",oth:"Other project costs",F:"F FEED",G:"G Detail design",H:"H CDM",I:"I Commissioning",J:"J Contingency (20%)",base:"Base project cost",cont:"Risk & contingency",c15:"Design dev. (15%)",c25:"Constr./equip. (25%)",c10:"Client (10%)"}
 }
 };
 
 function t(k){return I18N[lang][k]||k;}
 function fm(n){return "£"+Math.round(n).toLocaleString("en-GB");}
-
-function hplcCostHTML(){
-const L=I18N[lang].hplcCost,R=HPLC_RISK;
-const otherFj=CAPEX.F+CAPEX.G+CAPEX.H+CAPEX.I+CAPEX.J;
-return `<div class="cost-total-bar"><span>${t("hplc5oom")}</span><span>${fm(R.oom)}</span></div>
-<details class="cost-item" open><summary><span class="cost-label">${L.direct}</span><span class="cost-amt">${fm(CAPEX.direct)}</span></summary>
-<div class="cost-children">
-<details class="cost-sub" open><summary><span>${L.A}</span><span>${fm(CAPEX.A)}</span></summary><ul>
-<li><span>${L.A1}</span><span>${fm(CAPEX.A1)}</span></li>
-<li><span>${L.A2}</span><span>${fm(CAPEX.A2)}</span></li>
-<li><span>${L.A31}</span><span>${fm(CAPEX.A31)}</span></li>
-<li><span>${L.A32}</span><span>${fm(CAPEX.A32)}</span></li></ul></details>
-<div class="cost-leaf"><span>${L.B}</span><span>${fm(CAPEX.B)}</span></div>
-<div class="cost-leaf"><span>${L.C}</span><span>${fm(CAPEX.C)}</span></div>
-<div class="cost-leaf"><span>${L.D}</span><span>${fm(CAPEX.D)}</span></div>
-<div class="cost-leaf"><span>${L.E}</span><span>${fm(CAPEX.E)}</span></div>
-</div></details>
-<details class="cost-item"><summary><span class="cost-label">${L.oth}</span><span class="cost-amt">${fm(otherFj)}</span></summary>
-<div class="cost-children">
-<div class="cost-leaf"><span>${L.F}</span><span>${fm(CAPEX.F)}</span></div>
-<div class="cost-leaf"><span>${L.G}</span><span>${fm(CAPEX.G)}</span></div>
-<div class="cost-leaf"><span>${L.H}</span><span>${fm(CAPEX.H)}</span></div>
-<div class="cost-leaf"><span>${L.I}</span><span>${fm(CAPEX.I)}</span></div>
-<div class="cost-leaf"><span>${L.J}</span><span>${fm(CAPEX.J)}</span></div>
-</div></details>
-<details class="cost-item" open><summary><span class="cost-label">${L.base}</span><span class="cost-amt">${fm(CAPEX.total)}</span></summary></details>
-<details class="cost-item"><summary><span class="cost-label">${L.cont}</span><span class="cost-amt">${fm(R.cont_total)}</span></summary>
-<div class="cost-children">
-<div class="cost-leaf"><span>${L.c15}</span><span>${fm(R.c15)}</span></div>
-<div class="cost-leaf"><span>${L.c25}</span><span>${fm(R.c25)}</span></div>
-<div class="cost-leaf"><span>${L.c10}</span><span>${fm(R.c10)}</span></div>
-</div></details>`;
-}
 
 function ganttHTML(data,T0,T1,keys,axis,today,sub,leg){
 const RANGE=T1-T0;
@@ -385,14 +361,6 @@ return `
 <div class="card"><div class="chart-title">${t("extChL")}</div><div class="chart-wrap tall"><canvas id="cExt1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("extChR")}</div><div class="chart-wrap tall"><canvas id="cExt2"></canvas></div></div></div></section>
 
-<section class="slide"><h1>${t("ext7t")}</h1><h2>${t("ext7s")}</h2>
-<table><tbody>
-<tr><td>${t("extC15")}</td><td>${fm(7748149)}</td></tr>
-<tr><td>${t("extC25")}</td><td>${fm(12913581)}</td></tr>
-<tr><td>${t("extC10")}</td><td>${fm(5165433)}</td></tr>
-<tr><td>${t("extC4")}</td><td>${fm(626600)}</td></tr>
-</tbody></table></section>
-
 <section class="slide">${ganttHTML(GANTT_EXT,new Date("2026-07-01"),new Date("2030-05-07"),EXT_KEYS,["2026","2027","2028","2029","2030"],"2026-05-28","extGSub",{d:"extLegD",p:"extLegP",b:"extLegB",c:"extLegM",today:"extToday"})}</section>
 
 <section class="slide"><h1>${t("ext9t")}</h1>
@@ -420,9 +388,9 @@ return `
 
 <section class="slide" data-charts="hplc"><h1>${t("hplc6t")}</h1><h2>${t("hplc6s")}</h2>
 <div class="invest-kpi-row">
-<div class="invest-kpi highlight"><div class="ik-val">${fm(HPLC_RISK.oom)}</div><div class="ik-lbl">${t("hplc6kOom")}</div></div>
-<div class="invest-kpi"><div class="ik-val">${fm(CAPEX.total)}</div><div class="ik-lbl">${t("hplc6kBase")}</div></div>
-<div class="invest-kpi"><div class="ik-val">${fm(HPLC_RISK.cont_total)}</div><div class="ik-lbl">${t("hplc6kRisk")}</div></div></div>
+<div class="invest-kpi highlight"><div class="ik-val">${fm(''' + str(HPLC_OOM) + r''')}</div><div class="ik-lbl">${t("hplc6kOom")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(''' + str(DIRECT_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kBase")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(''' + str(HPLC_OTHER_TOTAL + GEN_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kRisk")}</div></div></div>
 <div class="grid-2">
 <div class="card"><div class="chart-title">${t("hplcChL")}</div><div class="chart-wrap tall"><canvas id="cHplc1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("hplcChR")}</div><div class="chart-wrap tall"><canvas id="cHplc2"></canvas></div></div></div></section>
@@ -462,24 +430,7 @@ tip.style.left=x+"px";tip.style.top=y+"px";}
 function buildCharts(which){
 const zh=lang==="zh";
 if(which==="ext"&&!chartsBuilt.ext){buildExtInvestmentCharts();chartsBuilt.ext=true;}
-if(which==="hplc"&&!chartsBuilt.hplc){
-const otherFj=CAPEX.F+CAPEX.G+CAPEX.H+CAPEX.I+CAPEX.J,oom=HPLC_RISK.oom;
-new Chart(document.getElementById("cHplc1"),{type:"bar",data:{labels:[zh?"改造 OOM":"Retrofit OOM"],datasets:[
-{label:zh?"直接工程":"Direct",data:[CAPEX.direct],backgroundColor:"#0f2b46"},
-{label:zh?"其他":"Other",data:[otherFj],backgroundColor:"#009688"},
-{label:zh?"风险预备":"Risk",data:[HPLC_RISK.cont_total],backgroundColor:"#c9a227"}]},
-options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
-scales:{x:{stacked:true,max:oom*1.02,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M"}},y:{stacked:true,display:false}}}});
-new Chart(document.getElementById("cHplc2"),{type:"bar",data:{labels:[zh?"直接工程":"Direct"],datasets:[
-{label:"A",data:[CAPEX.A],backgroundColor:"#0f2b46"},
-{label:"B",data:[CAPEX.B],backgroundColor:"#1a4a6e"},
-{label:"C",data:[CAPEX.C],backgroundColor:"#2e6da4"},
-{label:"D",data:[CAPEX.D],backgroundColor:"#4a7ba8"},
-{label:"E",data:[CAPEX.E],backgroundColor:"#009688"}]},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
-scales:{x:{stacked:true,display:false},y:{stacked:true,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M"}}}}});
-chartsBuilt.hplc=true;
-}
+if(which==="hplc"&&!chartsBuilt.hplc){buildHplcInvestmentCharts();chartsBuilt.hplc=true;}
 }
 
 function applyLang(){

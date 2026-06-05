@@ -318,16 +318,6 @@ return `
 <div class="grid-2"><div class="card"><div class="chart-title">${t("chartLeft")}</div><div class="chart-wrap"><canvas id="c1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("chartRight")}</div><div class="chart-wrap"><canvas id="c2"></canvas></div></div></div></section>
 
-<section class="slide"><h1>${t("s7t")}</h1><h2>${t("s7s")}</h2>
-<div class="grid-2"><div class="card"><table><tbody>
-<tr><td>${t("s7c1")}</td><td>${fm(7748149)}</td></tr>
-<tr><td>${t("s7c2")}</td><td>${fm(12913581)}</td></tr>
-<tr><td>${t("s7c3")}</td><td>${fm(5165433)}</td></tr>
-<tr><td>${t("s7c4")}</td><td>${fm(626600)}</td></tr></tbody></table></div>
-<div class="mitigate-box"><h4>${t("s7h")}</h4>
-<p>${t("s7m1")}</p><p style="margin-top:.35rem">${t("s7m2")}</p>
-<p style="margin-top:.35rem">${t("s7m3")}</p><p style="margin-top:.35rem">${t("s7m4")}</p></div></div></section>
-
 <section class="slide"><h1>${t("s8t")}</h1><h2>${t("s8s")}</h2>
 <div class="grid-2"><div class="card"><h3 style="font-size:.88rem;color:var(--teal);margin-bottom:.35rem">${t("s8in")}</h3>
 <ul style="font-size:.82rem;margin-left:1rem"><li>${t("s8in1")}</li><li>${t("s8in2")}</li><li>${t("s8in3")}</li><li>${t("s8in4")}</li></ul></div>

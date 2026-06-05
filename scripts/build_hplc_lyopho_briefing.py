@@ -5,6 +5,22 @@ import json
 from datetime import datetime, timedelta
 from pathlib import Path
 
+from hplc_feasibility_cost import (
+    CAPEX,
+    CHART_I18N_EN,
+    CHART_I18N_ZH,
+    DIRECT_TOTAL,
+    GEN_TOTAL,
+    HPLC_COST_CSS,
+    HPLC_COST_I18N_EN,
+    HPLC_COST_I18N_ZH,
+    HPLC_COST_RENDER_JS,
+    HPLC_OOM,
+    OTHER_TOTAL,
+    RISK_ON_BASE,
+    hplc_cost_data_json,
+)
+
 OUT = Path("/workspace/汇报/HPLC-Lyophilizer/HPLC_Lyophilizer_Management_Briefing_2026-05-28.html")
 
 GANTT_SHIFT_WEEKS = 4  # calendar offset applied to FEED → last row (not shown in UI copy)
@@ -83,35 +99,6 @@ GANTT_CALENDAR.append(
 GANTT_CALENDAR.extend(_shift_gantt_row(r) for r in _GANTT_BASE[1:])
 DURATION_ROWS = []
 
-# 9802-RBP-ZZ-ZZ-CP-X-100001 (P01, 15 May 2026) — values in £
-CAPEX = {
-    "total": 3_783_000,
-    "direct": 2_329_000,
-    "A": 1_575_000,
-    "A1": 200_000,
-    "A2": 50_000,
-    "A31": 358_000,
-    "A32": 967_000,
-    "B": 326_000,
-    "C": 264_000,
-    "D": 128_000,
-    "E": 35_000,
-    "F": 225_000,
-    "G": 289_000,
-    "H": 235_000,
-    "I": 76_000,
-    "J": 631_000,
-}
-# Extension-style OOM uplift on feasibility base (CapEx total)
-RISK_ON_BASE = {
-    "base": CAPEX["total"],
-    "oom": round(CAPEX["total"] * 1.5),
-    "c15": round(CAPEX["total"] * 0.15),
-    "c25": round(CAPEX["total"] * 0.25),
-    "c10": round(CAPEX["total"] * 0.10),
-    "cont_total": round(CAPEX["total"] * 0.50),
-}
-
 HTML = r'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -151,6 +138,7 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .invest-kpi .ik-val{font-size:1rem;font-weight:700;color:var(--navy);letter-spacing:-.02em}
 .invest-kpi .ik-lbl{font-size:.64rem;color:var(--muted);margin-top:.18rem;line-height:1.25}
 .cost-scroll{flex:1;overflow-y:auto;min-height:0}
+''' + HPLC_COST_CSS + r'''
 .cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.5rem .7rem;margin-bottom:.45rem;font-size:.88rem}
 .cost-total-bar{display:flex;justify-content:space-between;align-items:center}
 .cost-item{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:.3rem;background:#fff}
@@ -201,6 +189,8 @@ const GANTT_CALENDAR = ''' + json.dumps(GANTT_CALENDAR) + r''';
 const DURATION_ROWS = ''' + json.dumps(DURATION_ROWS) + r''';
 const CAPEX = ''' + json.dumps(CAPEX) + r''';
 const RISK = ''' + json.dumps(RISK_ON_BASE) + r''';
+const HPLC_COST_DATA = ''' + hplc_cost_data_json() + r''';
+''' + HPLC_COST_RENDER_JS + r'''
 const T0=new Date("2026-05-01"),T1=new Date("2027-12-31"),RANGE=T1-T0;
 function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
 const I18N={
@@ -222,9 +212,10 @@ hplcT:"HPLC",hplc1:"DAC300 色谱柱、浆料罐、CP300 泵撬（Asymchem 供�
 lyoT:"冻干机",lyo1:"冻干腔、冷凝器、制冷、隔离器、双 CIP 罐、除湿机、纯蒸汽发生器（Asymchem 供货）",lyo2:"需新增更衣室/气闸",lyo3:"拆除/气闸/分区约 20 周（有望缩至约 14 周）",
 s5t:"投资总览（OOM）",s5s:"9802-RBP-ZZ-ZZ-CP-X-100001 · 基准 2026-05-15",
 s5oom:"OOM 总价（可行性量级）",
-s6t:"投资结构",s6s:"OOM 构成与直接工程费分项",
-s6kOom:"OOM 总价（可行性量级）",s6kBase:"基础项目成本",s6kRisk:"风险与预备费",
-chartLeft:"OOM 总价构成",chartRight:"直接工程费 £2.329M 分项（A–E）",
+s6t:"投资结构",s6s:"与 CP-X-100001 费用结构一致",
+s6kOom:"OOM 总价",s6kBase:"直接工程费（含 20%）",s6kRisk:"其他费及 OOM 预备费",
+chartLeft:"项目 OOM 三板块",chartRight:"直接工程费 — 分项",
+hplcCost:''' + json.dumps(HPLC_COST_I18N_ZH, ensure_ascii=False) + r''',hplcChart:''' + json.dumps(CHART_I18N_ZH, ensure_ascii=False) + r''',
 s7t:"周期与关键路径",s7s:"FS §4.3–4.4 · 冻干机长周期驱动",
 s7k1:"冻干机制造",s7k1d:"8–10 个月",
 s7k2:"HPLC 供货",s7k2d:"约 18 周（DQ+商务后）",
@@ -250,13 +241,7 @@ s9d2:"是否批准长周期设备（冻干机包 £967k + HPLC £358k）的早�
 s9d3:"是否同意按 FS 建议优先冻干机、次 HPLC 的采购排序，并接受 PG.10–12 气闸/改造方案？",
 s9d4:"是否指令提前启动环境许可变更及公用工程负荷复核（FEED 输入）？",
 s10t:"谢谢",s10s:"",
-axis:["2026 H1","2026 H2","2027 H1","2027 H2"],
-costLabels:{
-direct:"直接工程费 (A–E)",A:"A 设备",A1:"A1 储罐/容器",A2:"A2 泵组",A31:"A3.1 HPLC（Hanbon）",A32:"A3.2 冻干机+隔离器+除湿+纯蒸汽发生器",
-B:"B 土建",C:"C 机管",D:"D 电仪控",E:"E HVAC",
-oth:"其他项目费",F:"F FEED",G:"G 详细设计",H:"H CDM",I:"I 调试",J:"J 预备金（20%）",
-base:"基础项目成本",cont:"风险与预备费合计",c15:"设计发展 (15%)",c25:"施工设备 (25%)",c10:"业主 (10%)"
-}
+axis:["2026 H1","2026 H2","2027 H1","2027 H2"]
 },
 en:{
 footer:"Asymchem UK · PDF Prep & Lyophilizer",
@@ -276,9 +261,10 @@ hplcT:"HPLC",hplc1:"DAC300 column, slurry tank, CP300 pump skid (Asymchem supply
 lyoT:"Lyophilizer",lyo1:"Dryer, condenser, refrigeration, isolator, twin CIP tanks, dehumidifier, pure steam generator (Asymchem supply)",lyo2:"New changing/airlock required",lyo3:"Enabling / airlock ~20 weeks (may reduce to ~14 weeks)",
 s5t:"Investment (OOM)",s5s:"9802-RBP-ZZ-ZZ-CP-X-100001 · base 15 May 2026",
 s5oom:"Total OOM (feasibility magnitude)",
-s6t:"Investment structure",s6s:"OOM build-up & direct works split",
-s6kOom:"Total OOM (feasibility magnitude)",s6kBase:"Base project cost",s6kRisk:"Risk & contingency",
-chartLeft:"Total OOM composition",chartRight:"Direct works £2.329M (A–E)",
+s6t:"Investment structure",s6s:"Aligned to CP-X-100001",
+s6kOom:"Total OOM",s6kBase:"Direct works (incl. 20%)",s6kRisk:"Other costs & OOM contingency",
+chartLeft:"Project OOM — three blocks",chartRight:"Direct works — line items",
+hplcCost:''' + json.dumps(HPLC_COST_I18N_EN, ensure_ascii=False) + r''',hplcChart:''' + json.dumps(CHART_I18N_EN, ensure_ascii=False) + r''',
 s7t:"Programme & Critical Path",s7s:"FS §4.3–4.4 · lyophilizer lead drives",
 s7k1:"Lyophilizer mfg",s7k1d:"8–10 months",
 s7k2:"HPLC supply",s7k2d:"~18 weeks (post DQ)",
@@ -304,52 +290,12 @@ s9d2:"Approve early funding for long-lead packages (lyoph £967k + HPLC £358k)?
 s9d3:"Confirm procurement sequence (lyophilizer first, then HPLC) and PG.10–12 airlock/works strategy?",
 s9d4:"Mandate early environmental permit change and utilities load review for FEED?",
 s10t:"Thank you",s10s:"",
-axis:["2026 H1","2026 H2","2027 H1","2027 H2"],
-costLabels:{
-direct:"Direct works (A–E)",A:"A Equipment",A1:"A1 Tanks/vessels",A2:"A2 Pumps",A31:"A3.1 HPLC (Hanbon)",A32:"A3.2 Lyoph + isolator + dehum + PSG",
-B:"B Civils",C:"C M&P",D:"D EIC",E:"E HVAC",
-oth:"Other project costs",F:"F FEED",G:"G Detailed design",H:"H CDM",I:"I Commissioning",J:"J Contingency reserve (20%)",
-base:"Base project cost",cont:"Risk & contingency (total)",c15:"Design development (15%)",c25:"Construction & equipment (25%)",c10:"Client (10%)"
-}
+axis:["2026 H1","2026 H2","2027 H1","2027 H2"]
 }
 };
 let lang="zh",idx=0,chartsBuilt=false;
 function t(k){return I18N[lang][k]||k;}
-function tc(k){return I18N[lang].costLabels[k];}
 function fm(n){return "£"+Math.round(n).toLocaleString("en-GB");}
-function fmtRange(central,pct){const lo=Math.round(central*(1-pct)),hi=Math.round(central*(1+pct));return fm(lo)+" – "+fm(hi);}
-function costHTML(){
-const L=I18N[lang].costLabels,C=CAPEX,R=RISK;
-const otherFj=C.F+C.G+C.H+C.I+C.J;
-return `<div class="cost-total-bar"><span>${t("s5oom")}</span><span>${fm(R.oom)}</span></div>
-<details class="cost-item" open><summary><span class="cost-label">${L.direct}</span><span class="cost-amt">${fm(C.direct)}</span></summary>
-<div class="cost-children">
-<details class="cost-sub" open><summary><span>${L.A}</span><span>${fm(C.A)}</span></summary><ul>
-<li><span>${L.A1}</span><span>${fm(C.A1)}</span></li>
-<li><span>${L.A2}</span><span>${fm(C.A2)}</span></li>
-<li><span>${L.A31}</span><span>${fm(C.A31)}</span></li>
-<li><span>${L.A32}</span><span>${fm(C.A32)}</span></li></ul></details>
-<div class="cost-leaf"><span>${L.B}</span><span>${fm(C.B)}</span></div>
-<div class="cost-leaf"><span>${L.C}</span><span>${fm(C.C)}</span></div>
-<div class="cost-leaf"><span>${L.D}</span><span>${fm(C.D)}</span></div>
-<div class="cost-leaf"><span>${L.E}</span><span>${fm(C.E)}</span></div>
-</div></details>
-<details class="cost-item"><summary><span class="cost-label">${L.oth}</span><span class="cost-amt">${fm(otherFj)}</span></summary>
-<div class="cost-children">
-<div class="cost-leaf"><span>${L.F}</span><span>${fm(C.F)}</span></div>
-<div class="cost-leaf"><span>${L.G}</span><span>${fm(C.G)}</span></div>
-<div class="cost-leaf"><span>${L.H}</span><span>${fm(C.H)}</span></div>
-<div class="cost-leaf"><span>${L.I}</span><span>${fm(C.I)}</span></div>
-<div class="cost-leaf"><span>${L.J}</span><span>${fm(C.J)}</span></div>
-</div></details>
-<details class="cost-item" open><summary><span class="cost-label">${L.base}</span><span class="cost-amt">${fm(C.total)}</span></summary></details>
-<details class="cost-item"><summary><span class="cost-label">${L.cont}</span><span class="cost-amt">${fm(R.cont_total)}</span></summary>
-<div class="cost-children">
-<div class="cost-leaf"><span>${L.c15}</span><span>${fm(R.c15)}</span></div>
-<div class="cost-leaf"><span>${L.c25}</span><span>${fm(R.c25)}</span></div>
-<div class="cost-leaf"><span>${L.c10}</span><span>${fm(R.c10)}</span></div>
-</div></details>`;
-}
 function ganttHTML(){
 const today=pct("2026-05-28");
 let rows="";
@@ -402,13 +348,13 @@ return `
 <div class="card"><h3>${t("lyoT")}</h3><ul style="margin-top:.4rem;font-size:.82rem"><li>${t("lyo1")}</li><li>${t("lyo2")}</li><li>${t("lyo3")}</li></ul></div></div></section>
 
 <section class="slide"><h1>${t("s5t")}</h1><h2>${t("s5s")}</h2>
-<div class="cost-scroll">${costHTML()}</div></section>
+<div class="cost-scroll">${hplcCostHTML()}</div></section>
 
 <section class="slide"><h1>${t("s6t")}</h1><h2>${t("s6s")}</h2>
 <div class="invest-kpi-row">
-<div class="invest-kpi highlight"><div class="ik-val">${fm(RISK.oom)}</div><div class="ik-lbl">${t("s6kOom")}</div></div>
-<div class="invest-kpi"><div class="ik-val">${fm(CAPEX.total)}</div><div class="ik-lbl">${t("s6kBase")}</div></div>
-<div class="invest-kpi"><div class="ik-val">${fm(RISK.cont_total)}</div><div class="ik-lbl">${t("s6kRisk")}</div></div></div>
+<div class="invest-kpi highlight"><div class="ik-val">${fm(''' + str(HPLC_OOM) + r''')}</div><div class="ik-lbl">${t("s6kOom")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(''' + str(DIRECT_TOTAL) + r''')}</div><div class="ik-lbl">${t("s6kBase")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(''' + str(OTHER_TOTAL + GEN_TOTAL) + r''')}</div><div class="ik-lbl">${t("s6kRisk")}</div></div></div>
 <div class="grid-2"><div class="card"><div class="chart-title">${t("chartLeft")}</div><div class="chart-wrap tall"><canvas id="c1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("chartRight")}</div><div class="chart-wrap tall"><canvas id="c2"></canvas></div></div></div></section>
 
@@ -458,35 +404,7 @@ function show(n){
 const s=slides();idx=(n+s.length)%s.length;
 s.forEach((el,i)=>el.classList.toggle("active",i===idx));
 document.getElementById("counter").textContent=(idx+1)+" / "+s.length;
-if(idx===4&&!chartsBuilt){buildCharts();chartsBuilt=true;}
-}
-function buildCharts(){
-const zh=lang==="zh";
-const otherFj=CAPEX.F+CAPEX.G+CAPEX.H+CAPEX.I+CAPEX.J;
-const oom=RISK.oom;
-const lblDirect=zh?"直接工程费 (A–E)":"Direct works (A–E)";
-const lblOther=zh?"其他项目费":"Other project costs";
-const lblRisk=zh?"风险与预备费":"Risk & contingency";
-new Chart(document.getElementById("c1"),{type:"bar",data:{
-labels:[zh?"项目投资 OOM":"Project OOM"],
-datasets:[
-{label:lblDirect,data:[CAPEX.direct],backgroundColor:"#0f2b46",borderRadius:4},
-{label:lblOther,data:[otherFj],backgroundColor:"#009688",borderRadius:4},
-{label:lblRisk,data:[RISK.cont_total],backgroundColor:"#c9a227",borderRadius:4}
-]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-plugins:{legend:{position:"bottom",labels:{font:{size:10},padding:14,usePointStyle:true,pointStyle:"rectRounded"}},
-tooltip:{callbacks:{label:c=>{const v=c.raw,pct=(v/oom*100).toFixed(1);return c.dataset.label+": "+fm(v)+" ("+pct+"%)";}}}},
-scales:{x:{stacked:true,max:oom*1.02,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M",font:{size:10}},grid:{color:"#eef1f4"}},
-y:{stacked:true,display:false}}}});
-new Chart(document.getElementById("c2"),{type:"bar",data:{labels:[zh?"直接工程费":"Direct works"],datasets:[
-{label:zh?"设备 A":"Equipment A",data:[CAPEX.A],backgroundColor:"#0f2b46"},
-{label:zh?"土建 B":"Civils B",data:[CAPEX.B],backgroundColor:"#1a4a6e"},
-{label:zh?"机管 C":"M&P C",data:[CAPEX.C],backgroundColor:"#2e6da4"},
-{label:zh?"电仪控 D":"EIC D",data:[CAPEX.D],backgroundColor:"#4a7ba8"},
-{label:zh?"HVAC E":"HVAC E",data:[CAPEX.E],backgroundColor:"#009688"}
-]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{font:{size:9},usePointStyle:true}}},
-tooltip:{callbacks:{label:c=>{const v=c.raw,pct=(v/CAPEX.direct*100).toFixed(1);return c.dataset.label+": "+fm(v)+" ("+pct+"%)";}}}},
-scales:{x:{stacked:true,display:false},y:{stacked:true,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M",font:{size:10}},grid:{color:"#eef1f4"}}}});
+if(idx===4&&!chartsBuilt){buildHplcInvestmentCharts();chartsBuilt=true;}
 }
 document.getElementById("btnZh").onclick=()=>{if(lang!=="zh"){lang="zh";applyLang();}};
 document.getElementById("btnEn").onclick=()=>{if(lang!=="en"){lang="en";applyLang();}};
