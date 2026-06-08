@@ -4,12 +4,16 @@ Bilingual slide deck combining **B902 east extension** (Scitech FS) and **HPLC +
 
 ## Open
 
-`UK_PDF_Portfolio_Briefing_2026-05-28.html` in a browser · **中文 / EN** toggle · **← →** to navigate
+- **`UK_PDF_Portfolio_Briefing_2026-05-28.html`** — standard retrofit breakdown (25% section contingencies)
+- **`UK_PDF_Portfolio_Briefing_2026-06-08.html`** — retrofit **direct/indirect + 30% price risk & project contingency** format
+
+Open either file in a browser · **中文 / EN** toggle · **← →** to navigate
 
 ## Rebuild
 
 ```bash
 python3 scripts/build_portfolio_briefing.py
+python3 scripts/build_portfolio_briefing_2026-06-08.py
 ```
 
 Sources: `scripts/build_management_briefing.py` + `scripts/build_hplc_lyopho_briefing.py` (data/constants only).
