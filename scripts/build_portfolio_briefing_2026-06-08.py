@@ -23,10 +23,12 @@ from hplc_capex_v2 import (
     CHART_I18N_EN as HPLC_CHART_I18N_EN,
     CHART_I18N_ZH as HPLC_CHART_I18N_ZH,
     DIRECT_TOTAL,
+    HPLC_COST_CSS,
     HPLC_COST_I18N_EN,
     HPLC_COST_I18N_ZH,
     HPLC_COST_RENDER_JS,
     HPLC_OOM,
+    GEN_TOTAL,
     INDIRECT_TOTAL,
     PROJECT_CONT,
     RISK_ON_BASE,
@@ -35,7 +37,6 @@ from hplc_capex_v2 import (
 
 ROOT = Path(__file__).resolve().parent
 OUT = Path("/workspace/汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-06-08.html")
-HPLC_RISK_OTHER = INDIRECT_TOTAL + PROJECT_CONT
 
 
 def _load_module(name: str, path: Path):
@@ -88,12 +89,13 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .chart-title{font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.35rem;text-align:center}
 .chart-wrap{height:200px;position:relative} .chart-wrap.tall{height:240px}
 .invest-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.65rem}
+.invest-kpi-row.cols4{grid-template-columns:repeat(4,1fr)}
 .invest-kpi{background:linear-gradient(160deg,#f8fafb,#fff);border:1px solid #e8ecf0;border-radius:10px;padding:.5rem;text-align:center}
 .invest-kpi.highlight{border-color:#d4b84a;background:linear-gradient(160deg,#fffdf5,#fff)}
 .invest-kpi .ik-val{font-size:.95rem;font-weight:700;color:var(--navy)}
 .invest-kpi .ik-lbl{font-size:.62rem;color:var(--muted);margin-top:.15rem}
 .cost-scroll{flex:1;overflow-y:auto;min-height:0}
-''' + EXT_COST_CSS + r'''
+''' + EXT_COST_CSS + HPLC_COST_CSS + r'''
 .cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.5rem .7rem;margin-bottom:.4rem;font-size:.86rem;display:flex;justify-content:space-between;align-items:center}
 .cost-item{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:.28rem;background:#fff}
 .cost-item>summary{display:flex;align-items:center;padding:.38rem .55rem;cursor:pointer;list-style:none;font-size:.78rem}
@@ -183,7 +185,7 @@ ext9d2:"是否推进模块化建造方案比选？",
 hplcSec:"二、厂房内 HPLC + 冻干", hplcSecs:"RBPC · Project 9802 · P01",
 hplc2t:"改造 · 执行摘要", hplc2s:"9802-RBP-ZZ-ZZ-RP-X-100000",
 hplcK1:"技术可行", hplcK1d:"FS P01",
-hplcK2:"£5.33M", hplcK2d:"Total CAPEX Estimate",
+hplcK2:"£5.33M", hplcK2d:"项目总投资估算",
 hplcK3:"2027-09", hplcK3d:"HPLC 目标",
 hplcK4:"2027-12", hplcK4d:"冻干目标",
 hplcB1:"范围：制备 HPLC（DAC300/CP300）+ 冻干机（隔离器、除湿、纯蒸汽发生器等）及配套改造。",
@@ -195,11 +197,11 @@ hplcT1b:"Hanbon 供货", hplcT1c:"PG.05 区域安装",
 hplcT2:"冻干机", hplcT2a:"冻干腔、隔离器、双 CIP、除湿、PSG",
 hplcT2b:"Asymchem 供货", hplcT2c:"气闸/改造约 20 周",
 hplc5t:"改造 · 投资总览", hplc5s:"9802-RBP-ZZ-ZZ-CP-X-100001",
-hplc5oom:"Total CAPEX Estimate",
-hplc6t:"改造 · 投资结构", hplc6s:"Direct / indirect + project contingency",
-hplc6kOom:"Total CAPEX", hplc6kBase:"Total Direct Cost", hplc6kRisk:"Indirect & project contingency",
+hplc5oom:"项目总投资估算",
+hplc6t:"改造 · 投资结构", hplc6s:"直接 / 间接 / 一般风险与预备费",
+hplc6kOom:"项目总投资", hplc6kDirect:"直接费用合计", hplc6kIndirect:"间接费用合计", hplc6kGen:"一般风险与预备费",
 hplcCost:''' + json.dumps(HPLC_COST_I18N_ZH, ensure_ascii=False) + r''',hplcChart:''' + json.dumps(HPLC_CHART_I18N_ZH, ensure_ascii=False) + r''',
-hplcChL:"项目 OOM 三板块", hplcChR:"直接工程费 — 分项",
+hplcChL:"项目总投资构成", hplcChR:"直接费用 — 分项",
 hplc7t:"改造 · 周期", hplc7s:"FS §4.4 图 1",
 hplc7k1:"冻干制造", hplc7k1d:"8–10 月",
 hplc7k2:"HPLC 供货", hplc7k2d:"~18 周",
@@ -270,10 +272,10 @@ hplcT2:"Lyophilizer", hplcT2a:"Dryer, isolator, twin CIP, dehumidifier, PSG",
 hplcT2b:"Asymchem supply", hplcT2c:"Airlock ~20 weeks",
 hplc5t:"Retrofit · Investment", hplc5s:"9802-CP-X-100001",
 hplc5oom:"Total OOM",
-hplc6t:"Retrofit · Structure", hplc6s:"Aligned to CP-X-100001",
-hplc6kOom:"Total CAPEX", hplc6kBase:"Total Direct Cost", hplc6kRisk:"Indirect & project contingency",
+hplc6t:"Retrofit · Structure", hplc6s:"Direct / indirect / general risk & contingency",
+hplc6kOom:"Total CAPEX", hplc6kDirect:"Total Direct Cost", hplc6kIndirect:"Total Indirect Cost", hplc6kGen:"General risk & contingency",
 hplcCost:''' + json.dumps(HPLC_COST_I18N_EN, ensure_ascii=False) + r''',hplcChart:''' + json.dumps(HPLC_CHART_I18N_EN, ensure_ascii=False) + r''',
-hplcChL:"Project OOM — three blocks", hplcChR:"Direct works — line items",
+hplcChL:"Total CAPEX composition", hplcChR:"Total Direct Cost — breakdown",
 hplc7t:"Retrofit · Programme", hplc7s:"FS §4.4 Fig. 1",
 hplc7k1:"Lyoph build", hplc7k1d:"8–10 mo",
 hplc7k2:"HPLC supply", hplc7k2d:"~18 wk",
@@ -390,10 +392,11 @@ return `
 <div class="cost-scroll">${hplcCostHTML()}</div></section>
 
 <section class="slide" data-charts="hplc"><h1>${t("hplc6t")}</h1><h2>${t("hplc6s")}</h2>
-<div class="invest-kpi-row">
+<div class="invest-kpi-row cols4">
 <div class="invest-kpi highlight"><div class="ik-val">${fm(''' + str(HPLC_OOM) + r''')}</div><div class="ik-lbl">${t("hplc6kOom")}</div></div>
-<div class="invest-kpi"><div class="ik-val">${fm(''' + str(DIRECT_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kBase")}</div></div>
-<div class="invest-kpi"><div class="ik-val">${fm(''' + str(HPLC_RISK_OTHER) + r''')}</div><div class="ik-lbl">${t("hplc6kRisk")}</div></div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(''' + str(DIRECT_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kDirect")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(''' + str(INDIRECT_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kIndirect")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(''' + str(GEN_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kGen")}</div></div></div>
 <div class="grid-2">
 <div class="card"><div class="chart-title">${t("hplcChL")}</div><div class="chart-wrap tall"><canvas id="cHplc1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("hplcChR")}</div><div class="chart-wrap tall"><canvas id="cHplc2"></canvas></div></div></div></section>
