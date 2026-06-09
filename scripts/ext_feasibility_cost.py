@@ -237,19 +237,16 @@ let baseItems=D.baseItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,
 const baseBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secBase,D.baseTotal)}</summary>
 <div class="cost-section-body">${baseItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.baseSub)}</span></div>
-<div class="cost-risk-line"><span>${L.baseRisk}</span><span>${fm(D.baseRisk)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.baseTotal)}</span></div></div></details>`;
+<div class="cost-risk-line"><span>${L.baseRisk}</span><span>${fm(D.baseRisk)}</span></div></div></details>`;
 let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,it.amount)).join("");
 const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secOther,D.otherTotal)}</summary>
 <div class="cost-section-body">${otherItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.otherSub)}</span></div>
-<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(D.otherCont)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.otherTotal)}</span></div></div></details>`;
+<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(D.otherCont)}</span></div></div></details>`;
 const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secGen,D.genTotal)}</summary>
 <div class="cost-section-body">
 <div class="cost-leaf cost-leaf-sub"><span>${L.confidence}</span><span>${fm(D.confidence)}</span></div>
-<div class="cost-leaf cost-leaf-sub"><span>${L.riskReg}</span><span>${fm(D.riskReg)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.genTotal)}</span></div></div></details>`;
+<div class="cost-leaf cost-leaf-sub"><span>${L.riskReg}</span><span>${fm(D.riskReg)}</span></div></div></details>`;
 return `<div class="cost-total-bar"><span>${L.oom}</span><span>${fm(D.oom)}</span></div>${baseBlock}${otherBlock}${genBlock}`;
 }
 function buildExtInvestmentCharts(){

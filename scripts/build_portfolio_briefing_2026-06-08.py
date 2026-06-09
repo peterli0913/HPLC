@@ -30,6 +30,8 @@ from hplc_capex_v2 import (
     HPLC_OOM,
     GEN_TOTAL,
     INDIRECT_TOTAL,
+    INFRA_TOTAL,
+    MAIN_EQUIP_TOTAL,
     PROJECT_CONT,
     RISK_ON_BASE,
     hplc_cost_data_json,
@@ -90,6 +92,7 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .chart-wrap{height:200px;position:relative} .chart-wrap.tall{height:240px}
 .invest-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.65rem}
 .invest-kpi-row.cols4{grid-template-columns:repeat(4,1fr)}
+.invest-kpi-row.cols2{grid-template-columns:repeat(2,1fr)}
 .invest-kpi{background:linear-gradient(160deg,#f8fafb,#fff);border:1px solid #e8ecf0;border-radius:10px;padding:.5rem;text-align:center}
 .invest-kpi.highlight{border-color:#d4b84a;background:linear-gradient(160deg,#fffdf5,#fff)}
 .invest-kpi .ik-val{font-size:.95rem;font-weight:700;color:var(--navy)}
@@ -200,6 +203,7 @@ hplc5t:"改造 · 投资总览", hplc5s:"9802-RBP-ZZ-ZZ-CP-X-100001",
 hplc5oom:"项目总投资估算",
 hplc6t:"改造 · 投资结构", hplc6s:"直接 / 间接 / 一般风险与预备费",
 hplc6kOom:"项目总投资", hplc6kDirect:"直接费用合计", hplc6kIndirect:"间接费用合计", hplc6kGen:"一般风险与预备费",
+hplc6kMain:"1. 主工艺设备", hplc6kInfra:"2. 基础设施改造",
 hplcCost:''' + json.dumps(HPLC_COST_I18N_ZH, ensure_ascii=False) + r''',hplcChart:''' + json.dumps(HPLC_CHART_I18N_ZH, ensure_ascii=False) + r''',
 hplcChL:"项目总投资构成", hplcChR:"直接费用 — 分项",
 hplc7t:"改造 · 周期", hplc7s:"FS §4.4 图 1",
@@ -274,6 +278,7 @@ hplc5t:"Retrofit · Investment", hplc5s:"9802-CP-X-100001",
 hplc5oom:"Total OOM",
 hplc6t:"Retrofit · Structure", hplc6s:"Direct / indirect / general risk & contingency",
 hplc6kOom:"Total CAPEX", hplc6kDirect:"Total Direct Cost", hplc6kIndirect:"Total Indirect Cost", hplc6kGen:"General risk & contingency",
+hplc6kMain:"1. Main Equipment", hplc6kInfra:"2. Infrastructure Modification",
 hplcCost:''' + json.dumps(HPLC_COST_I18N_EN, ensure_ascii=False) + r''',hplcChart:''' + json.dumps(HPLC_CHART_I18N_EN, ensure_ascii=False) + r''',
 hplcChL:"Total CAPEX composition", hplcChR:"Total Direct Cost — breakdown",
 hplc7t:"Retrofit · Programme", hplc7s:"FS §4.4 Fig. 1",
@@ -397,6 +402,9 @@ return `
 <div class="invest-kpi"><div class="ik-val">${fm(''' + str(DIRECT_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kDirect")}</div></div>
 <div class="invest-kpi"><div class="ik-val">${fm(''' + str(INDIRECT_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kIndirect")}</div></div>
 <div class="invest-kpi"><div class="ik-val">${fm(''' + str(GEN_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kGen")}</div></div></div>
+<div class="invest-kpi-row cols2 direct-sub">
+<div class="invest-kpi invest-kpi-mid"><div class="ik-val">${fm(''' + str(MAIN_EQUIP_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kMain")}</div></div>
+<div class="invest-kpi invest-kpi-mid"><div class="ik-val">${fm(''' + str(INFRA_TOTAL) + r''')}</div><div class="ik-lbl">${t("hplc6kInfra")}</div></div></div>
 <div class="grid-2">
 <div class="card"><div class="chart-title">${t("hplcChL")}</div><div class="chart-wrap tall"><canvas id="cHplc1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("hplcChR")}</div><div class="chart-wrap tall"><canvas id="cHplc2"></canvas></div></div></div></section>

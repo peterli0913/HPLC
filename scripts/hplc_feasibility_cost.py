@@ -246,18 +246,15 @@ let directItems=D.directItems.filter(it=>it.amount>0).map(it=>hplcCostItemHTML(i
 const directBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secDirect,directTotal)}</summary>
 <div class="cost-section-body">${directItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(directSubtotal)}</span></div>
-<div class="cost-risk-line"><span>${L.directCont}</span><span>${fm(directCont)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(directTotal)}</span></div></div></details>`;
+<div class="cost-risk-line"><span>${L.directCont}</span><span>${fm(directCont)}</span></div></div></details>`;
 let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>hplcCostItemHTML(it.id,it.amount)).join("");
 const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secOther,otherTotal)}</summary>
 <div class="cost-section-body">${otherItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(otherSubtotal)}</span></div>
-<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(otherCont)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(otherTotal)}</span></div></div></details>`;
+<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(otherCont)}</span></div></div></details>`;
 const genLines=D.genItems.map(it=>`<div class="cost-leaf cost-leaf-sub"><span>${L[it.id]}</span><span>${fm(it.amount)}</span></div>`).join("");
 const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secGen,D.genTotal)}</summary>
-<div class="cost-section-body">${genLines}
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.genTotal)}</span></div></div></details>`;
+<div class="cost-section-body">${genLines}</div></details>`;
 return `<div class="cost-total-bar"><span>${L.oom}</span><span>${fm(D.oom)}</span></div>${directBlock}${otherBlock}${genBlock}`;
 }
 function buildHplcInvestmentCharts(){

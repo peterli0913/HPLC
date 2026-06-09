@@ -37,6 +37,7 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .chart-wrap{height:200px;position:relative} .chart-wrap.tall{height:240px}
 .invest-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.65rem}
 .invest-kpi-row.cols4{grid-template-columns:repeat(4,1fr)}
+.invest-kpi-row.cols2{grid-template-columns:repeat(2,1fr)}
 .invest-kpi{background:linear-gradient(160deg,#f8fafb,#fff);border:1px solid #e8ecf0;border-radius:10px;padding:.5rem;text-align:center}
 .invest-kpi.highlight{border-color:#d4b84a;background:linear-gradient(160deg,#fffdf5,#fff)}
 .invest-kpi .ik-val{font-size:.95rem;font-weight:700;color:var(--navy)}
@@ -97,10 +98,16 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .invest-kpi .ik-val{font-size:.95rem;font-weight:700;color:var(--navy)}
 .invest-kpi .ik-lbl{font-size:.62rem;color:var(--muted);margin-top:.15rem}
 
-.cost-item-l2>summary{padding:.32rem .55rem .32rem 1rem;font-size:.76rem;font-weight:600}
-.cost-item-l2>summary .cost-label{color:var(--navy);font-weight:600}
-.cost-item-l2 .cost-children{padding-left:1.35rem}
+.cost-item-l2{border:1px solid #d4dde6;border-radius:8px;margin:.28rem 0;background:linear-gradient(180deg,#f3f7fb,#f8fafb);box-shadow:0 1px 4px rgba(15,43,70,.04)}
+.cost-item-l2>summary{padding:.4rem .6rem .4rem 1rem;font-size:.8rem;font-weight:600}
+.cost-item-l2>summary .cost-label{color:var(--navy);font-weight:700}
+.cost-item-l2>summary .cost-amt{font-size:.82rem;font-weight:700;color:var(--navy);background:#e2eaf2;padding:.18rem .5rem;border-radius:5px}
+.cost-item-l2 .cost-children{padding:.15rem .5rem .35rem 1.35rem;border-top:1px solid #e4eaf0}
 .cost-leaf-l3{padding-left:.35rem}
+.invest-kpi-row.direct-sub{margin-top:-.15rem;margin-bottom:.55rem}
+.invest-kpi-mid{border-color:#b8c5d4;background:linear-gradient(160deg,#eef3f8,#f6f9fb)}
+.invest-kpi-mid .ik-val{font-size:.88rem}
+.invest-kpi-mid .ik-lbl{font-size:.6rem;font-weight:600;color:#4a5f73}
 
 .cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.5rem .7rem;margin-bottom:.4rem;font-size:.86rem;display:flex;justify-content:space-between;align-items:center}
 .cost-item{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:.28rem;background:#fff}
@@ -148,7 +155,7 @@ const GANTT_EXT = [["gFs", "2026-05-01", "2026-05-31", "done", "RIBA 1 Feasibili
 const GANTT_HPLC = [["gFs", "2026-05-19", "2026-05-26", "done", "FS report P01 (19 May 2026); programme baseline from 26 May 2026 (Fig. 1).", "\u53ef\u884c\u6027\u7814\u7a76 P01\uff082026-05-19\uff09\uff1b\u8fdb\u5ea6\u57fa\u51c6\u81ea 2026-05-26 \u8d77\uff08\u56fe 1\uff09\u3002"], ["gEng", "2026-06-01", "2026-07-01", "staff", "Await SW engineer Keith to complete continuous hydrogenation project duties before transferring to this project.", "\u7b49\u5f85 SW \u5de5\u7a0b\u5e08 Keith \u5b8c\u6210\u8fde\u7eed\u6c22\u5316\u9879\u76ee\u76f8\u5173\u4e8b\u52a1\u540e\u8f6c\u5165\u672c\u9879\u76ee\u3002"], ["gFeed", "2026-07-13", "2026-10-18", "assume", "FEED 12\u201314 weeks (\u00a74.3): illustrative, after engineer mobilisation.", "FEED 12\u201314 \u5468\uff08\u00a74.3\uff09\uff1a\u793a\u610f\uff0c\u5de5\u7a0b\u5e08\u5c31\u4f4d\u540e\u542f\u52a8\u3002"], ["gDd", "2026-10-19", "2027-03-07", "assume", "Detailed design 18\u201320 weeks (\u00a74.3): assumed after FEED, bar shows 20 weeks.", "\u8be6\u7ec6\u8bbe\u8ba1 18\u201320 \u5468\uff08\u00a74.3\uff09\uff1a\u5047\u8bbe\u63a5 FEED \u540e\u542f\u52a8\uff0c\u6761\u5757\u6309 20 \u5468\u793a\u610f\u3002"], ["gLySpec", "2026-06-23", "2026-08-17", "warn", "Lyoph spec + funding/deposit (Fig. 1).", "\u51bb\u5e72\u673a\u89c4\u683c\u786e\u5b9a\u548c\u8d44\u91d1\u5ba1\u6279\uff08\u56fe 1\uff09\u3002"], ["gLyMfg", "2026-08-25", "2027-05-03", "warn", "Lyophiliser build: 9 months (Fig. 1).", "\u51bb\u5e72\u673a\u5236\u9020\uff1a9 \u4e2a\u6708\uff08\u56fe 1\uff09\u3002"], ["gLyFat", "2027-05-04", "2027-06-07", "warn", "Lyoph FAT + remediation (Fig. 1).", "\u51bb\u5e72\u673a FAT\uff08\u56fe 1\uff09\u3002"], ["gLyShip", "2027-06-08", "2027-09-27", "warn", "Lyoph shipping + installation (Fig. 1).", "\u51bb\u5e72\u673a\u8fd0\u8f93\u5b89\u88c5\uff08\u56fe 1\uff09\u3002"], ["gLyVal", "2027-09-28", "2027-12-06", "warn", "Lyoph validation to PQ complete (Fig. 1).", "\u51bb\u5e72\u9a8c\u8bc1\u81f3 PQ \u5b8c\u6210\uff08\u56fe 1\uff09\u3002"], ["gHplcSpec", "2026-09-15", "2026-11-09", "plan", "HPLC spec + funding/deposit (Fig. 1).", "HPLC \u89c4\u683c\u786e\u5b9a\u548c\u8d44\u91d1\u5ba1\u6279\uff08\u56fe 1\uff09\u3002"], ["gHplcMfg", "2026-11-17", "2027-03-22", "plan", "HPLC manufacture: 18 weeks (Fig. 1).", "HPLC \u5236\u9020\uff1a18 \u5468\uff08\u56fe 1\uff09\u3002"], ["gHplcFat", "2027-03-23", "2027-04-19", "plan", "HPLC FAT + remediation (Fig. 1).", "HPLC FAT\uff08\u56fe 1\uff09\u3002"], ["gHplcShip", "2027-04-27", "2027-06-28", "plan", "HPLC shipping + installation (Fig. 1).", "HPLC \u8fd0\u8f93\u5b89\u88c5\uff08\u56fe 1\uff09\u3002"], ["gTanks", "2026-08-18", "2027-05-31", "plan", "Procure mobile head tanks \u2014 RB Plant (Fig. 1).", "\u79fb\u52a8\u5934\u7f50\u91c7\u8d2d\uff08RB Plant\uff09\uff08\u56fe 1\uff09\u3002"], ["gWaste", "2026-08-18", "2027-05-17", "plan", "Procure waste tank \u2014 RB Plant (Fig. 1).", "\u5e9f\u6db2\u7f50\u91c7\u8d2d\uff08RB Plant\uff09\uff08\u56fe 1\uff09\u3002"], ["gRetrofit", "2027-01-21", "2027-05-13", "build", "Retrofit / demolition / airlock (Fig. 1; \u00a74.3 ~20 wk).", "\u6539\u9020\uff08\u62c6\u9664\u3001\u6c14\u95f8\u3001\u5206\u533a\u7b49\uff09\uff08\u56fe 1\uff1b\u00a74.3 \u7ea6 20 \u5468\uff09\u3002"]];
 const CAPEX = {"total": 5329100, "feasBase": 3783000};
 const HPLC_RISK = {"base": 3783000, "oom": 5329100, "subtotal": 4099300, "project_cont": 1229800};
-const HPLC_COST_DATA = {"oom": 5329100, "directTotal": 3026800, "indirectTotal": 1072500, "subtotal": 4099300, "projectCont": 1229800, "genTotal": 1229800, "projectContPct": 30, "mainEquipSub": 1575000, "mainEquipTotal": 2047500, "mainPriceRisk": 472500, "infraSub": 753300, "infraTotal": 979300, "infraPriceRisk": 226000, "indirectSub": 825000, "indirectPriceRisk": 247500, "lines": {"lyo": 967000, "hplc": 358000, "tanks": 200000, "pumps": 50000, "civil": 326000, "mech": 264000, "elec": 128000, "hvac": 35300, "feed": 225000, "design": 289000, "cdm": 235000, "comm": 76000}, "chartStack": {"direct_total": 3026800, "indirect_total": 1072500, "gen_total": 1229800}, "chartDonut": [967000, 358000, 200000, 50000, 326000, 264000, 128000, 35300], "chartDonutIds": ["lyo", "hplc", "tanks", "pumps", "civil", "mech", "elec", "hvac"]};
+const HPLC_COST_DATA = {"oom": 5329100, "directTotal": 3026800, "indirectTotal": 1072500, "subtotal": 4099300, "projectCont": 1229800, "genTotal": 1229800, "projectContPct": 30, "mainEquipSub": 1575000, "mainEquipTotal": 2047500, "mainPriceRisk": 472500, "infraSub": 753300, "infraTotal": 979300, "infraPriceRisk": 226000, "indirectSub": 825000, "indirectPriceRisk": 247500, "lines": {"lyo": 967000, "hplc": 358000, "tanks": 200000, "pumps": 50000, "civil": 326000, "mech": 264000, "elec": 128000, "hvac": 35300, "feed": 225000, "design": 289000, "cdm": 235000, "comm": 76000}, "chartStack": {"direct_total": 3026800, "indirect_total": 1072500, "gen_total": 1229800}, "chartDonut": [2047500, 979300], "chartDonutIds": ["sec1", "sec2"], "chartDonutDetail": [967000, 358000, 200000, 50000, 326000, 264000, 128000, 35300], "chartDonutDetailIds": ["lyo", "hplc", "tanks", "pumps", "civil", "mech", "elec", "hvac"]};
 const EXT_OOM = 78108089;
 const EXT_COST_DATA = {"oom": 78108089, "baseSub": 47591969, "baseRisk": 11897992, "baseTotal": 59489961, "baseRiskPct": 25, "otherSub": 4062357, "otherCont": 1015589, "otherTotal": 5077946, "otherContPct": 25, "confBase": 51654326, "confidence": 12913582, "confPct": 25, "riskReg": 626600, "genTotal": 13540182, "baseItems": [{"id": "fac", "amount": 254960, "lines": [[154960, "0.1"], [50000, "0.2"], [50000, "0.3"]]}, {"id": "sub", "amount": 1499680, "lines": [[1239680, "1.1"], [150000, "1.2"], [40000, "1.3"], [70000, "1.4"]]}, {"id": "sup", "amount": 3942636, "lines": []}, {"id": "int", "amount": 1270672, "lines": [[309920, "3.1"], [449384, "3.2"], [511368, "3.3"]]}, {"id": "fit", "amount": 154960, "lines": []}, {"id": "bld", "amount": 9532716, "lines": [[166808, "5.1"], [4165824, "5.2"], [2506484, "5.3"], [627200, "5.4"], [1966400, "5.5"]]}, {"id": "proc", "amount": 23249083, "lines": []}, {"id": "prefab", "amount": 0, "lines": []}, {"id": "exist", "amount": 204000, "lines": [[80000, "7.1"], [40000, "7.2"], [84000, "7.3"]]}, {"id": "ext", "amount": 1859520, "lines": []}, {"id": "pre", "amount": 3357458, "lines": []}, {"id": "ohp", "amount": 2266284, "lines": []}], "otherItems": [{"id": "design", "amount": 3807357}, {"id": "survey", "amount": 80000}, {"id": "breeam", "amount": 150000}, {"id": "plan", "amount": 25000}, {"id": "client", "amount": 0}], "chartStack": {"base_total": 59489961, "other_total": 5077946, "general_risk": 13540182}, "chartDonut": [254960, 1499680, 3942636, 1270672, 154960, 9532716, 23249083, 204000, 1859520, 3357458, 2266284], "chartDonutIds": ["fac", "sub", "sup", "int", "fit", "bld", "proc", "exist", "ext", "pre", "ohp"]};
 
@@ -170,19 +177,16 @@ let baseItems=D.baseItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,
 const baseBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secBase,D.baseTotal)}</summary>
 <div class="cost-section-body">${baseItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.baseSub)}</span></div>
-<div class="cost-risk-line"><span>${L.baseRisk}</span><span>${fm(D.baseRisk)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.baseTotal)}</span></div></div></details>`;
+<div class="cost-risk-line"><span>${L.baseRisk}</span><span>${fm(D.baseRisk)}</span></div></div></details>`;
 let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,it.amount)).join("");
 const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secOther,D.otherTotal)}</summary>
 <div class="cost-section-body">${otherItems}
 <div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.otherSub)}</span></div>
-<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(D.otherCont)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.otherTotal)}</span></div></div></details>`;
+<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(D.otherCont)}</span></div></div></details>`;
 const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secGen,D.genTotal)}</summary>
 <div class="cost-section-body">
 <div class="cost-leaf cost-leaf-sub"><span>${L.confidence}</span><span>${fm(D.confidence)}</span></div>
-<div class="cost-leaf cost-leaf-sub"><span>${L.riskReg}</span><span>${fm(D.riskReg)}</span></div>
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.genTotal)}</span></div></div></details>`;
+<div class="cost-leaf cost-leaf-sub"><span>${L.riskReg}</span><span>${fm(D.riskReg)}</span></div></div></details>`;
 return `<div class="cost-total-bar"><span>${L.oom}</span><span>${fm(D.oom)}</span></div>${baseBlock}${otherBlock}${genBlock}`;
 }
 function buildExtInvestmentCharts(){
@@ -235,7 +239,6 @@ ${hplcLeaf("feed",ln.feed,3)}${hplcLeaf("design",ln.design,3)}${hplcLeaf("cdm",l
 const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secGen,D.genTotal)}</summary>
 <div class="cost-section-body">
 ${hplcLeaf("projectCont",D.projectCont,3)}
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.genTotal)}</span></div>
 </div></details>`;
 return `<div class="cost-total-bar"><span>${L.capex}</span><span>${fm(D.oom)}</span></div>${directBlock}${indirectBlock}${genBlock}`;
 }
@@ -310,6 +313,7 @@ hplc5t:"改造 · 投资总览", hplc5s:"9802-RBP-ZZ-ZZ-CP-X-100001",
 hplc5oom:"项目总投资估算",
 hplc6t:"改造 · 投资结构", hplc6s:"直接 / 间接 / 一般风险与预备费",
 hplc6kOom:"项目总投资", hplc6kDirect:"直接费用合计", hplc6kIndirect:"间接费用合计", hplc6kGen:"一般风险与预备费",
+hplc6kMain:"1. 主工艺设备", hplc6kInfra:"2. 基础设施改造",
 hplcCost:{"capex": "项目总投资估算", "secDirect": "直接费用合计", "secIndirect": "间接费用合计", "secGen": "一般风险与预备费", "secTotal": "本项合计", "sec1": "1. 主工艺设备", "lyo": "1.1 冻干机", "hplc": "1.2 HPLC 撬装", "tanks": "1.3 储罐/容器", "pumps": "1.4 泵组", "mainPrice": "1.5 价格风险（30%）", "sec2": "2. 基础设施改造", "civil": "2.1 土建结构", "mech": "2.2 机械与管道", "elec": "2.3 电气仪表", "hvac": "2.4 暖通空调", "infraPrice": "2.5 价格风险（30%）", "feed": "3. FEED 研究", "design": "4. 详细设计", "cdm": "5. CDM 费用", "comm": "6. 调试", "indirectPrice": "7. 价格风险（30%）", "projectCont": "全项目预备费（30%）"},hplcChart:{"stackDirect": "直接费用合计", "stackIndirect": "间接费用合计", "stackGen": "一般风险与预备费", "donutTitle": "直接费用 — 设备与改造分项"},
 hplcChL:"项目总投资构成", hplcChR:"直接费用 — 分项",
 hplc7t:"改造 · 周期", hplc7s:"FS §4.4 图 1",
@@ -384,6 +388,7 @@ hplc5t:"Retrofit · Investment", hplc5s:"9802-CP-X-100001",
 hplc5oom:"Total OOM",
 hplc6t:"Retrofit · Structure", hplc6s:"Direct / indirect / general risk & contingency",
 hplc6kOom:"Total CAPEX", hplc6kDirect:"Total Direct Cost", hplc6kIndirect:"Total Indirect Cost", hplc6kGen:"General risk & contingency",
+hplc6kMain:"1. Main Equipment", hplc6kInfra:"2. Infrastructure Modification",
 hplcCost:{"capex": "Total CAPEX Estimate", "secDirect": "Total Direct Cost", "secIndirect": "Total Indirect Cost", "secGen": "General risk & contingency", "secTotal": "Section total", "sec1": "1. Main Equipment", "lyo": "1.1 Lyo", "hplc": "1.2 HPLC skid", "tanks": "1.3 Tanks/Vessels", "pumps": "1.4 Pumps", "mainPrice": "1.5 Price Risk (30%)", "sec2": "2. Infrastructure Modification", "civil": "2.1 Civil & Structure", "mech": "2.2 Mechanical & Piping", "elec": "2.3 Electrical & Instrumentation", "hvac": "2.4 HVAC", "infraPrice": "2.5 Price Risk (30%)", "feed": "3. FEED Study", "design": "4. Detailed Design", "cdm": "5. CDM Fee", "comm": "6. Commission", "indirectPrice": "7. Price Risk (30%)", "projectCont": "Whole Project contingency (30%)"},hplcChart:{"stackDirect": "Total Direct Cost", "stackIndirect": "Total Indirect Cost", "stackGen": "General risk & contingency", "donutTitle": "Direct cost — equipment & infra"},
 hplcChL:"Total CAPEX composition", hplcChR:"Total Direct Cost — breakdown",
 hplc7t:"Retrofit · Programme", hplc7s:"FS §4.4 Fig. 1",
@@ -507,6 +512,9 @@ return `
 <div class="invest-kpi"><div class="ik-val">${fm(3026800)}</div><div class="ik-lbl">${t("hplc6kDirect")}</div></div>
 <div class="invest-kpi"><div class="ik-val">${fm(1072500)}</div><div class="ik-lbl">${t("hplc6kIndirect")}</div></div>
 <div class="invest-kpi"><div class="ik-val">${fm(1229800)}</div><div class="ik-lbl">${t("hplc6kGen")}</div></div></div>
+<div class="invest-kpi-row cols2 direct-sub">
+<div class="invest-kpi invest-kpi-mid"><div class="ik-val">${fm(2047500)}</div><div class="ik-lbl">${t("hplc6kMain")}</div></div>
+<div class="invest-kpi invest-kpi-mid"><div class="ik-val">${fm(979300)}</div><div class="ik-lbl">${t("hplc6kInfra")}</div></div></div>
 <div class="grid-2">
 <div class="card"><div class="chart-title">${t("hplcChL")}</div><div class="chart-wrap tall"><canvas id="cHplc1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("hplcChR")}</div><div class="chart-wrap tall"><canvas id="cHplc2"></canvas></div></div></div></section>

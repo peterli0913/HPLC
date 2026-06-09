@@ -167,8 +167,10 @@ def hplc_cost_data_json() -> str:
                 "comm": COMMISSION,
             },
             "chartStack": CHART_STACK,
-            "chartDonut": [i["amount"] for i in DONUT_ITEMS],
-            "chartDonutIds": [i["id"] for i in DONUT_ITEMS],
+            "chartDonut": [MAIN_EQUIP_TOTAL, INFRA_TOTAL],
+            "chartDonutIds": ["sec1", "sec2"],
+            "chartDonutDetail": [i["amount"] for i in DONUT_ITEMS],
+            "chartDonutDetailIds": [i["id"] for i in DONUT_ITEMS],
         }
     )
 
@@ -207,7 +209,6 @@ ${hplcLeaf("feed",ln.feed,3)}${hplcLeaf("design",ln.design,3)}${hplcLeaf("cdm",l
 const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secGen,D.genTotal)}</summary>
 <div class="cost-section-body">
 ${hplcLeaf("projectCont",D.projectCont,3)}
-<div class="cost-section-total"><span>${L.secTotal}</span><span>${fm(D.genTotal)}</span></div>
 </div></details>`;
 return `<div class="cost-total-bar"><span>${L.capex}</span><span>${fm(D.oom)}</span></div>${directBlock}${indirectBlock}${genBlock}`;
 }
@@ -230,8 +231,14 @@ options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"ri
 """
 
 HPLC_COST_CSS = EXT_COST_CSS + """
-.cost-item-l2>summary{padding:.32rem .55rem .32rem 1rem;font-size:.76rem;font-weight:600}
-.cost-item-l2>summary .cost-label{color:var(--navy);font-weight:600}
-.cost-item-l2 .cost-children{padding-left:1.35rem}
+.cost-item-l2{border:1px solid #d4dde6;border-radius:8px;margin:.28rem 0;background:linear-gradient(180deg,#f3f7fb,#f8fafb);box-shadow:0 1px 4px rgba(15,43,70,.04)}
+.cost-item-l2>summary{padding:.4rem .6rem .4rem 1rem;font-size:.8rem;font-weight:600}
+.cost-item-l2>summary .cost-label{color:var(--navy);font-weight:700}
+.cost-item-l2>summary .cost-amt{font-size:.82rem;font-weight:700;color:var(--navy);background:#e2eaf2;padding:.18rem .5rem;border-radius:5px}
+.cost-item-l2 .cost-children{padding:.15rem .5rem .35rem 1.35rem;border-top:1px solid #e4eaf0}
 .cost-leaf-l3{padding-left:.35rem}
+.invest-kpi-row.direct-sub{margin-top:-.15rem;margin-bottom:.55rem}
+.invest-kpi-mid{border-color:#b8c5d4;background:linear-gradient(160deg,#eef3f8,#f6f9fb)}
+.invest-kpi-mid .ik-val{font-size:.88rem}
+.invest-kpi-mid .ik-lbl{font-size:.6rem;font-weight:600;color:#4a5f73}
 """
