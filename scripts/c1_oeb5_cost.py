@@ -25,7 +25,7 @@ GANTT_C1 = [
     [
         "c1Scope",
         "2026-07-01",
-        "2026-08-31",
+        "2026-09-30",
         "plan",
         "Finalise scope (8 weeks), aligned with retrofit approval.",
         "范围定稿（8 周），假设与改造项目一并批准。",
@@ -33,7 +33,7 @@ GANTT_C1 = [
     [
         "c1Dd",
         "2026-09-01",
-        "2026-11-30",
+        "2026-12-31",
         "plan",
         "Detailed design (12 weeks).",
         "详细设计（12 周）。",
@@ -41,7 +41,7 @@ GANTT_C1 = [
     [
         "c1Build",
         "2026-12-01",
-        "2027-04-30",
+        "2027-05-31",
         "warn",
         "Place orders & equipment build (20 weeks).",
         "下单及设备制造（20 周）。",
@@ -49,7 +49,7 @@ GANTT_C1 = [
     [
         "c1IQ",
         "2027-05-01",
-        "2027-06-30",
+        "2027-07-31",
         "build",
         "Installation & qualification (8 weeks).",
         "安装与确认（8 周）。",

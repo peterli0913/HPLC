@@ -160,7 +160,7 @@ const HPLC_COST_DATA = {"oom": 5329100, "directTotal": 3026800, "indirectTotal":
 const EXT_OOM = 78108089;
 const EXT_COST_DATA = {"oom": 78108089, "baseSub": 47591969, "baseRisk": 11897992, "baseTotal": 59489961, "baseRiskPct": 25, "otherSub": 4062357, "otherCont": 1015589, "otherTotal": 5077946, "otherContPct": 25, "confBase": 51654326, "confidence": 12913582, "confPct": 25, "riskReg": 626600, "genTotal": 13540182, "baseItems": [{"id": "fac", "amount": 254960, "lines": [[154960, "0.1"], [50000, "0.2"], [50000, "0.3"]]}, {"id": "sub", "amount": 1499680, "lines": [[1239680, "1.1"], [150000, "1.2"], [40000, "1.3"], [70000, "1.4"]]}, {"id": "sup", "amount": 3942636, "lines": []}, {"id": "int", "amount": 1270672, "lines": [[309920, "3.1"], [449384, "3.2"], [511368, "3.3"]]}, {"id": "fit", "amount": 154960, "lines": []}, {"id": "bld", "amount": 9532716, "lines": [[166808, "5.1"], [4165824, "5.2"], [2506484, "5.3"], [627200, "5.4"], [1966400, "5.5"]]}, {"id": "proc", "amount": 23249083, "lines": []}, {"id": "prefab", "amount": 0, "lines": []}, {"id": "exist", "amount": 204000, "lines": [[80000, "7.1"], [40000, "7.2"], [84000, "7.3"]]}, {"id": "ext", "amount": 1859520, "lines": []}, {"id": "pre", "amount": 3357458, "lines": []}, {"id": "ohp", "amount": 2266284, "lines": []}], "otherItems": [{"id": "design", "amount": 3807357}, {"id": "survey", "amount": 80000}, {"id": "breeam", "amount": 150000}, {"id": "plan", "amount": 25000}, {"id": "client", "amount": 0}], "chartStack": {"base_total": 59489961, "other_total": 5077946, "general_risk": 13540182}, "chartDonut": [254960, 1499680, 3942636, 1270672, 154960, 9532716, 23249083, 204000, 1859520, 3357458, 2266284], "chartDonutIds": ["fac", "sub", "sup", "int", "fit", "bld", "proc", "exist", "ext", "pre", "ohp"]};
 const C1_COST_DATA = {"oom": 2476500, "equipSub": 1905000, "projectCont": 571500, "contPct": 30, "genTotal": 571500, "isoFixed": 1000000, "hvacGroup": 575000, "flexGroup": 330000, "lines": {"iso2f": 500000, "isoGF": 500000, "hvac": 350000, "airlock": 225000, "flex": 330000}, "chartStack": {"equip_sub": 1905000, "project_cont": 571500}, "chartDonut": [1000000, 575000, 330000], "chartDonutIds": ["sec1", "sec2", "sec3"]};
-const GANTT_C1 = [["c1Scope", "2026-07-01", "2026-08-31", "plan", "Finalise scope (8 weeks), aligned with retrofit approval.", "\u8303\u56f4\u5b9a\u7a3f\uff088 \u5468\uff09\uff0c\u5047\u8bbe\u4e0e\u6539\u9020\u9879\u76ee\u4e00\u5e76\u6279\u51c6\u3002"], ["c1Dd", "2026-09-01", "2026-11-30", "plan", "Detailed design (12 weeks).", "\u8be6\u7ec6\u8bbe\u8ba1\uff0812 \u5468\uff09\u3002"], ["c1Build", "2026-12-01", "2027-04-30", "warn", "Place orders & equipment build (20 weeks).", "\u4e0b\u5355\u53ca\u8bbe\u5907\u5236\u9020\uff0820 \u5468\uff09\u3002"], ["c1IQ", "2027-05-01", "2027-06-30", "build", "Installation & qualification (8 weeks).", "\u5b89\u88c5\u4e0e\u786e\u8ba4\uff088 \u5468\uff09\u3002"]];
+const GANTT_C1 = [["c1Scope", "2026-07-01", "2026-09-30", "plan", "Finalise scope (8 weeks), aligned with retrofit approval.", "\u8303\u56f4\u5b9a\u7a3f\uff088 \u5468\uff09\uff0c\u5047\u8bbe\u4e0e\u6539\u9020\u9879\u76ee\u4e00\u5e76\u6279\u51c6\u3002"], ["c1Dd", "2026-09-01", "2026-12-31", "plan", "Detailed design (12 weeks).", "\u8be6\u7ec6\u8bbe\u8ba1\uff0812 \u5468\uff09\u3002"], ["c1Build", "2026-12-01", "2027-05-31", "warn", "Place orders & equipment build (20 weeks).", "\u4e0b\u5355\u53ca\u8bbe\u5907\u5236\u9020\uff0820 \u5468\uff09\u3002"], ["c1IQ", "2027-05-01", "2027-07-31", "build", "Installation & qualification (8 weeks).", "\u5b89\u88c5\u4e0e\u786e\u8ba4\uff088 \u5468\uff09\u3002"]];
 
 function extCostLabels(){return I18N[lang].extCost;}
 function extBullets(id){const b=I18N[lang].extCost.bullets;return (b&&b[id])?b[id]:[];}
@@ -315,7 +315,7 @@ p2t:"项目概览", p2s:"三条独立工作流 · 可行性/内部估算 OOM",
 p2th1:"子项目", p2th2:"范围", p2th3:"OOM（可行性量级）", p2th4:"关键节点",
 p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干燥", p2r1o:"£78.1M", p2r1d:"2030-05 竣工",
 p2r2n:"HPLC + 冻干", p2r2s:"既有 PDF footprint 改造", p2r2o:"£5.33M", p2r2d:"2027-09 HPLC / 12 月冻干",
-p2r3n:"C1 模块 OEB5 升级", p2r3s:"现有 C1 模块 OEB5 日常运行能力", p2r3o:"£2.48M", p2r3d:"2027-06 安装确认",
+p2r3n:"C1 模块 OEB5 升级", p2r3s:"现有 C1 模块 OEB5 日常运行能力", p2r3o:"£2.48M", p2r3d:"2027-07 安装确认",
 p2link:"交付关联：厂房内改造（制备 HPLC + 冻干）与 C1 模块升级须同步完成，方能为制备 HPLC 操作提供 OEB5 能力；制备 HPLC 单元驱动整体交付时间线。",
 extTag:"扩建", hplcTag:"改造", c1Tag:"C1 OEB5",
 extSec:"一、B902 东侧扩建", extSecs:"Scitech · RIBA Stage 1 · 300291-RE-0001",
@@ -382,7 +382,7 @@ c1Sec:"三、C1 模块 OEB5 升级", c1Secs:"Sandwich PDF · 内部估算",
 c12t:"C1 · 执行摘要", c12s:"现有 C1 模块 OEB5 日常运行能力",
 c1K1:"OEB5 日常运行", c1K1d:"升级目标",
 c1K2:"£2.48M", c1K2d:"项目总投资估算",
-c1K3:"2027-06", c1K3d:"安装与确认目标",
+c1K3:"2027-07", c1K3d:"安装与确认目标",
 c1B1:"范围：二层物料分装与首层最终包装固定隔离器；HVAC 升级；进出气闸联锁及雾化淋浴；覆盖各单元操作与废物流的定制柔性隔离器。",
 c1B2:"估算：尚无供应商正式报价；柔性隔离器已与 ILC Dover 对接；固定隔离器按本地（EU/UK）供货估算，仍有降本空间。",
 c1B3:"交付关联：须与厂房内改造（制备 HPLC + 冻干）同步完成，方能为制备 HPLC 操作提供 OEB5 能力。",
@@ -423,7 +423,7 @@ p2t:"Project overview", p2s:"Three workstreams · feasibility / internal OOM",
 p2th1:"Workstream", p2th2:"Scope", p2th3:"OOM (feasibility)", p2th4:"Milestone",
 p2r1n:"B902 east extension", p2r1s:"New 4-floor + mezzanine", p2r1o:"£78.1M", p2r1d:"Complete May 2030",
 p2r2n:"HPLC + lyophilizer", p2r2s:"Retrofit in existing PDF", p2r2o:"£5.33M", p2r2d:"HPLC Sep 2027 / lyoph Dec",
-p2r3n:"C1 module OEB5 upgrade", p2r3s:"Routine OEB5 ops in existing C1 module", p2r3o:"£2.48M", p2r3d:"IQ complete Jun 2027",
+p2r3n:"C1 module OEB5 upgrade", p2r3s:"Routine OEB5 ops in existing C1 module", p2r3o:"£2.48M", p2r3d:"IQ complete Jul 2027",
 p2link:"Delivery link: in-situ retrofit (prep HPLC + lyophilizer) and C1 upgrade must be delivered together to provide OEB5 capability for prep HPLC; prep HPLC drives the overall timeline.",
 extTag:"Extension", hplcTag:"Retrofit", c1Tag:"C1 OEB5",
 extSec:"I. B902 East Extension", extSecs:"Scitech · RIBA 1 · 300291-RE-0001",
@@ -491,7 +491,7 @@ c1Sec:"III. C1 Module OEB5 Upgrade", c1Secs:"Sandwich PDF · internal estimate",
 c12t:"C1 · Summary", c12s:"Routine OEB5 operational capability",
 c1K1:"OEB5 routine ops", c1K1d:"Upgrade objective",
 c1K2:"£2.48M", c1K2d:"Total CAPEX estimate",
-c1K3:"Jun 2027", c1K3d:"Install & qualification target",
+c1K3:"Jul 2027", c1K3d:"Install & qualification target",
 c1B1:"Scope: fixed isolators (2nd floor dispensing, GF pack-off); HVAC upgrades; entry/exit airlock interlocks incl. mist showers; bespoke flexible isolators for unit ops and waste streams.",
 c1B2:"Estimate: no supplier quotes yet; ILC Dover engaged on flexible isolators; fixed isolators based on local (EU/UK) supply — scope to reduce cost.",
 c1B3:"Delivery link: must be delivered with retrofit (prep HPLC + lyoph) for OEB5 prep HPLC capability.",
@@ -682,7 +682,7 @@ ${ganttHTML(GANTT_HPLC,new Date("2026-05-01"),new Date("2027-12-31"),HPLC_KEYS,[
 <div class="kpi"><div class="val">${t("c17k3")}</div><div class="lbl">${t("c17k3d")}</div></div></div>
 <div class="kpi-row cols3" style="margin-bottom:.5rem">
 <div class="kpi"><div class="val">${t("c17k4")}</div><div class="lbl">${t("c17k4d")}</div></div></div>
-${ganttHTML(GANTT_C1,new Date("2026-07-01"),new Date("2027-06-30"),C1_KEYS,["2026 H2","2027 H1","2027 H2"],"2026-06-12","c1GSub",{p:"c1LegP",w:"c1LegWarn",b:"c1LegB",today:"c1Today"})}</section>
+${ganttHTML(GANTT_C1,new Date("2026-07-01"),new Date("2027-07-31"),C1_KEYS,["2026 H2","2027 H1","2027 H2"],"2026-06-12","c1GSub",{p:"c1LegP",w:"c1LegWarn",b:"c1LegB",today:"c1Today"})}</section>
 
 <section class="slide"><h1>${t("c19t")}</h1>
 <ul class="decision-list">
