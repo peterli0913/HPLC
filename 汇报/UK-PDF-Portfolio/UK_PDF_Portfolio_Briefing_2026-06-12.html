@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Asymchem UK — PDF Portfolio Briefing</title>
+<!-- build: portfolio-2026-06-12 rev 2026-06-12-c1-gantt-v3 -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root{--navy:#0f2b46;--teal:#009688;--accent:#c9a227;--ext:#1a4a6e;--hplc:#5b6eae;--c1:#8b6914;--bg:#f4f6f8;--card:#fff;--text:#2c3e50;--muted:#5a6a7a;--warn:#b43a2a}
@@ -123,16 +124,16 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .scope-grid h3{font-size:.84rem;color:var(--navy);margin-bottom:.3rem}
 .compare-table td:last-child,.compare-table th:last-child{text-align:right;font-weight:600}
 .gantt-wrap{flex:1;min-height:0;background:var(--card);border-radius:10px;padding:.7rem;border:1px solid #e8ecf0;display:flex;flex-direction:column}
-.gantt-axis{display:flex;justify-content:space-between;font-size:.63rem;color:var(--muted);padding:0 0 .22rem 7.5rem;border-bottom:1px solid #dde3e8;margin-bottom:.22rem}
+.gantt-axis{display:flex;justify-content:space-between;font-size:.63rem;color:var(--muted);padding:0 .15rem .22rem 7.5rem;border-bottom:1px solid #dde3e8;margin-bottom:.22rem}
 .gantt-body{flex:1;overflow-y:auto}
-.gantt-row{display:grid;grid-template-columns:7rem 1fr 4.6rem;gap:.3rem;margin-bottom:.3rem;align-items:center}
+.gantt-row{display:grid;grid-template-columns:7rem 1fr 6rem;gap:.35rem;margin-bottom:.35rem;align-items:center}
 .gantt-label{font-size:.63rem;font-weight:600;color:var(--navy);text-align:right;line-height:1.1}
 .gantt-track{position:relative;height:19px;background:#eef2f6;border-radius:4px}
 .gantt-bar{position:absolute;top:2px;height:15px;border-radius:3px;min-width:3px;cursor:pointer}
 .gantt-bar.done{background:var(--teal)} .gantt-bar.plan{background:#1a4a6e}
 .gantt-bar.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 5px,#8f7db8 5px,#8f7db8 10px)}
 .gantt-bar.warn{background:var(--accent)} .gantt-bar.build{background:#2e6da4} .gantt-bar.staff{background:#5b6eae}
-.gantt-dates{font-size:.58rem;color:var(--muted)}
+.gantt-dates{font-size:.58rem;color:var(--muted);white-space:nowrap;line-height:1.2;text-align:right}
 .gantt-legend{font-size:.6rem;color:var(--muted);margin-top:.3rem;display:flex;gap:.55rem;flex-wrap:wrap}
 .gantt-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:.15rem;vertical-align:middle}
 .today-line{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);z-index:2;pointer-events:none}
@@ -160,7 +161,7 @@ const HPLC_COST_DATA = {"oom": 5329100, "directTotal": 3026800, "indirectTotal":
 const EXT_OOM = 78108089;
 const EXT_COST_DATA = {"oom": 78108089, "baseSub": 47591969, "baseRisk": 11897992, "baseTotal": 59489961, "baseRiskPct": 25, "otherSub": 4062357, "otherCont": 1015589, "otherTotal": 5077946, "otherContPct": 25, "confBase": 51654326, "confidence": 12913582, "confPct": 25, "riskReg": 626600, "genTotal": 13540182, "baseItems": [{"id": "fac", "amount": 254960, "lines": [[154960, "0.1"], [50000, "0.2"], [50000, "0.3"]]}, {"id": "sub", "amount": 1499680, "lines": [[1239680, "1.1"], [150000, "1.2"], [40000, "1.3"], [70000, "1.4"]]}, {"id": "sup", "amount": 3942636, "lines": []}, {"id": "int", "amount": 1270672, "lines": [[309920, "3.1"], [449384, "3.2"], [511368, "3.3"]]}, {"id": "fit", "amount": 154960, "lines": []}, {"id": "bld", "amount": 9532716, "lines": [[166808, "5.1"], [4165824, "5.2"], [2506484, "5.3"], [627200, "5.4"], [1966400, "5.5"]]}, {"id": "proc", "amount": 23249083, "lines": []}, {"id": "prefab", "amount": 0, "lines": []}, {"id": "exist", "amount": 204000, "lines": [[80000, "7.1"], [40000, "7.2"], [84000, "7.3"]]}, {"id": "ext", "amount": 1859520, "lines": []}, {"id": "pre", "amount": 3357458, "lines": []}, {"id": "ohp", "amount": 2266284, "lines": []}], "otherItems": [{"id": "design", "amount": 3807357}, {"id": "survey", "amount": 80000}, {"id": "breeam", "amount": 150000}, {"id": "plan", "amount": 25000}, {"id": "client", "amount": 0}], "chartStack": {"base_total": 59489961, "other_total": 5077946, "general_risk": 13540182}, "chartDonut": [254960, 1499680, 3942636, 1270672, 154960, 9532716, 23249083, 204000, 1859520, 3357458, 2266284], "chartDonutIds": ["fac", "sub", "sup", "int", "fit", "bld", "proc", "exist", "ext", "pre", "ohp"]};
 const C1_COST_DATA = {"oom": 2476500, "equipSub": 1905000, "projectCont": 571500, "contPct": 30, "genTotal": 571500, "isoFixed": 1000000, "hvacGroup": 575000, "flexGroup": 330000, "lines": {"iso2f": 500000, "isoGF": 500000, "hvac": 350000, "airlock": 225000, "flex": 330000}, "chartStack": {"equip_sub": 1905000, "project_cont": 571500}, "chartDonut": [1000000, 575000, 330000], "chartDonutIds": ["sec1", "sec2", "sec3"]};
-const GANTT_C1 = [["c1Scope", "2026-07-01", "2026-08-31", "plan", "Finalise scope (8 weeks), aligned with retrofit approval.", "\u8303\u56f4\u5b9a\u7a3f\uff088 \u5468\uff09\uff0c\u5047\u8bbe\u4e0e\u6539\u9020\u9879\u76ee\u4e00\u5e76\u6279\u51c6\u3002", "2026-07-01", "2026-09-30"], ["c1Dd", "2026-09-01", "2026-11-30", "plan", "Detailed design (12 weeks).", "\u8be6\u7ec6\u8bbe\u8ba1\uff0812 \u5468\uff09\u3002", "2026-09-01", "2026-12-31"], ["c1Build", "2026-12-01", "2027-04-30", "warn", "Place orders & equipment build (20 weeks).", "\u4e0b\u5355\u53ca\u8bbe\u5907\u5236\u9020\uff0820 \u5468\uff09\u3002", "2026-12-01", "2027-05-31"], ["c1IQ", "2027-05-01", "2027-06-30", "build", "Installation & qualification (8 weeks).", "\u5b89\u88c5\u4e0e\u786e\u8ba4\uff088 \u5468\uff09\u3002", "2027-05-01", "2027-07-31"]];
+const GANTT_C1 = [["c1Scope", "2026-07-01", "2026-08-31", "plan", "Finalise scope (8 weeks), aligned with retrofit approval.", "\u8303\u56f4\u5b9a\u7a3f\uff088 \u5468\uff09\uff0c\u5047\u8bbe\u4e0e\u6539\u9020\u9879\u76ee\u4e00\u5e76\u6279\u51c6\u3002", "2026/07 \u2013 2026/09"], ["c1Dd", "2026-09-01", "2026-11-30", "plan", "Detailed design (12 weeks).", "\u8be6\u7ec6\u8bbe\u8ba1\uff0812 \u5468\uff09\u3002", "2026/09 \u2013 2026/12"], ["c1Build", "2026-12-01", "2027-04-30", "warn", "Place orders & equipment build (20 weeks).", "\u4e0b\u5355\u53ca\u8bbe\u5907\u5236\u9020\uff0820 \u5468\uff09\u3002", "2026/12 \u2013 2027/05"], ["c1IQ", "2027-05-01", "2027-06-30", "build", "Installation & qualification (8 weeks).", "\u5b89\u88c5\u4e0e\u786e\u8ba4\uff088 \u5468\uff09\u3002", "2027/05 \u2013 2027/07"]];
 
 function extCostLabels(){return I18N[lang].extCost;}
 function extBullets(id){const b=I18N[lang].extCost.bullets;return (b&&b[id])?b[id]:[];}
@@ -399,10 +400,10 @@ c16kOom:"项目总投资", c16kEquip:"主设备小计", c16kCont:"全项目预�
 c1Cost:{"capex": "项目总投资估算", "secEquip": "主设备（设备与设计费）", "sec1": "1. 固定隔离器", "iso2f": "1.1 三层（second floor）物料分装固定隔离器", "isoGF": "1.2 一层（ground floor）最终包装固定隔离器", "sec2": "2. HVAC 与气闸", "hvac": "2.1 HVAC 系统改造/升级", "airlock": "2.2 气闸联锁及雾化淋浴", "sec3": "3. 柔性隔离", "flex": "3.1 各单元操作定制柔性隔离器", "secGen": "一般风险与预备费", "projectCont": "全项目预备费（30%）"},c1Chart:{"stackEquip": "主设备小计", "stackCont": "全项目预备费", "donutTitle": "主设备 — 分项"},
 c1ChL:"项目总投资构成", c1ChR:"主设备 — 分项",
 c17t:"C1 · 周期", c17s:"假设与改造项目一并批准",
-c17k1:"范围定稿", c17k1d:"8 周",
-c17k2:"详细设计", c17k2d:"12 周",
-c17k3:"下单/制造", c17k3d:"20 周",
-c17k4:"安装确认", c17k4d:"8 周",
+c17k1:"范围定稿", c17k1d:"8 周 · 2026/07–09",
+c17k2:"详细设计", c17k2d:"12 周 · 2026/09–12",
+c17k3:"下单/制造", c17k3d:"20 周 · 2026/12–05",
+c17k4:"安装确认", c17k4d:"8 周 · 2027/05–07",
 c1GSub:"C1 OEB5 升级时间轴",
 c1Scope:"范围定稿", c1Dd:"详细设计", c1Build:"下单及设备制造", c1IQ:"安装与确认",
 c1LegP:"设计/准备", c1LegWarn:"下单+制造", c1LegB:"施工/确认", c1Today:"约今",
@@ -508,10 +509,10 @@ c16kOom:"Total CAPEX", c16kEquip:"Equipment subtotal", c16kCont:"Project conting
 c1Cost:{"capex": "Total CAPEX Estimate", "secEquip": "Main equipment (equipment & design costs)", "sec1": "1. Fixed isolators", "iso2f": "1.1 2nd floor material dispensing fixed isolator", "isoGF": "1.2 Ground floor final pack-off fixed isolator", "sec2": "2. HVAC & airlocks", "hvac": "2.1 HVAC system modifications / upgrades", "airlock": "2.2 Airlock interlocking & mist shower installation", "sec3": "3. Flexible isolation", "flex": "3.1 Bespoke flexible isolators — unit operations", "secGen": "General risk & contingency", "projectCont": "Whole Project contingency (30%)"},c1Chart:{"stackEquip": "Equipment subtotal", "stackCont": "Project contingency", "donutTitle": "Main equipment — breakdown"},
 c1ChL:"Total CAPEX composition", c1ChR:"Main equipment — breakdown",
 c17t:"C1 · Programme", c17s:"Assumes joint approval with retrofit",
-c17k1:"Finalise scope", c17k1d:"8 weeks",
-c17k2:"Detailed design", c17k2d:"12 weeks",
-c17k3:"Orders / build", c17k3d:"20 weeks",
-c17k4:"Install & IQ", c17k4d:"8 weeks",
+c17k1:"Finalise scope", c17k1d:"8 wk · Jul–Sep 2026",
+c17k2:"Detailed design", c17k2d:"12 wk · Sep–Dec 2026",
+c17k3:"Orders / build", c17k3d:"20 wk · Dec–May 2027",
+c17k4:"Install & IQ", c17k4d:"8 wk · May–Jul 2027",
 c1GSub:"C1 OEB5 upgrade timeline",
 c1Scope:"Finalise scope", c1Dd:"Detailed design", c1Build:"Orders & equipment build", c1IQ:"Installation & qualification",
 c1LegP:"Design / prep", c1LegWarn:"Orders + build", c1LegB:"Install / IQ", c1Today:"~Today",
@@ -528,6 +529,12 @@ pEnd:"Thank you", pEnds:"",
 function t(k){return I18N[lang][k]||k;}
 function fm(n){return "£"+Math.round(n).toLocaleString("en-GB");}
 
+function ganttDateLabel(g){
+if(g[6]&&String(g[6]).includes("–"))return g[6];
+const dispStart=g[6]||g[1],dispEnd=g[7]||g[2];
+const d0=dispStart.slice(0,7).replace("-","/"),d1=dispEnd.slice(0,7).replace("-","/");
+return d0+" – "+d1;
+}
 function ganttHTML(data,T0,T1,keys,axis,today,sub,leg){
 const RANGE=T1-T0;
 function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
@@ -535,12 +542,11 @@ let rows="";
 data.forEach((g,i)=>{
 const key=keys[i]||g[0];
 const left=pct(g[1]),right=pct(g[2]),w=Math.max(1.2,right-left);
-const dispStart=g[6]||g[1],dispEnd=g[7]||g[2];
-const d0=dispStart.slice(0,7).replace("-","/"),d1=dispEnd.slice(0,7).replace("-","/");
+const dateLabel=ganttDateLabel(g);
 rows+=`<div class="gantt-row"><div class="gantt-label">${t(key)}</div><div class="gantt-track">
 ${i===0?`<div class="today-line" style="left:${pct(today)}%"><span class="today-tag">${t(leg.today||"today")}</span></div>`:""}
-<div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${d0} – ${d1}"></div>
-</div><div class="gantt-dates">${d0} – ${d1}</div></div>`;
+<div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${dateLabel}"></div>
+</div><div class="gantt-dates">${dateLabel}</div></div>`;
 });
 return `<div class="gantt-wrap"><div class="chart-title">${t(sub)}</div>
 <div class="gantt-axis">${axis.map(y=>`<span>${y}</span>`).join("")}</div>

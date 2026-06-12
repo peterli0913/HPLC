@@ -71,6 +71,7 @@ HTML = r'''<!DOCTYPE html>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Asymchem UK — PDF Portfolio Briefing</title>
+<!-- build: portfolio-2026-06-12 rev 2026-06-12-c1-gantt-v3 -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root{--navy:#0f2b46;--teal:#009688;--accent:#c9a227;--ext:#1a4a6e;--hplc:#5b6eae;--c1:#8b6914;--bg:#f4f6f8;--card:#fff;--text:#2c3e50;--muted:#5a6a7a;--warn:#b43a2a}
@@ -125,16 +126,16 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .scope-grid h3{font-size:.84rem;color:var(--navy);margin-bottom:.3rem}
 .compare-table td:last-child,.compare-table th:last-child{text-align:right;font-weight:600}
 .gantt-wrap{flex:1;min-height:0;background:var(--card);border-radius:10px;padding:.7rem;border:1px solid #e8ecf0;display:flex;flex-direction:column}
-.gantt-axis{display:flex;justify-content:space-between;font-size:.63rem;color:var(--muted);padding:0 0 .22rem 7.5rem;border-bottom:1px solid #dde3e8;margin-bottom:.22rem}
+.gantt-axis{display:flex;justify-content:space-between;font-size:.63rem;color:var(--muted);padding:0 .15rem .22rem 7.5rem;border-bottom:1px solid #dde3e8;margin-bottom:.22rem}
 .gantt-body{flex:1;overflow-y:auto}
-.gantt-row{display:grid;grid-template-columns:7rem 1fr 4.6rem;gap:.3rem;margin-bottom:.3rem;align-items:center}
+.gantt-row{display:grid;grid-template-columns:7rem 1fr 6rem;gap:.35rem;margin-bottom:.35rem;align-items:center}
 .gantt-label{font-size:.63rem;font-weight:600;color:var(--navy);text-align:right;line-height:1.1}
 .gantt-track{position:relative;height:19px;background:#eef2f6;border-radius:4px}
 .gantt-bar{position:absolute;top:2px;height:15px;border-radius:3px;min-width:3px;cursor:pointer}
 .gantt-bar.done{background:var(--teal)} .gantt-bar.plan{background:#1a4a6e}
 .gantt-bar.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 5px,#8f7db8 5px,#8f7db8 10px)}
 .gantt-bar.warn{background:var(--accent)} .gantt-bar.build{background:#2e6da4} .gantt-bar.staff{background:#5b6eae}
-.gantt-dates{font-size:.58rem;color:var(--muted)}
+.gantt-dates{font-size:.58rem;color:var(--muted);white-space:nowrap;line-height:1.2;text-align:right}
 .gantt-legend{font-size:.6rem;color:var(--muted);margin-top:.3rem;display:flex;gap:.55rem;flex-wrap:wrap}
 .gantt-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:.15rem;vertical-align:middle}
 .today-line{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);z-index:2;pointer-events:none}
@@ -259,10 +260,10 @@ c16kOom:"项目总投资", c16kEquip:"主设备小计", c16kCont:"全项目预�
 c1Cost:''' + json.dumps(C1_COST_I18N_ZH, ensure_ascii=False) + r''',c1Chart:''' + json.dumps(C1_CHART_I18N_ZH, ensure_ascii=False) + r''',
 c1ChL:"项目总投资构成", c1ChR:"主设备 — 分项",
 c17t:"C1 · 周期", c17s:"假设与改造项目一并批准",
-c17k1:"范围定稿", c17k1d:"8 周",
-c17k2:"详细设计", c17k2d:"12 周",
-c17k3:"下单/制造", c17k3d:"20 周",
-c17k4:"安装确认", c17k4d:"8 周",
+c17k1:"范围定稿", c17k1d:"8 周 · 2026/07–09",
+c17k2:"详细设计", c17k2d:"12 周 · 2026/09–12",
+c17k3:"下单/制造", c17k3d:"20 周 · 2026/12–05",
+c17k4:"安装确认", c17k4d:"8 周 · 2027/05–07",
 c1GSub:"C1 OEB5 升级时间轴",
 c1Scope:"范围定稿", c1Dd:"详细设计", c1Build:"下单及设备制造", c1IQ:"安装与确认",
 c1LegP:"设计/准备", c1LegWarn:"下单+制造", c1LegB:"施工/确认", c1Today:"约今",
@@ -368,10 +369,10 @@ c16kOom:"Total CAPEX", c16kEquip:"Equipment subtotal", c16kCont:"Project conting
 c1Cost:''' + json.dumps(C1_COST_I18N_EN, ensure_ascii=False) + r''',c1Chart:''' + json.dumps(C1_CHART_I18N_EN, ensure_ascii=False) + r''',
 c1ChL:"Total CAPEX composition", c1ChR:"Main equipment — breakdown",
 c17t:"C1 · Programme", c17s:"Assumes joint approval with retrofit",
-c17k1:"Finalise scope", c17k1d:"8 weeks",
-c17k2:"Detailed design", c17k2d:"12 weeks",
-c17k3:"Orders / build", c17k3d:"20 weeks",
-c17k4:"Install & IQ", c17k4d:"8 weeks",
+c17k1:"Finalise scope", c17k1d:"8 wk · Jul–Sep 2026",
+c17k2:"Detailed design", c17k2d:"12 wk · Sep–Dec 2026",
+c17k3:"Orders / build", c17k3d:"20 wk · Dec–May 2027",
+c17k4:"Install & IQ", c17k4d:"8 wk · May–Jul 2027",
 c1GSub:"C1 OEB5 upgrade timeline",
 c1Scope:"Finalise scope", c1Dd:"Detailed design", c1Build:"Orders & equipment build", c1IQ:"Installation & qualification",
 c1LegP:"Design / prep", c1LegWarn:"Orders + build", c1LegB:"Install / IQ", c1Today:"~Today",
@@ -388,6 +389,12 @@ pEnd:"Thank you", pEnds:"",
 function t(k){return I18N[lang][k]||k;}
 function fm(n){return "£"+Math.round(n).toLocaleString("en-GB");}
 
+function ganttDateLabel(g){
+if(g[6]&&String(g[6]).includes("–"))return g[6];
+const dispStart=g[6]||g[1],dispEnd=g[7]||g[2];
+const d0=dispStart.slice(0,7).replace("-","/"),d1=dispEnd.slice(0,7).replace("-","/");
+return d0+" – "+d1;
+}
 function ganttHTML(data,T0,T1,keys,axis,today,sub,leg){
 const RANGE=T1-T0;
 function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
@@ -395,12 +402,11 @@ let rows="";
 data.forEach((g,i)=>{
 const key=keys[i]||g[0];
 const left=pct(g[1]),right=pct(g[2]),w=Math.max(1.2,right-left);
-const dispStart=g[6]||g[1],dispEnd=g[7]||g[2];
-const d0=dispStart.slice(0,7).replace("-","/"),d1=dispEnd.slice(0,7).replace("-","/");
+const dateLabel=ganttDateLabel(g);
 rows+=`<div class="gantt-row"><div class="gantt-label">${t(key)}</div><div class="gantt-track">
 ${i===0?`<div class="today-line" style="left:${pct(today)}%"><span class="today-tag">${t(leg.today||"today")}</span></div>`:""}
-<div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${d0} – ${d1}"></div>
-</div><div class="gantt-dates">${d0} – ${d1}</div></div>`;
+<div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${dateLabel}"></div>
+</div><div class="gantt-dates">${dateLabel}</div></div>`;
 });
 return `<div class="gantt-wrap"><div class="chart-title">${t(sub)}</div>
 <div class="gantt-axis">${axis.map(y=>`<span>${y}</span>`).join("")}</div>
