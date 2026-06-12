@@ -21,38 +21,47 @@ C1_OOM = EQUIP_SUB + PROJECT_CONT  # 2,476,500
 
 CHART_STACK = {"equip_sub": EQUIP_SUB, "project_cont": PROJECT_CONT}
 
+# Plot dates (g[1], g[2]) set bar length; optional g[6], g[7] override displayed months only.
 GANTT_C1 = [
     [
         "c1Scope",
         "2026-07-01",
-        "2026-09-30",
+        "2026-08-31",
         "plan",
         "Finalise scope (8 weeks), aligned with retrofit approval.",
         "范围定稿（8 周），假设与改造项目一并批准。",
+        "2026-07-01",
+        "2026-09-30",
     ],
     [
         "c1Dd",
         "2026-09-01",
-        "2026-12-31",
+        "2026-11-30",
         "plan",
         "Detailed design (12 weeks).",
         "详细设计（12 周）。",
+        "2026-09-01",
+        "2026-12-31",
     ],
     [
         "c1Build",
         "2026-12-01",
-        "2027-05-31",
+        "2027-04-30",
         "warn",
         "Place orders & equipment build (20 weeks).",
         "下单及设备制造（20 周）。",
+        "2026-12-01",
+        "2027-05-31",
     ],
     [
         "c1IQ",
         "2027-05-01",
-        "2027-07-31",
+        "2027-06-30",
         "build",
         "Installation & qualification (8 weeks).",
         "安装与确认（8 周）。",
+        "2027-05-01",
+        "2027-07-31",
     ],
 ]
 

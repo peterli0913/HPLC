@@ -351,7 +351,7 @@ c1Sec:"III. C1 Module OEB5 Upgrade", c1Secs:"Sandwich PDF · internal estimate",
 c12t:"C1 · Summary", c12s:"Routine OEB5 operational capability",
 c1K1:"OEB5 routine ops", c1K1d:"Upgrade objective",
 c1K2:"£2.48M", c1K2d:"Total CAPEX estimate",
-c1K3:"Jun 2027", c1K3d:"Install & qualification target",
+c1K3:"Jul 2027", c1K3d:"Install & qualification target",
 c1B1:"Scope: fixed isolators (2nd floor dispensing, GF pack-off); HVAC upgrades; entry/exit airlock interlocks incl. mist showers; bespoke flexible isolators for unit ops and waste streams.",
 c1B2:"Estimate: no supplier quotes yet; ILC Dover engaged on flexible isolators; fixed isolators based on local (EU/UK) supply — scope to reduce cost.",
 c1B3:"Delivery link: must be delivered with retrofit (prep HPLC + lyoph) for OEB5 prep HPLC capability.",
@@ -395,7 +395,8 @@ let rows="";
 data.forEach((g,i)=>{
 const key=keys[i]||g[0];
 const left=pct(g[1]),right=pct(g[2]),w=Math.max(1.2,right-left);
-const d0=g[1].slice(0,7).replace("-","/"),d1=g[2].slice(0,7).replace("-","/");
+const dispStart=g[6]||g[1],dispEnd=g[7]||g[2];
+const d0=dispStart.slice(0,7).replace("-","/"),d1=dispEnd.slice(0,7).replace("-","/");
 rows+=`<div class="gantt-row"><div class="gantt-label">${t(key)}</div><div class="gantt-track">
 ${i===0?`<div class="today-line" style="left:${pct(today)}%"><span class="today-tag">${t(leg.today||"today")}</span></div>`:""}
 <div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${d0} – ${d1}"></div>
