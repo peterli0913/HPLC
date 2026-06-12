@@ -212,7 +212,7 @@ hplcB1:"范围：制备 HPLC（DAC300/CP300）+ 冻干机（隔离器、除湿�
 hplcB2:"投资：Total CAPEX Estimate £5.33M（直接+间接+30% 项目预备费）；非最终 Capex。",
 hplcB3:"周期：冻干机长周期驱动；优先冻干后 HPLC。",
 hplcB4:"关联：须与 C1 模块 OEB5 升级同步交付，方可实现制备 HPLC 的 OEB5 运行能力。",
-hplc3t:"改造 · 范围", hplc3s:"",
+hplc3t:"改造 · 范围",
 hplcT1:"HPLC", hplcT1a:"DAC300/CP300 泵撬；移动头罐；2000 L 废液罐",
 hplcT1b:"Hanbon 供货", hplcT1c:"PG.05 区域安装",
 hplcT2:"冻干机", hplcT2a:"冻干腔、隔离器、双 CIP、除湿、PSG",
@@ -247,8 +247,8 @@ c1B1:"范围：二层物料分装与首层最终包装固定隔离器；HVAC 升
 c1B2:"估算：尚无供应商正式报价；柔性隔离器已与 ILC Dover 对接；固定隔离器按本地（EU/UK）供货估算，仍有降本空间。",
 c1B3:"交付关联：须与厂房内改造（制备 HPLC + 冻干）同步完成，方能为制备 HPLC 操作提供 OEB5 能力。",
 c1B4:"周期：假设与改造项目一并批准；制备 HPLC 单元驱动整体交付节奏。",
-c13t:"C1 · 范围", c13s:"",
-c1S1:"固定隔离器", c1S1a:"二层：物料分装", c1S1b:"首层：最终包装",
+c13t:"C1 · 范围",
+c1S1:"固定隔离器", c1S1a:"三层（second floor）：物料分装", c1S1b:"一层（ground floor）：最终包装",
 c1S2:"HVAC 与气闸", c1S2a:"HVAC 升级，支持日常 OEB5 运行", c1S2b:"进出气闸联锁升级，含雾化淋浴",
 c1S3:"柔性隔离", c1S3a:"多台定制柔性隔离器", c1S3b:"覆盖模块内各单元操作及废物流",
 c1S4:"估价依据", c1S4a:"柔性隔离器：ILC Dover 对接中", c1S4b:"其余设备：尚无详细报价支撑",
@@ -320,7 +320,7 @@ hplcB1:"Prep HPLC + lyophilizer (isolator, dehumidifier, PSG, etc.) and enabling
 hplcB2:"Total CAPEX Estimate £5.33M (direct + indirect + 30% project contingency); not final Capex.",
 hplcB3:"Lyophilizer lead time drives; lyoph before HPLC.",
 hplcB4:"Link: must be delivered together with C1 OEB5 upgrade for prep HPLC OEB5 capability.",
-hplc3t:"Retrofit · Scope", hplc3s:"",
+hplc3t:"Retrofit · Scope",
 hplcT1:"HPLC", hplcT1a:"DAC300/CP300; mobile tanks; 2,000 L waste hold",
 hplcT1b:"Hanbon supply", hplcT1c:"Install PG.05",
 hplcT2:"Lyophilizer", hplcT2a:"Dryer, isolator, twin CIP, dehumidifier, PSG",
@@ -356,7 +356,7 @@ c1B1:"Scope: fixed isolators (2nd floor dispensing, GF pack-off); HVAC upgrades;
 c1B2:"Estimate: no supplier quotes yet; ILC Dover engaged on flexible isolators; fixed isolators based on local (EU/UK) supply — scope to reduce cost.",
 c1B3:"Delivery link: must be delivered with retrofit (prep HPLC + lyoph) for OEB5 prep HPLC capability.",
 c1B4:"Programme: assumes joint approval with retrofit; prep HPLC unit drives delivery timeline.",
-c13t:"C1 · Scope", c13s:"",
+c13t:"C1 · Scope",
 c1S1:"Fixed isolators", c1S1a:"2nd floor: material dispensing", c1S1b:"Ground floor: final pack-off",
 c1S2:"HVAC & airlocks", c1S2a:"HVAC upgrades for routine OEB5 operation", c1S2b:"Entry/exit airlock interlocks incl. mist showers",
 c1S3:"Flexible isolation", c1S3a:"Multiple bespoke flexible isolator systems", c1S3b:"All unit operations and waste streams within module",
@@ -473,7 +473,7 @@ return `
 <div class="kpi hplc"><div class="val">${t("hplcK4")}</div><div class="lbl">${t("hplcK4d")}</div></div></div>
 <ul><li>${t("hplcB1")}</li><li>${t("hplcB2")}</li><li>${t("hplcB3")}</li><li>${t("hplcB4")}</li></ul></section>
 
-<section class="slide"><h1>${t("hplc3t")}</h1>${t("hplc3s")?`<h2>${t("hplc3s")}</h2>`:""}
+<section class="slide"><h1>${t("hplc3t")}</h1>
 <div class="scope-grid">
 <div class="card"><h3>${t("hplcT1")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("hplcT1a")}</li><li>${t("hplcT1b")}</li><li>${t("hplcT1c")}</li></ul></div>
 <div class="card"><h3>${t("hplcT2")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("hplcT2a")}</li><li>${t("hplcT2b")}</li><li>${t("hplcT2c")}</li></ul></div></div></section>
@@ -516,7 +516,7 @@ ${ganttHTML(GANTT_HPLC,new Date("2026-05-01"),new Date("2027-12-31"),HPLC_KEYS,[
 <div class="kpi c1"><div class="val">${t("c1K3")}</div><div class="lbl">${t("c1K3d")}</div></div></div>
 <ul><li>${t("c1B1")}</li><li>${t("c1B2")}</li><li>${t("c1B3")}</li><li>${t("c1B4")}</li></ul></section>
 
-<section class="slide"><h1>${t("c13t")}</h1>${t("c13s")?`<h2>${t("c13s")}</h2>`:""}
+<section class="slide"><h1>${t("c13t")}</h1>
 <div class="scope-grid">
 <div class="card"><h3>${t("c1S1")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S1a")}</li><li>${t("c1S1b")}</li></ul></div>
 <div class="card"><h3>${t("c1S2")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S2a")}</li><li>${t("c1S2b")}</li></ul></div>
