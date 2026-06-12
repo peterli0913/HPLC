@@ -177,7 +177,7 @@ p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干�
 p2r2n:"HPLC + 冻干", p2r2s:"既有 PDF footprint 改造", p2r2o:"£5.33M", p2r2d:"2027-09 HPLC / 12 月冻干",
 p2r3n:"C1 模块 OEB5 升级", p2r3s:"现有 C1 模块 OEB5 日常运行能力", p2r3o:"£2.48M", p2r3d:"2027-06 安装确认",
 p2link:"交付关联：厂房内改造（制备 HPLC + 冻干）与 C1 模块升级须同步完成，方能为制备 HPLC 操作提供 OEB5 能力；制备 HPLC 单元驱动整体交付时间线。",
-extTag:"扩建", hplcTag:"改造", c1Tag:"C1",
+extTag:"扩建", hplcTag:"改造", c1Tag:"C1 OEB5",
 extSec:"一、B902 东侧扩建", extSecs:"Scitech · RIBA Stage 1 · 300291-RE-0001",
 ext2t:"扩建 · 执行摘要", ext2s:"2026-05-22 · Issue A1",
 extK1:"FS 完成", extK1d:"RIBA 1",
@@ -238,20 +238,20 @@ legDone:"完成", legStaff:"工程师就位", legPlan:"采购/制造", legBuild:
 legCrit:"关键路径", legAssume:"§4.3 示意", today:"约今",
 hplc9t:"改造 · 决策", hplc9d1:"是否批准进入 FEED？",
 hplc9d2:"是否批准长周期设备早期采购资金？",
-c1Sec:"三、C1 模块 OEB5 升级", c1Secs:"Sandwich PDF · 内部估算（Scott · Jun 2026）",
+c1Sec:"三、C1 模块 OEB5 升级", c1Secs:"Sandwich PDF · 内部估算",
 c12t:"C1 · 执行摘要", c12s:"现有 C1 模块 OEB5 日常运行能力",
 c1K1:"OEB5 日常运行", c1K1d:"升级目标",
 c1K2:"£2.48M", c1K2d:"项目总投资估算",
 c1K3:"2027-06", c1K3d:"安装与确认目标",
 c1B1:"范围：二层物料分装与首层最终包装固定隔离器；HVAC 升级；进出气闸联锁及雾化淋浴；覆盖各单元操作与废物流的定制柔性隔离器。",
 c1B2:"估算：尚无供应商正式报价；柔性隔离器已与 ILC Dover 对接；固定隔离器按本地（EU/UK）供货估算，仍有降本空间。",
-c1B3:"交付关联：虽为独立工作流，但须与厂房内改造（制备 HPLC + 冻干）同步完成，方能为制备 HPLC 操作提供 OEB5 能力。",
+c1B3:"交付关联：须与厂房内改造（制备 HPLC + 冻干）同步完成，方能为制备 HPLC 操作提供 OEB5 能力。",
 c1B4:"周期：假设与改造项目一并批准；制备 HPLC 单元驱动整体交付节奏。",
 c13t:"C1 · 范围", c13s:"",
 c1S1:"固定隔离器", c1S1a:"二层：物料分装", c1S1b:"首层：最终包装",
 c1S2:"HVAC 与气闸", c1S2a:"HVAC 升级，支持日常 OEB5 运行", c1S2b:"进出气闸联锁升级，含雾化淋浴",
 c1S3:"柔性隔离", c1S3a:"多台定制柔性隔离器", c1S3b:"覆盖模块内各单元操作及废物流",
-c1S4:"供应状态", c1S4a:"柔性隔离器：ILC Dover 对接中", c1S4b:"其余设备：尚无详细报价支撑",
+c1S4:"估价依据", c1S4a:"柔性隔离器：ILC Dover 对接中", c1S4b:"其余设备：尚无详细报价支撑",
 c15t:"C1 · 投资总览", c15s:"内部估算 · 主设备 + 30% 项目预备费",
 c15oom:"项目总投资估算",
 c16t:"C1 · 投资结构", c16s:"主设备小计 / 全项目预备费",
@@ -263,11 +263,11 @@ c17k1:"范围定稿", c17k1d:"8 周",
 c17k2:"详细设计", c17k2d:"12 周",
 c17k3:"下单/制造", c17k3d:"20 周",
 c17k4:"安装确认", c17k4d:"8 周",
-c1GSub:"C1 升级时间轴",
+c1GSub:"C1 OEB5 升级时间轴",
 c1Scope:"范围定稿", c1Dd:"详细设计", c1Build:"下单及设备制造", c1IQ:"安装与确认",
-c1LegP:"设计/准备", c1LegW:"采购/制造", c1LegB:"施工/确认", c1Today:"约今",
+c1LegP:"设计/准备", c1LegWarn:"下单+制造", c1LegB:"施工/确认", c1Today:"约今",
 c19t:"C1 · 决策", c19d1:"是否批准 C1 OEB5 升级与改造项目一并推进？",
-c19d2:"是否授权启动 ILC Dover 柔性隔离器及固定隔离器本地供货方案深化？",
+c19d2:"是否授权启动 ILC Dover 柔性隔离器及固定隔离器供货方案深化？",
 pDecT:"组合 · 提请关注", pDecS:"",
 pDec1:"三条线可独立决策与资金路径；扩建与改造 OOM 为可行性量级，C1 为内部估算。",
 pDec2:"扩建：RIBA 2 与模块化比选。",
@@ -285,7 +285,7 @@ p2r1n:"B902 east extension", p2r1s:"New 4-floor + mezzanine", p2r1o:"£78.1M", p
 p2r2n:"HPLC + lyophilizer", p2r2s:"Retrofit in existing PDF", p2r2o:"£5.33M", p2r2d:"HPLC Sep 2027 / lyoph Dec",
 p2r3n:"C1 module OEB5 upgrade", p2r3s:"Routine OEB5 ops in existing C1 module", p2r3o:"£2.48M", p2r3d:"IQ complete Jun 2027",
 p2link:"Delivery link: in-situ retrofit (prep HPLC + lyophilizer) and C1 upgrade must be delivered together to provide OEB5 capability for prep HPLC; prep HPLC drives the overall timeline.",
-extTag:"Extension", hplcTag:"Retrofit", c1Tag:"C1",
+extTag:"Extension", hplcTag:"Retrofit", c1Tag:"C1 OEB5",
 extSec:"I. B902 East Extension", extSecs:"Scitech · RIBA 1 · 300291-RE-0001",
 ext2t:"Extension · Summary", ext2s:"22 May 2026 · A1",
 extK1:"FS done", extK1d:"RIBA 1",
@@ -347,20 +347,20 @@ legCrit:"Critical", legAssume:"§4.3 illustrative", today:"~Today",
 hplc9t:"Retrofit · Decisions", hplc9d1:"Approve progression to FEED?",
 hplc9d2:"Approve early funding for long-lead packages?",
 pDecT:"Portfolio · For attention", pDecS:"",
-c1Sec:"III. C1 Module OEB5 Upgrade", c1Secs:"Sandwich PDF · internal estimate (Scott · Jun 2026)",
+c1Sec:"III. C1 Module OEB5 Upgrade", c1Secs:"Sandwich PDF · internal estimate",
 c12t:"C1 · Summary", c12s:"Routine OEB5 operational capability",
 c1K1:"OEB5 routine ops", c1K1d:"Upgrade objective",
 c1K2:"£2.48M", c1K2d:"Total CAPEX estimate",
 c1K3:"Jun 2027", c1K3d:"Install & qualification target",
 c1B1:"Scope: fixed isolators (2nd floor dispensing, GF pack-off); HVAC upgrades; entry/exit airlock interlocks incl. mist showers; bespoke flexible isolators for unit ops and waste streams.",
 c1B2:"Estimate: no supplier quotes yet; ILC Dover engaged on flexible isolators; fixed isolators based on local (EU/UK) supply — scope to reduce cost.",
-c1B3:"Delivery link: separate workstream, but must be delivered with retrofit (prep HPLC + lyoph) for OEB5 prep HPLC capability.",
+c1B3:"Delivery link: must be delivered with retrofit (prep HPLC + lyoph) for OEB5 prep HPLC capability.",
 c1B4:"Programme: assumes joint approval with retrofit; prep HPLC unit drives delivery timeline.",
 c13t:"C1 · Scope", c13s:"",
 c1S1:"Fixed isolators", c1S1a:"2nd floor: material dispensing", c1S1b:"Ground floor: final pack-off",
 c1S2:"HVAC & airlocks", c1S2a:"HVAC upgrades for routine OEB5 operation", c1S2b:"Entry/exit airlock interlocks incl. mist showers",
 c1S3:"Flexible isolation", c1S3a:"Multiple bespoke flexible isolator systems", c1S3b:"All unit operations and waste streams within module",
-c1S4:"Supply status", c1S4a:"Flexible isolators: ILC Dover engaged", c1S4b:"Other packages: no detailed quotes yet",
+c1S4:"Pricing basis", c1S4a:"Flexible isolators: ILC Dover engaged", c1S4b:"Other packages: no detailed quotes yet",
 c15t:"C1 · Investment", c15s:"Internal estimate · equipment + 30% project contingency",
 c15oom:"Total CAPEX Estimate",
 c16t:"C1 · Structure", c16s:"Equipment subtotal / project contingency",
@@ -372,11 +372,11 @@ c17k1:"Finalise scope", c17k1d:"8 weeks",
 c17k2:"Detailed design", c17k2d:"12 weeks",
 c17k3:"Orders / build", c17k3d:"20 weeks",
 c17k4:"Install & IQ", c17k4d:"8 weeks",
-c1GSub:"C1 upgrade timeline",
+c1GSub:"C1 OEB5 upgrade timeline",
 c1Scope:"Finalise scope", c1Dd:"Detailed design", c1Build:"Orders & equipment build", c1IQ:"Installation & qualification",
-c1LegP:"Design / prep", c1LegW:"Procure / build", c1LegB:"Install / IQ", c1Today:"~Today",
+c1LegP:"Design / prep", c1LegWarn:"Orders + build", c1LegB:"Install / IQ", c1Today:"~Today",
 c19t:"C1 · Decisions", c19d1:"Approve C1 OEB5 upgrade in parallel with retrofit?",
-c19d2:"Authorise ILC Dover flexible isolator work and local fixed-isolator option development?",
+c19d2:"Authorise ILC Dover flexible isolator work and fixed-isolator option development?",
 pDec1:"Three workstreams — separate funding paths; ext/retrofit OOM = feasibility, C1 = internal estimate.",
 pDec2:"Extension: RIBA 2 and modular study.",
 pDec3:"Retrofit + C1: plan joint delivery; link retrofit FEED/procurement with C1 scope finalisation.",
@@ -405,10 +405,11 @@ return `<div class="gantt-wrap"><div class="chart-title">${t(sub)}</div>
 <div class="gantt-axis">${axis.map(y=>`<span>${y}</span>`).join("")}</div>
 <div class="gantt-body">${rows}</div>
 <div class="gantt-legend">
-<span><i style="background:var(--teal)"></i>${t(leg.d)}</span>
-<span><i style="background:#1a4a6e"></i>${t(leg.p)}</span>
-<span><i style="background:#2e6da4"></i>${t(leg.b)}</span>
-<span><i style="background:var(--accent)"></i>${t(leg.c)}</span>
+${leg.d?`<span><i style="background:var(--teal)"></i>${t(leg.d)}</span>`:""}
+${leg.p?`<span><i style="background:#1a4a6e"></i>${t(leg.p)}</span>`:""}
+${leg.b?`<span><i style="background:#2e6da4"></i>${t(leg.b)}</span>`:""}
+${leg.w?`<span><i style="background:var(--accent)"></i>${t(leg.w)}</span>`:""}
+${leg.c?`<span><i style="background:var(--accent)"></i>${t(leg.c)}</span>`:""}
 ${leg.s?`<span><i style="background:#5b6eae"></i>${t(leg.s)}</span>`:""}
 ${leg.a?`<span><i style="background:#6d5b95"></i>${t(leg.a)}</span>`:""}
 </div></div>`;
@@ -472,7 +473,7 @@ return `
 <div class="kpi hplc"><div class="val">${t("hplcK4")}</div><div class="lbl">${t("hplcK4d")}</div></div></div>
 <ul><li>${t("hplcB1")}</li><li>${t("hplcB2")}</li><li>${t("hplcB3")}</li><li>${t("hplcB4")}</li></ul></section>
 
-<section class="slide"><h1>${t("hplc3t")}</h1><h2>${t("hplc3s")}</h2>
+<section class="slide"><h1>${t("hplc3t")}</h1>${t("hplc3s")?`<h2>${t("hplc3s")}</h2>`:""}
 <div class="scope-grid">
 <div class="card"><h3>${t("hplcT1")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("hplcT1a")}</li><li>${t("hplcT1b")}</li><li>${t("hplcT1c")}</li></ul></div>
 <div class="card"><h3>${t("hplcT2")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("hplcT2a")}</li><li>${t("hplcT2b")}</li><li>${t("hplcT2c")}</li></ul></div></div></section>
@@ -515,7 +516,7 @@ ${ganttHTML(GANTT_HPLC,new Date("2026-05-01"),new Date("2027-12-31"),HPLC_KEYS,[
 <div class="kpi c1"><div class="val">${t("c1K3")}</div><div class="lbl">${t("c1K3d")}</div></div></div>
 <ul><li>${t("c1B1")}</li><li>${t("c1B2")}</li><li>${t("c1B3")}</li><li>${t("c1B4")}</li></ul></section>
 
-<section class="slide"><h1>${t("c13t")}</h1><h2>${t("c13s")}</h2>
+<section class="slide"><h1>${t("c13t")}</h1>${t("c13s")?`<h2>${t("c13s")}</h2>`:""}
 <div class="scope-grid">
 <div class="card"><h3>${t("c1S1")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S1a")}</li><li>${t("c1S1b")}</li></ul></div>
 <div class="card"><h3>${t("c1S2")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S2a")}</li><li>${t("c1S2b")}</li></ul></div>
@@ -541,14 +542,11 @@ ${ganttHTML(GANTT_HPLC,new Date("2026-05-01"),new Date("2027-12-31"),HPLC_KEYS,[
 <div class="kpi"><div class="val">${t("c17k3")}</div><div class="lbl">${t("c17k3d")}</div></div></div>
 <div class="kpi-row cols3" style="margin-bottom:.5rem">
 <div class="kpi"><div class="val">${t("c17k4")}</div><div class="lbl">${t("c17k4d")}</div></div></div>
-${ganttHTML(GANTT_C1,new Date("2026-07-01"),new Date("2027-06-30"),C1_KEYS,["2026 H2","2027 H1","2027 H2"],"2026-06-12","c1GSub",{d:"c1LegP",p:"c1LegW",b:"c1LegB",today:"c1Today"})}</section>
+${ganttHTML(GANTT_C1,new Date("2026-07-01"),new Date("2027-06-30"),C1_KEYS,["2026 H2","2027 H1","2027 H2"],"2026-06-12","c1GSub",{p:"c1LegP",w:"c1LegWarn",b:"c1LegB",today:"c1Today"})}</section>
 
 <section class="slide"><h1>${t("c19t")}</h1>
 <ul class="decision-list">
 <li class="c1">${t("c19d1")}</li><li class="c1">${t("c19d2")}</li></ul></section>
-
-<section class="slide"><h1>${t("pDecT")}</h1><h2>${t("pDecS")}</h2>
-<ul><li>${t("pDec1")}</li><li>${t("pDec2")}</li><li>${t("pDec3")}</li><li>${t("pDec4")}</li></ul></section>
 
 <section class="slide title-slide"><h1>${t("pEnd")}</h1></section>`;
 }
