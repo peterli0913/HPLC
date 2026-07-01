@@ -93,8 +93,8 @@ def build():
         ),
         (
             "电力 / Electrical power",
-            "需要；实验室侧通常 220 V / 50 Hz 单路主电源。隔离器本体一般 ≤1.5 kW；总容量需叠加箱内设备（天平、小型反应/搅拌设备、油浴等）。集团内实验室参考约 1.2–1.3 kW；复杂场景可参考 ≤5.5 kW。待操作清单确认后最终定稿并留余量",
-            "Typically 220 V / 50 Hz single supply. Isolator unit ≤1.5 kW; total must include in-isolator equipment. Internal lab reference ~1.2–1.3 kW; up to ~5.5 kW for complex cases. Final rating TBC with equipment list + margin",
+            "需要；实验室侧通常 220 V / 50 Hz 单路主电源。隔离器本体一般 ≤1.5 kW；含箱内设备（天平、小型反应/搅拌设备、油浴等）总功率参考范围 **1.5–5 kW**",
+            "Typically 220 V / 50 Hz single supply. Isolator unit ≤1.5 kW; **total installed power (incl. in-isolator equipment) indicative range 1.5–5 kW**",
         ),
         (
             "氮气 / Nitrogen",
@@ -103,8 +103,8 @@ def build():
         ),
         (
             "压缩空气 / Compressed air",
-            "实验室操作侧通常不需要；隔离器可预留接口。氮气与压缩空气一般二选一，高活实验室多用氮气",
-            "Generally not required for routine lab ops; optional connection on isolator. Typically nitrogen OR compressed air — nitrogen preferred for HP",
+            "需要；隔离器本体用于气密封、控制等（与氮气均需配置）",
+            "Required — isolator unit needs compressed air for gas seal, controls, etc. (**both nitrogen and compressed air required**)",
         ),
         (
             "真空 / Vacuum",
@@ -112,9 +112,9 @@ def build():
             "Required for drying. Central lab vacuum preferred; small dedicated pump acceptable. Interface only — no vacuum filter on isolator",
         ),
         (
-            "排风 / 暖通 / Exhaust & HVAC",
-            "需要；排风量与箱内体积及目标负压（−30~−50 Pa 或 −100~−200 Pa）有关。参考约 50 m³/h/排风口，详细设计阶段确认",
-            "Required from building services. Flow depends on volume and target ΔP. Reference ~50 m³/h per exhaust point — TBC at detailed design",
+            "尾气排风 / Off-gas exhaust",
+            "需要；属尾气系统，非空调系统。排风量与箱内体积及目标负压（−30~−50 Pa 或 −100~−200 Pa）有关。参考约 50 m³/h/排风口，详细设计阶段确认",
+            "Required — **off-gas / exhaust system** (not HVAC). Flow depends on volume and target ΔP. Reference ~50 m³/h per exhaust point — TBC at detailed design",
         ),
         (
             "冷/热介质 / Heating & cooling utilities",
