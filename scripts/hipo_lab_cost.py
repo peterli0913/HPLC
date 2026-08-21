@@ -107,21 +107,6 @@ ISO_ALLOWANCE_UNIT_4NR = 150_000
 ISO_ALLOWANCE_UNIT_1NR = 100_000
 ISO_ALLOWANCE_TOTAL = FFE_ISO_4NR + FFE_ISO_1NR  # 700,000
 
-QUOTE_DATA = {
-    "howorthIsolator": HOWORTH_ISOLATOR,
-    "howorthRtp": HOWORTH_RTP_OPTION,
-    "howorthMockup": HOWORTH_MOCKUP,
-    "ilcEngineering": ILC_ENGINEERING,
-    "ilcFlex": ILC_FLEX_ISOLATOR,
-    "ilcDoc": ILC_DOCUMENTATION,
-    "ilcServices": ILC_SERVICES,
-    "ilcTotal": ILC_TOTAL,
-    "ilcCerts": ILC_CERTIFICATES,
-    "allowanceUnit4": ISO_ALLOWANCE_UNIT_4NR,
-    "allowanceUnit1": ISO_ALLOWANCE_UNIT_1NR,
-    "allowanceTotal": ISO_ALLOWANCE_TOTAL,
-}
-
 CHART_STACK = {
     "building": TOTAL_BUILDING_WORKS,
     "prof": PROF_SERVICES,
@@ -273,56 +258,56 @@ GANTT_HIPO = [
 
 # ------------------------------------------------------------------ i18n
 HIPO_COST_I18N_ZH = {
-    "capex": "COST LIMIT（含通胀）",
+    "capex": "项目投资（含通胀）",
     "secBuild": "建筑工程费合计 Total Building Works Estimate",
-    "sec0": "0 促成工程 Facilitating Works",
-    "fw1": "0.1 拆除、改造与拆砌（隔断等）",
-    "fw2": "0.2 机电拆除（燃气、风管、电气、烟感、Crowcon 等）",
+    "sec0": "1 改造工程 Facilitating Works",
+    "fw1": "1.1 拆除、改造与拆砌（隔断等）",
+    "fw2": "1.2 机电拆除（燃气、风管、电气、烟感、Crowcon 等）",
     "sec2": "2 上部结构 Superstructure",
     "ss1": "2.7 内墙与隔断（墙面衬板、新建隔断、氢气管道包封）",
     "ss2": "2.8 内门（5 单开 + 1 子母卫生门、2 木门、4 樘旧门翻新）",
     "sec3": "3 装饰 Finishes",
-    "fin1": "3.1 墙面装饰（实验室 475 m²、书写区 70 m²）",
-    "fin2": "3.2 地面（实验室卷材乙烯 173 m²、踢脚 136 m、书写区地毯 33 m²）",
+    "fin1": "3.1 墙面装饰（实验室 475 m²、办公区 70 m²）",
+    "fin2": "3.2 地面（实验室卷材乙烯 173 m²、踢脚 136 m、办公区地毯 33 m²）",
     "fin3": "3.3 吊顶（实验室金属吊顶 173 m²、周边收口 136 m）",
     "sec4": "4 家具与设备 Fittings, Furnishings and Equipment",
-    "ffeIso4": "隔离器（暂列）4 台 × £150,000",
-    "ffeIso1": "隔离器（暂列）1 台 × £100,000",
-    "ffeFume": "通风柜（假设现有可用，仅列维修保养暂列）",
-    "ffeSf6": "SF6 检漏测试暂列",
-    "ffeFurn": "家具暂列（更衣柜、跨越凳、移动实验台、BIBO 桶）",
-    "ffeWrite": "书写区家具暂列",
+    "ffeIso4": "隔离器 4 台 × £150,000",
+    "ffeIso1": "隔离器 1 台 × £100,000",
+    "ffeFume": "通风柜（假设现有可用，仅列维修保养）",
+    "ffeSf6": "SF6 检漏测试",
+    "ffeFurn": "家具（更衣柜、跨越凳、移动实验台、BIBO 桶）",
+    "ffeWrite": "办公区家具",
     "sec5": "5 机电安装 Services",
     "sv3": "5.3 排水（水槽与淋浴接管）",
-    "sv4": "5.4 给水（冷热水、水槽复装、雾化淋浴暂列 £35,000）",
+    "sv4": "5.4 给水（冷热水、水槽复装、雾化淋浴 £35,000）",
     "sv6": "5.6 暖通空调（AHU 恢复使用、全套风管、袋进袋出 HEPA 排风、BMS 升级、系统平衡）",
     "sv8": "5.8 电气（小动力 182 m²、照明 182 m²，含设备接电）",
     "sv11": "5.11 消防（实验室喷淋 182 m²）",
     "sv12": "5.12 通信、安防与控制（门禁 3 处、结构化布线、CCTV、火灾报警）",
     "sv13": "5.13 特殊安装（实验室气体管道 182 m²）",
     "sv14": "5.14 配合机电的土建工作（开洞、防火封堵、检修口，按 5%）",
-    "subBuild": "促成与建筑工程小计 Facilitating and Building Works",
-    "sec9": "9 临建与承包商设计 Preliminaries",
-    "pre1": "9.1 临时工程（保留设备与公共区域防护、临时照明）",
-    "pre2": "9.2 现场福利与临建（施工期 21 周）",
-    "pre3": "9.3 设计与施工管理（勘查、RIBA 2/3 与 RIBA 4 承包商设计、RIBA 5 现场资源 22 周）",
-    "sec10": "10 管理费与利润 Overheads and Profit（5.00%）",
-    "secProf": "11 专业服务费 Professional Services",
+    "subBuild": "改造与建筑工程小计 Facilitating and Building Works",
+    "sec9": "6 临建与承包商设计 Preliminaries",
+    "pre1": "6.1 临时工程（保留设备与公共区域防护、临时照明）",
+    "pre2": "6.2 现场福利与临建（施工期 21 周）",
+    "pre3": "6.3 设计与施工管理（勘查、RIBA 2/3 与 RIBA 4 承包商设计、RIBA 5 现场资源 22 周）",
+    "sec10": "7 管理费与利润 Overheads and Profit（5.00%）",
+    "secProf": "8 专业服务费 Professional Services",
     "prof": "项目管理（合同前 33 周 / 合同后 22 周 / 缺陷期）、设计支持、商务支持与合同管理",
-    "secEquip": "12 业主供货并安装设备 Equipment (supplied and installed by the Client)",
-    "equip": "依据设备清单《Equipment List Costs for scoping 5 Aug》（本次资料未含明细）",
-    "secRisk": "13 风险预备费 Risk Allowance Estimate",
-    "risk": "13.1 设计发展风险（依风险登记册）；13.2 施工风险已含于上",
-    "secInf": "14 通胀 Inflation（2.15%）",
-    "inflation": "自基准日至施工期的通胀调整；15 增值税 VAT 不含",
+    "secEquip": "9 业主（凯莱英）供货并安装设备 Equipment (supplied and installed by the Client)",
+    "equip": "依据设备清单《Equipment List Costs for scoping 5 Aug》",
+    "secRisk": "10 风险预备费 Risk Allowance Estimate",
+    "risk": "10.1 设计发展风险（依风险登记册）",
+    "secInf": "11 通胀 Inflation（2.15%）",
+    "inflation": "自基准日至施工期的通胀调整",
 }
 
 HIPO_COST_I18N_EN = {
     "capex": "COST LIMIT (including inflation)",
     "secBuild": "Total Building Works Estimate",
-    "sec0": "0 Facilitating Works",
-    "fw1": "0.1 Strip out, alterations and demolition (partitions and the like)",
-    "fw2": "0.2 Strip out (services) — gas, ductwork, electrical, detectors, Crowcon",
+    "sec0": "1 Facilitating Works",
+    "fw1": "1.1 Strip out, alterations and demolition (partitions and the like)",
+    "fw2": "1.2 Strip out (services) — gas, ductwork, electrical, detectors, Crowcon",
     "sec2": "2 Superstructure",
     "ss1": "2.7 Internal walls and partitions (wall lining, new partitions, H₂ pipework boxing)",
     "ss2": "2.8 Internal doors (5 single-leaf + 1 leaf-and-half hygienic, 2 timber, 4 refurbished)",
@@ -331,8 +316,8 @@ HIPO_COST_I18N_EN = {
     "fin2": "3.2 Floor finishes (sheet vinyl 173 m², coved skirting 136 m, carpet 33 m²)",
     "fin3": "3.3 Ceiling finishes (metal suspended ceiling 173 m², perimeter detail 136 m)",
     "sec4": "4 Fittings, Furnishings and Equipment",
-    "ffeIso4": "Isolators; provisional allowance 4 nr × £150,000",
-    "ffeIso1": "Isolators; provisional allowance 1 nr × £100,000",
+    "ffeIso4": "Isolators; 4 nr × £150,000",
+    "ffeIso1": "Isolators; 1 nr × £100,000",
     "ffeFume": "Fume hoods — existing assumed serviceable; servicing/repair allowance",
     "ffeSf6": "SF6 testing allowance",
     "ffeFurn": "Furniture allowance (lockers, step-over bench, mobile benches, BIBO bins)",
@@ -347,51 +332,39 @@ HIPO_COST_I18N_EN = {
     "sv13": "5.13 Special installations (laboratory gas pipework 182 m²)",
     "sv14": "5.14 Builder's work in connection with services (holes, fire stopping, hatches — 5%)",
     "subBuild": "Facilitating and Building Works",
-    "sec9": "9 Preliminaries (incl. Contractor's design)",
-    "pre1": "9.1 Temporary works (protection to retained equipment / common areas, lighting)",
-    "pre2": "9.2 Site welfare and accommodation (21 weeks)",
-    "pre3": "9.3 Design and construction management (surveys, RIBA 2/3 and RIBA 4 contractor's design, RIBA 5 resourcing 22 wks)",
-    "sec10": "10 Overheads and Profit (5.00%)",
-    "secProf": "11 Professional Services",
+    "sec9": "6 Preliminaries (incl. Contractor's design)",
+    "pre1": "6.1 Temporary works (protection to retained equipment / common areas, lighting)",
+    "pre2": "6.2 Site welfare and accommodation (21 weeks)",
+    "pre3": "6.3 Design and construction management (surveys, RIBA 2/3 and RIBA 4 contractor's design, RIBA 5 resourcing 22 wks)",
+    "sec10": "7 Overheads and Profit (5.00%)",
+    "secProf": "8 Professional Services",
     "prof": "Project management (pre-contract 33 wks / post-contract 22 wks / defects), design support, commercial support & contract administration",
-    "secEquip": "12 Equipment (supplied and installed by the Client)",
-    "equip": "Per equipment list \"Equipment List Costs for scoping 5 Aug\" (breakdown not in this pack)",
-    "secRisk": "13 Risk Allowance Estimate",
-    "risk": "13.1 Design development risk (refer to risk register); 13.2 construction risk incl. above",
-    "secInf": "14 Inflation (2.15%)",
-    "inflation": "Inflation from base date through construction; 15 VAT excluded",
+    "secEquip": "9 Equipment (supplied and installed by the Client)",
+    "equip": "Per equipment list \"Equipment List Costs for scoping 5 Aug\"",
+    "secRisk": "10 Risk Allowance Estimate",
+    "risk": "10.1 Design development risk (refer to risk register)",
+    "secInf": "11 Inflation (2.15%)",
+    "inflation": "Inflation from base date through construction",
 }
 
 CHART_I18N_ZH = {
     "stackBuilding": "建筑工程费",
     "stackProf": "专业服务费",
-    "stackEquip": "业主供货设备",
+    "stackEquip": "业主（凯莱英）供货设备",
     "stackRisk": "风险预备费",
     "stackInf": "通胀",
     "donutTitle": "建筑工程费 — 分项",
-    "qIlcEng": "概念设计（Pos 2）",
-    "qIlcFlex": "柔性隔离器（Pos 3）",
-    "qIlcDoc": "文件（Pos 4）",
-    "qIlcSvc": "服务 FAT/包装（Pos 5）",
-    "qCmpAllow": "成本计划暂列（£/台）",
-    "qCmpHoworth": "Howorth 预算价（£/台）",
-    "qCmpAxis": "固定式分装隔离器单价",
+    "stackAxis": "项目投资",
 }
 
 CHART_I18N_EN = {
     "stackBuilding": "Building works",
     "stackProf": "Professional services",
-    "stackEquip": "Client equipment",
+    "stackEquip": "Client (Asymchem) equipment",
     "stackRisk": "Risk allowance",
     "stackInf": "Inflation",
     "donutTitle": "Building works — breakdown",
-    "qIlcEng": "Concept development (Pos 2)",
-    "qIlcFlex": "Flexible isolator (Pos 3)",
-    "qIlcDoc": "Documentation (Pos 4)",
-    "qIlcSvc": "Services FAT/packing (Pos 5)",
-    "qCmpAllow": "Cost plan allowance (£/unit)",
-    "qCmpHoworth": "Howorth budget price (£/unit)",
-    "qCmpAxis": "Fixed dispensing isolator, unit price",
+    "stackAxis": "Project investment",
 }
 
 
@@ -448,7 +421,6 @@ def hipo_cost_data_json() -> str:
             "chartStack": CHART_STACK,
             "chartDonut": [i["amount"] for i in DONUT_ITEMS],
             "chartDonutIds": [i["id"] for i in DONUT_ITEMS],
-            "quotes": QUOTE_DATA,
         }
     )
 
@@ -472,6 +444,10 @@ const body=leaves.map(k=>hipoLeaf(k,ln[k],3)).join("");
 return `<details class="cost-item cost-item-sub cost-item-l2" open><summary>${hipoSubHd(L[id],D.groups[id])}</summary>
 <div class="cost-children">${body}</div></details>`;
 }
+function hipoGroupFlat(id){
+const D=HIPO_COST_DATA,L=hipoCostLabels();
+return `<details class="cost-item cost-item-sub cost-item-l2" data-no-body><summary>${hipoSubHd(L[id],D.groups[id])}</summary></details>`;
+}
 function hipoCostHTML(){
 const D=HIPO_COST_DATA,L=hipoCostLabels(),ln=D.lines||{};
 const buildBody=[
@@ -482,7 +458,7 @@ hipoGroup("sec4",["ffeIso4","ffeIso1","ffeFume","ffeSf6","ffeFurn","ffeWrite"]),
 hipoGroup("sec5",["sv3","sv4","sv6","sv8","sv11","sv12","sv13","sv14"]),
 `<div class="cost-subtotal"><span>${L.subBuild}</span><span>${fm(D.facBuildSub)}</span></div>`,
 hipoGroup("sec9",["pre1","pre2","pre3"]),
-hipoLeaf("sec10",D.groups.sec10,3),
+hipoGroupFlat("sec10"),
 ].join("");
 const buildBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secBuild,D.buildingWorks)}</summary>
 <div class="cost-section-body">${buildBody}</div></details>`;
@@ -501,7 +477,7 @@ const zh=lang==="zh",D=HIPO_COST_DATA,Lc=I18N[lang].hipoChart||{};
 const el1=document.getElementById("cHipo1"),el2=document.getElementById("cHipo2");
 if(!el1||!el2)return;
 const S=D.chartStack;
-new Chart(el1,{type:"bar",data:{labels:[zh?"COST LIMIT":"COST LIMIT"],datasets:[
+new Chart(el1,{type:"bar",data:{labels:[Lc.stackAxis],datasets:[
 {label:Lc.stackBuilding,data:[S.building],backgroundColor:"#0f2b46"},
 {label:Lc.stackProf,data:[S.prof],backgroundColor:"#2e6da4"},
 {label:Lc.stackEquip,data:[S.equip],backgroundColor:"#1f7a6f"},
@@ -514,21 +490,6 @@ const labels=ids.map(id=>(I18N[lang].hipoCost[id]||id));
 new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,
 backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#1f7a6f","#5b6eae","#c9a227","#9aa8b6"]}]},
 options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:7.5},boxWidth:9}}}}});
-}
-function buildHipoQuoteCharts(){
-const D=HIPO_COST_DATA,Q=D.quotes,Lc=I18N[lang].hipoChart||{};
-const el1=document.getElementById("cQuote1"),el2=document.getElementById("cQuote2");
-if(!el1||!el2)return;
-new Chart(el1,{type:"doughnut",data:{labels:[Lc.qIlcFlex,Lc.qIlcEng,Lc.qIlcSvc,Lc.qIlcDoc],
-datasets:[{data:[Q.ilcFlex,Q.ilcEngineering,Q.ilcServices,Q.ilcDoc],
-backgroundColor:["#1f7a6f","#0f2b46","#2e6da4","#9aa8b6"]}]},
-options:{responsive:true,maintainAspectRatio:false,
-plugins:{legend:{position:"right",labels:{font:{size:8},boxWidth:10}}}}});
-new Chart(el2,{type:"bar",data:{labels:[Lc.qCmpAxis],datasets:[
-{label:Lc.qCmpAllow,data:[Q.allowanceUnit4],backgroundColor:"#9aa8b6"},
-{label:Lc.qCmpHoworth,data:[Q.howorthIsolator],backgroundColor:"#c9a227"}]},
-options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{font:{size:8},boxWidth:10}}},
-scales:{y:{ticks:{callback:v=>"£"+(v/1000).toFixed(0)+"k"}}}}});
 }
 """
 
