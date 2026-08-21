@@ -1,9 +1,12 @@
 """HIPO lab (G-128 suite alterations) concept-stage data — portfolio briefing.
 
-Sources (2026-08 HIPO Feasibility Reports, no values derived outside these):
+Sources (HIPO Feasibility Reports, no values derived outside these):
   * DPH_G-128 Suite Alterations Concept Cost Plan 260806
   * Asymchem Concept Programme_260727 (DRAFT CONCEPT PROGRAMME)
   * Asymchem G128 Alterations Concept Estimate Risk Register (raised 02/08/2026)
+  * ILC Dover budget quotation JS26-11384-0, 22 Jul 2026 — reactor charging isolator
+  * Howorth Q26543 budget isolator proposal, 11 Aug 2026 (email Darren Newsome → Clare Crook)
+  * Reactor Charging Isolator Schematic - ASYMCHEM.docx (drawings only, no text)
 """
 
 from __future__ import annotations
@@ -82,6 +85,42 @@ ACCURACY_LOWER = 3_740_000
 RISK_NET_TOTAL = 397_875
 RISK_LOW_EST = 146_633
 RISK_HIGH_EST = 649_117
+
+# ------------------------------------------- isolator budget quotations (new)
+# Howorth Q26543 — budget pricing, Ex Works Howorth; packing, delivery,
+# installation and commissioning to be provided on confirmation of final designs.
+HOWORTH_ISOLATOR = 250_000  # single chamber dispensing isolator
+HOWORTH_RTP_OPTION = 18_000  # 1 x 190 RTP incl. 400 mm container (optional)
+HOWORTH_MOCKUP = 17_000
+
+# ILC Dover JS26-11384-0 — EXW CH-Rossens, Incoterm 2020, without VAT.
+ILC_ENGINEERING = 10_370  # Pos 2 concept development, reactors R19-R22
+ILC_FLEX_ISOLATOR = 94_700  # Pos 3 flexible isolator
+ILC_DOCUMENTATION = 5_060  # Pos 4 documentation
+ILC_SERVICES = 5_670  # Pos 5 services (FAT 3,270 + packing 2,400)
+ILC_TOTAL = 115_800  # quotation total = Pos 2 + 3 + 4 + 5
+ILC_CERTIFICATES = 2_750  # Pos 4.1, priced separately (outside the total above)
+ILC_LEAD_WEEKS = 20  # from approval of the drawing
+
+# Cost-plan isolator allowances, for like-for-like comparison with the quotes
+ISO_ALLOWANCE_UNIT_4NR = 150_000
+ISO_ALLOWANCE_UNIT_1NR = 100_000
+ISO_ALLOWANCE_TOTAL = FFE_ISO_4NR + FFE_ISO_1NR  # 700,000
+
+QUOTE_DATA = {
+    "howorthIsolator": HOWORTH_ISOLATOR,
+    "howorthRtp": HOWORTH_RTP_OPTION,
+    "howorthMockup": HOWORTH_MOCKUP,
+    "ilcEngineering": ILC_ENGINEERING,
+    "ilcFlex": ILC_FLEX_ISOLATOR,
+    "ilcDoc": ILC_DOCUMENTATION,
+    "ilcServices": ILC_SERVICES,
+    "ilcTotal": ILC_TOTAL,
+    "ilcCerts": ILC_CERTIFICATES,
+    "allowanceUnit4": ISO_ALLOWANCE_UNIT_4NR,
+    "allowanceUnit1": ISO_ALLOWANCE_UNIT_1NR,
+    "allowanceTotal": ISO_ALLOWANCE_TOTAL,
+}
 
 CHART_STACK = {
     "building": TOTAL_BUILDING_WORKS,
@@ -330,6 +369,13 @@ CHART_I18N_ZH = {
     "stackRisk": "风险预备费",
     "stackInf": "通胀",
     "donutTitle": "建筑工程费 — 分项",
+    "qIlcEng": "概念设计（Pos 2）",
+    "qIlcFlex": "柔性隔离器（Pos 3）",
+    "qIlcDoc": "文件（Pos 4）",
+    "qIlcSvc": "服务 FAT/包装（Pos 5）",
+    "qCmpAllow": "成本计划暂列（£/台）",
+    "qCmpHoworth": "Howorth 预算价（£/台）",
+    "qCmpAxis": "固定式分装隔离器单价",
 }
 
 CHART_I18N_EN = {
@@ -339,6 +385,13 @@ CHART_I18N_EN = {
     "stackRisk": "Risk allowance",
     "stackInf": "Inflation",
     "donutTitle": "Building works — breakdown",
+    "qIlcEng": "Concept development (Pos 2)",
+    "qIlcFlex": "Flexible isolator (Pos 3)",
+    "qIlcDoc": "Documentation (Pos 4)",
+    "qIlcSvc": "Services FAT/packing (Pos 5)",
+    "qCmpAllow": "Cost plan allowance (£/unit)",
+    "qCmpHoworth": "Howorth budget price (£/unit)",
+    "qCmpAxis": "Fixed dispensing isolator, unit price",
 }
 
 
@@ -395,6 +448,7 @@ def hipo_cost_data_json() -> str:
             "chartStack": CHART_STACK,
             "chartDonut": [i["amount"] for i in DONUT_ITEMS],
             "chartDonutIds": [i["id"] for i in DONUT_ITEMS],
+            "quotes": QUOTE_DATA,
         }
     )
 
@@ -460,6 +514,21 @@ const labels=ids.map(id=>(I18N[lang].hipoCost[id]||id));
 new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,
 backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#1f7a6f","#5b6eae","#c9a227","#9aa8b6"]}]},
 options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:7.5},boxWidth:9}}}}});
+}
+function buildHipoQuoteCharts(){
+const D=HIPO_COST_DATA,Q=D.quotes,Lc=I18N[lang].hipoChart||{};
+const el1=document.getElementById("cQuote1"),el2=document.getElementById("cQuote2");
+if(!el1||!el2)return;
+new Chart(el1,{type:"doughnut",data:{labels:[Lc.qIlcFlex,Lc.qIlcEng,Lc.qIlcSvc,Lc.qIlcDoc],
+datasets:[{data:[Q.ilcFlex,Q.ilcEngineering,Q.ilcServices,Q.ilcDoc],
+backgroundColor:["#1f7a6f","#0f2b46","#2e6da4","#9aa8b6"]}]},
+options:{responsive:true,maintainAspectRatio:false,
+plugins:{legend:{position:"right",labels:{font:{size:8},boxWidth:10}}}}});
+new Chart(el2,{type:"bar",data:{labels:[Lc.qCmpAxis],datasets:[
+{label:Lc.qCmpAllow,data:[Q.allowanceUnit4],backgroundColor:"#9aa8b6"},
+{label:Lc.qCmpHoworth,data:[Q.howorthIsolator],backgroundColor:"#c9a227"}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{font:{size:8},boxWidth:10}}},
+scales:{y:{ticks:{callback:v=>"£"+(v/1000).toFixed(0)+"k"}}}}});
 }
 """
 

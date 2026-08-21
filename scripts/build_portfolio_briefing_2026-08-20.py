@@ -72,6 +72,8 @@ from hipo_lab_cost import (
     HIPO_COST_I18N_ZH,
     HIPO_COST_RENDER_JS,
     HIPO_TOTAL,
+    HOWORTH_ISOLATOR,
+    ILC_TOTAL,
     RISK_ALLOWANCE as HIPO_RISK_ALLOWANCE,
     RISK_HIGH_EST,
     RISK_LOW_EST,
@@ -94,12 +96,15 @@ hplc = _load_module("hplc_brief", ROOT / "build_hplc_lyopho_briefing.py")
 ext = _load_module("ext_brief", ROOT / "build_management_briefing.py")
 
 # --------------------------------------------------------------------------
-# Re-baseline: the three earlier programmes assumed a June 2026 start; the
-# portfolio now starts in September 2026, so every not-yet-started bar moves
-# by three calendar months. Completed bars ("done") stay where they are.
+# Re-baseline: the retrofit and C1 programmes assumed a June 2026 start; they
+# now start in September 2026, so every not-yet-started bar moves by three
+# calendar months. Completed bars ("done") stay where they are.
+#
+# The extension keeps the Scitech master programme unchanged: group direction
+# is to hold the May 2030 completion date, so it is excluded from the shift.
 # --------------------------------------------------------------------------
 SHIFT_MONTHS = 3
-TODAY = "2026-08-20"
+TODAY = "2026-08-21"
 
 
 def _add_months(date_str: str, months: int) -> str:
@@ -139,34 +144,7 @@ def shift_gantt(rows: list, months: int = SHIFT_MONTHS) -> list:
     return shifted
 
 
-# Tooltips carrying absolute dates need the same +3 months applied to the text.
-EXT_TOOLTIP_PATCH = {
-    "gR2": (
-        "RIBA 2 Concept Design (160 days). Concept report & stage gate May 2027.",
-        "RIBA 2 概念设计（160 天）；2027-05 概念报告与阶段评审。",
-    ),
-    "gPlan": (
-        "Planning: submission Mar 2028, statutory period, consent target 21 Jun 2028.",
-        "规划：2028-03 提交，法定审批期，目标许可 2028-06-21。",
-    ),
-    "gEnd": (
-        "Validation, handover, project complete (07 Aug 2030).",
-        "确认验证、移交；项目完成 2030-08-07。",
-    ),
-}
-
-
-def _patch_tooltips(rows: list, patch: dict) -> list:
-    out = []
-    for row in rows:
-        r = list(row)
-        if r[0] in patch:
-            r[4], r[5] = patch[r[0]]
-        out.append(r)
-    return out
-
-
-GANTT_EXT_SHIFTED = _patch_tooltips(shift_gantt(ext.GANTT_JS), EXT_TOOLTIP_PATCH)
+GANTT_EXT_HELD = [list(r) for r in ext.GANTT_JS]  # unshifted — May 2030 held
 GANTT_HPLC_SHIFTED = shift_gantt(hplc.GANTT_CALENDAR)
 GANTT_C1_SHIFTED = shift_gantt(GANTT_C1)
 
@@ -265,7 +243,7 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 <div id="deck"></div>
 <div class="footer"><span id="footerText"></span><span id="navHint"></span><span id="counter"></span></div>
 <script>
-const GANTT_EXT = ''' + json.dumps(GANTT_EXT_SHIFTED) + r''';
+const GANTT_EXT = ''' + json.dumps(GANTT_EXT_HELD) + r''';
 const GANTT_HPLC = ''' + json.dumps(GANTT_HPLC_SHIFTED) + r''';
 const CAPEX = ''' + json.dumps(CAPEX) + r''';
 const HPLC_RISK = ''' + json.dumps(RISK_ON_BASE) + r''';
@@ -286,22 +264,22 @@ nav:"← → 翻页", tag:"内部汇报 · 整体汇报",
 p1t:"凯莱英 UK · Sandwich PDF", p1s:"资本项目汇报", p1m:"B902 东侧扩建 + 厂房内 HPLC/冻干改造 + C1 模块 OEB5 升级 + OEB5 高活实验室 · 2026年8月",
 p2t:"项目概览", p2s:"四条独立工作流 · 可行性 / 概念 / 内部估算量级",
 p2th1:"子项目", p2th2:"范围", p2th3:"投资（估算量级）", p2th4:"关键节点",
-p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干燥", p2r1o:"£78.1M", p2r1d:"2030-08 竣工",
+p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干燥", p2r1o:"£78.1M", p2r1d:"2030-05 竣工（保持）",
 p2r2n:"HPLC + 冻干", p2r2s:"既有 PDF footprint 改造", p2r2o:"£5.33M", p2r2d:"2027-12 HPLC / 2028-03 冻干",
 p2r3n:"C1 模块 OEB5 升级", p2r3s:"现有 C1 模块 OEB5 日常运行能力", p2r3o:"£2.48M", p2r3d:"2027-10 安装确认",
 p2r4n:"OEB5 高活实验室", p2r4s:"既有 G-128 套间改造；GIFA 215 m²；4+1 台隔离器（暂列）", p2r4o:"£4.56M", p2r4d:"2027-09-17 竣工",
 p2link:"交付关联：厂房内改造（制备 HPLC + 冻干）与 C1 模块升级须同步完成，方能为制备 HPLC 操作提供 OEB5 能力；制备 HPLC 单元驱动整体交付时间线。",
-p2rebase:"进度口径：前三条线原按 2026 年 6 月启动估算，现统一以 2026 年 9 月启动重新基线（整体顺延 3 个月），范围与费用不变；高活实验室概念进度本身即以 2026-09-01 资金批准为起点。",
+p2rebase:"进度口径：厂房内改造与 C1 模块升级原按 2026 年 6 月启动估算，现以 2026 年 9 月启动重新基线（顺延 3 个月），范围与费用不变；高活实验室概念进度本身即以 2026-09-01 资金批准为起点。902 东侧扩建按集团口径保持 2030-05 竣工，沿用设计方总控计划不作顺延，启动延后需在阶段内消化。",
 p2sum:"厂房内三条线合计（改造 £5.33M + C1 £2.48M + 高活实验室 £4.56M）约 £12.37M，不含 902 东侧扩建。各线口径不同：扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。",
 extTag:"扩建", hplcTag:"改造", c1Tag:"C1 OEB5", hipoTag:"高活实验室",
 extSec:"一、B902 东侧扩建", extSecs:"Scitech · RIBA Stage 1 · 300291-RE-0001",
 ext2t:"扩建 · 执行摘要", ext2s:"2026-05-22 · Issue A1",
 extK1:"FS 完成", extK1d:"RIBA 1",
 extK2:"£78.1M", extK2d:"项目 OOM",
-extK3:"2030-08", extK3d:"总控完成（+3 个月）",
+extK3:"2030-05", extK3d:"总控完成（集团口径保持）",
 extB1:"范围：东侧约 600 m²，四层+设备夹层，10 台反应釜、2500 L 加氢釜、3 套过滤干燥机及公用工程。",
 extB2:"方案：Option 1 — 拆除/迁址原加氢厂房；与 902 低层楼面贯通。",
-extB3:"进展：FS 完成；RIBA 2 概念设计按 2026-10 启动重新基线（原 2026-07 口径顺延 3 个月）。",
+extB3:"进展：FS 完成；按集团口径保持 2030-05 竣工，沿用设计方总控计划；RIBA 2 概念设计启动延后需在阶段内消化。",
 ext4t:"扩建 · 范围基线", ext4s:"Option 1",
 ext4b1:"GIFA 约 3,099 m²；防洪抬升约 1.5 m", ext4b2:"第二疏散梯；加氢区泄压板", ext4b3:"BREEAM 预评估 Very Good 基线",
 ext5t:"扩建 · 投资总览", ext5s:"300291-CM-0001",
@@ -311,7 +289,7 @@ ext6kOom:"OOM 总价", ext6kBase:"直接工程费（含 25%）", ext6kRisk:"其�
 extCost:''' + json.dumps(EXT_COST_I18N_ZH, ensure_ascii=False) + r''',extChart:''' + json.dumps(EXT_CHART_I18N_ZH, ensure_ascii=False) + r''',
 extChL:"项目 OOM 三板块", extChR:"直接工程费 — 分项",
 ext8t:"扩建 · 整体周期", ext8s:"300291-PM-PR-0002",
-extGSub:"总控时间轴（条块长度按日历比例）· 以 2026-09 启动重新基线，原 6 月口径整体 +3 个月",
+extGSub:"总控时间轴（条块长度按日历比例）· 沿用设计方总控计划，按集团口径保持 2030-05 竣工",
 extGFs:"可行性 RIBA 1", extGR2:"概念 RIBA 2", extGR3:"方案 RIBA 3", extGPl:"规划",
 extGR4:"详细 RIBA 4", extGEq:"长周期设备", extGMed:"中等周期设备", extGPre:"施工准备",
 extGR5:"施工 RIBA 5", extGCo:"调试", extGEn:"验证/竣工",
@@ -390,18 +368,20 @@ hipoK1:"概念阶段", hipoK1d:"成本计划 / 概念进度 / 风险登记册",
 hipoK2:"£4.56M", hipoK2d:"COST LIMIT（含通胀）",
 hipoK3:"2027-09-17", hipoK3d:"概念进度竣工",
 hipoK4:"215 m²", hipoK4d:"GIFA（实验室约 182 + 书写区约 33）",
-hipoB1:"范围：既有 G-128 套间改造为实验室与书写区，GIFA 215 m²；隔离器按暂列金额计（4 台 × £150,000 + 1 台 × £100,000）。",
+hipoB1:"范围：既有 G-128 套间改造为实验室与书写区，GIFA 215 m²；隔离器在成本计划中按暂列金额计（4 台 × £150,000 + 1 台 × £100,000）。",
 hipoB2:"投资：COST LIMIT（含通胀）£4,562,044；不含增值税；估算精度区间 £3.74M – £4.99M。",
 hipoB3:"构成：建筑工程费 £1.95M + 专业服务费 £0.14M + 业主供货设备 £1.98M + 风险预备费 £0.40M + 通胀 £0.10M。",
 hipoB4:"周期：概念进度（草案）自 2026-09-01 资金批准与推进决定起 262 个工作日，2027-09-17 竣工；隔离器 2027-06-02 到场。",
-hipoB5:"待确认：概念阶段文件未定义 OEB 目标等级（隔离器按暂列金额计）；业主供货设备明细依据另一份设备清单，本资料未含。",
+hipoB5:"新增进展：已取得两家隔离器供应商预算报价 —— Howorth（Q26543，2026-08-11）单腔分装隔离器 £250,000/台；ILC Dover（JS26-11384-0，2026-07-22）反应釜投料柔性隔离器整包 £115,800。",
+hipoB6:"待确认：概念阶段文件仍未定义 OEB 目标等级（ILC Dover 报价按 OEB 4、1–10 µg/m³ 口径）；业主供货设备明细依据另一份设备清单，本资料未含。",
 hipo3t:"高活实验室 · 范围", hipo3s:"依据 G-128 概念成本计划分项",
 hipoS1:"范围与面积", hipoS1a:"既有 G-128 套间（G128 及 G128A–D）改造；GIFA 215 m²",
 hipoS1b:"实验室区约 182 m²（机电费率基准）+ 书写区约 33 m²（地毯量）",
 hipoS1c:"拆除 G128 与 G128D 之间砌块墙；混凝土墙新开 2 处传递窗洞、2 处门洞",
-hipoS2:"隔离器与实验设备", hipoS2a:"隔离器暂列：4 台 × £150,000 + 1 台 × £100,000（合计 £700,000）",
-hipoS2b:"通风柜：假设现有可继续使用，仅列 £20,000 维修保养暂列；是否新购为进度中待定项",
-hipoS2c:"SF6 检漏测试暂列 £20,000；家具暂列含更衣柜、跨越凳、移动实验台、BIBO 桶",
+hipoS2:"隔离器与实验设备", hipoS2a:"成本计划暂列：4 台 × £150,000 + 1 台 × £100,000（合计 £700,000）",
+hipoS2b:"已取得预算报价：Howorth 单腔分装隔离器 £250,000/台；ILC Dover 反应釜投料柔性隔离器整包 £115,800",
+hipoS2c:"通风柜：假设现有可继续使用，仅列 £20,000 维修保养暂列；是否新购为进度中待定项",
+hipoS2d:"SF6 检漏测试暂列 £20,000；家具暂列含更衣柜、跨越凳、移动实验台、BIBO 桶",
 hipoS3:"土建与装饰改造", hipoS3a:"拆除：家具与实验设备清空、地面与吊顶拆除、燃气/风管/电气/烟感/Crowcon 撤除",
 hipoS3b:"新建：墙面衬板 475 m²、新隔断 40 m²；5 樘单开 + 1 樘子母卫生门、2 樘木门、4 樘旧门翻新",
 hipoS3c:"装饰：实验室卷材乙烯地面 173 m²、金属吊顶 173 m²、书写区地毯 33 m²",
@@ -414,7 +394,24 @@ hipo6kTotal:"COST LIMIT（含通胀）", hipo6kBuild:"建筑工程费合计", hi
 hipo6kRisk:"风险预备费", hipo6kRange:"估算精度区间",
 hipoCost:''' + json.dumps(HIPO_COST_I18N_ZH, ensure_ascii=False) + r''',hipoChart:''' + json.dumps(HIPO_CHART_I18N_ZH, ensure_ascii=False) + r''',
 hipoChL:"COST LIMIT 构成", hipoChR:"建筑工程费 — 分项",
-hipoRiskNote:"风险登记册（2026-08-02 起草，12 项全部 Open，责任方 Employer）：净额 £397,875，区间 £146,633 – £649,117。最可能影响居前：AHU 状况不足需更换（最可能 £250,000）、最终用户需求变更（£200,000）、初始预算不足（£200,000）、设计发展变更（£95,000）；另有隔离器制造交期由约 3 个月延长至 5–8 个月的风险（按 £20,000/月计）与既有通风柜不可用需新购（最坏 £150,000）。",
+hipoRiskNote:"风险登记册（2026-08-02 起草，12 项全部 Open，责任方 Employer）：净额 £397,875，区间 £146,633 – £649,117。最可能影响居前：AHU 状况不足需更换（最可能 £250,000）、最终用户需求变更（£200,000）、初始预算不足（£200,000）、设计发展变更（£95,000）；另有隔离器制造交期由约 3 个月延长至 5–8 个月的风险（按 £20,000/月计）与既有通风柜不可用需新购（最坏 £150,000）。注：ILC Dover 报价交期约 20 周（图纸批准后起算），已超过成本计划假设的约 3 个月，对应上述交期风险已部分显性化。",
+hipo8t:"高活实验室 · 隔离器采购与供应商报价", hipo8s:"新增外部资料 · Howorth Q26543（2026-08-11）/ ILC Dover JS26-11384-0（2026-07-22）",
+hipo8k1:"£250,000", hipo8k1d:"Howorth 单腔分装隔离器（预算价 / 台）",
+hipo8k2:"£115,800", hipo8k2d:"ILC Dover 反应釜投料隔离器（整包）",
+hipo8k3:"OEB 4", hipo8k3d:"ILC Dover 报价密闭等级（1–10 µg/m³）",
+hipo8k4:"约 20 周", hipo8k4d:"ILC Dover 交期（图纸批准后）",
+hipo8c1:"Howorth Q26543 · 固定式高密闭隔离器", 
+hipo8c1a:"单腔分装隔离器 £250,000：4 副手套、传递箱、氮气吹扫、喷淋球与冲洗枪；箱内危险区（Zone 21）、箱外安全区",
+hipo8c1b:"选项：190 RTP 含 400 mm 料桶 £18,000；实体样机（mock-up）£17,000",
+hipo8c1c:"报价口径 Ex Works Howorth：包装、运输、安装与调试待最终设计确认后另报；密闭性测试可由第三方提供",
+hipo8c1d:"Clare 已回复：待项目资金落实后再就需求做深入讨论（2026-08-12）",
+hipo8c2:"ILC Dover JS26-11384-0 · 反应釜投料柔性隔离器",
+hipo8c2a:"总价 £115,800（EXW CH-Rossens，不含增值税）= 概念设计 £10,370 + 柔性隔离器 £94,700 + 文件 £5,060 + 服务 £5,670；证书（Pos 4.1）£2,750 单独列价",
+hipo8c2b:"概念设计范围：R19–R22 四台反应釜投料方案，含现场踏勘、方案设计与图纸、Teams 汇报及正式报价；1 名工程师 5 个工作日、约 50 小时 ±10%",
+hipo8c2c:"供货内容：2 套不锈钢支架（约 1560×870×1860 mm，带刹车脚轮）、2 套 12″ BIBO 罐组与 14″ 袋、1 套 14″ 封切分离工具、4 套 12″ 五层内衬罐组、4 套柔性腔体（内部约 1500×700×900 mm，4 副 EPDM 手套、3 只 P100 过滤器，ArmorFlex 113/114 防静电）",
+hipo8c2d:"技术口径：接触物料 AISI 316L、Ra ≤ 0.8 µm；ATEX 接触部件 II 2G IIB T3 / II 2D IIIB T195℃；密闭等级 OEB 4（1–10 µg/m³），实际工况需经 SMEPAC 测试确认",
+hipo8c2e:"商务条款：付款 30% 下单 / 20% 图纸批准 / 50% FAT；报价有效期 30 天；运输不含；耗材另行向 ILC Dover 波兰工厂下单，2026-06-01 起订单加收 5% 临时附加费",
+hipo8note:"口径提示与影响：① 若 G-128 所需为 Howorth 这类固定式高密闭分装隔离器，则成本计划 £150,000/台 的暂列金额明显偏低（预算价 £250,000/台，且两家报价均不含包装、运输、安装与调试），£700,000 隔离器暂列存在缺口，须在 BoD 与 ±10% 估算阶段重新核定。② ILC Dover 报价的密闭等级为 OEB 4（1–10 µg/m³），与内部讨论的 OEB 5 目标非同一口径，冻结等级后须重新询价。③ 该报价概念设计范围明确指向 R19–R22 四台反应釜投料，属既有厂房反应釜投料场景，与 C1 模块柔性隔离器范围存在重叠，其费用归属（高活实验室 / C1 模块）需与英方确认后再并入投资口径，本页暂按外部询价基准呈现、未计入任何一条线的投资总额。",
 hipo7t:"高活实验室 · 周期", hipo7s:"Asymchem Concept Programme_260727（DRAFT CONCEPT PROGRAMME）",
 hipo7k1:"262 天", hipo7k1d:"总工期（工作日）",
 hipo7k2:"2026-09-01", hipo7k2d:"资金批准与推进决定",
@@ -428,8 +425,10 @@ hConstr:"施工", hComm:"调试与移交", hRisk:"进度风险预留→竣工",
 hipoLegP:"设计/合约", hipoLegW:"采购/制造/预留", hipoLegB:"施工/调试", hipoToday:"约今",
 hipo9t:"高活实验室 · 决策", hipo9s:"",
 hipo9d1:"是否批准 2026-09-01 的资金批准与推进决定节点（概念进度以此为起点，262 个工作日至 2027-09-17 竣工）？",
-hipo9d2:"是否先行冻结 OEB 目标等级与用户需求（BoD）？概念文件未定义等级、隔离器仅按暂列金额计，该口径直接决定设备规格与可选供应商范围。",
-hipo9d3:"是否安排 AHU 状况核查与既有通风柜可用性确认？二者为风险登记册中金额最高的两项（最可能 £250,000 / 最坏 £150,000）。",
+hipo9d2:"是否先行冻结 OEB 目标等级与用户需求（BoD）？概念文件未定义等级，现有 ILC Dover 报价按 OEB 4（1–10 µg/m³）口径，该等级直接决定设备规格与可选供应商范围，冻结后须重新询价。",
+hipo9d3:"是否重新核定隔离器预算口径？Howorth 单腔分装隔离器预算价 £250,000/台，高于成本计划 £150,000/台 的暂列金额，且两家报价均不含包装运输安装调试。",
+hipo9d4:"是否确认 ILC Dover 报价（R19–R22 反应釜投料）的费用归属为高活实验室或 C1 模块？该范围与 C1 柔性隔离器存在重叠，归属未定前不并入任一条线投资总额。",
+hipo9d5:"是否安排 AHU 状况核查与既有通风柜可用性确认？二者为风险登记册中金额最高的两项（最可能 £250,000 / 最坏 £150,000）。",
 pDecT:"组合 · 提请关注", pDecS:"",
 pDec1:"四条线可独立决策与资金路径；扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。",
 pDec2:"扩建：RIBA 2 与模块化比选。",
@@ -445,22 +444,22 @@ nav:"← → navigate", tag:"Internal · Portfolio briefing",
 p1t:"Asymchem UK · Sandwich PDF", p1s:"Capital Projects Briefing", p1m:"B902 extension + HPLC/lyoph retrofit + C1 OEB5 upgrade + OEB5 HIPO lab · August 2026",
 p2t:"Project overview", p2s:"Four workstreams · feasibility / concept / internal estimate",
 p2th1:"Workstream", p2th2:"Scope", p2th3:"Investment (estimate level)", p2th4:"Milestone",
-p2r1n:"B902 east extension", p2r1s:"New 4-floor + mezzanine", p2r1o:"£78.1M", p2r1d:"Complete Aug 2030",
+p2r1n:"B902 east extension", p2r1s:"New 4-floor + mezzanine", p2r1o:"£78.1M", p2r1d:"Complete May 2030 (held)",
 p2r2n:"HPLC + lyophilizer", p2r2s:"Retrofit in existing PDF", p2r2o:"£5.33M", p2r2d:"HPLC Dec 2027 / lyoph Mar 2028",
 p2r3n:"C1 module OEB5 upgrade", p2r3s:"Routine OEB5 ops in existing C1 module", p2r3o:"£2.48M", p2r3d:"IQ complete Oct 2027",
 p2r4n:"OEB5 HIPO lab", p2r4s:"Existing G-128 suite alterations; 215 m² GIFA; 4+1 isolators (provisional)", p2r4o:"£4.56M", p2r4d:"Complete 17 Sep 2027",
 p2link:"Delivery link: in-situ retrofit (prep HPLC + lyophilizer) and C1 upgrade must be delivered together to provide OEB5 capability for prep HPLC; prep HPLC drives the overall timeline.",
-p2rebase:"Programme basis: the first three lines were estimated from a June 2026 start and are now re-baselined to a September 2026 start (+3 calendar months); scope and cost are unchanged. The HIPO lab concept programme already starts at the 01 Sep 2026 funding approval.",
+p2rebase:"Programme basis: the retrofit and C1 upgrade were estimated from a June 2026 start and are now re-baselined to a September 2026 start (+3 calendar months); scope and cost are unchanged. The HIPO lab concept programme already starts at the 01 Sep 2026 funding approval. The B902 east extension holds its May 2030 completion per group direction and keeps the consultant master programme unshifted — the later start must be absorbed within the stages.",
 p2sum:"The three in-building lines total ~£12.37M (retrofit £5.33M + C1 £2.48M + HIPO lab £4.56M), excluding the B902 east extension. Estimate bases differ: extension and retrofit are feasibility level, C1 is an internal estimate, the HIPO lab is a concept cost plan.",
 extTag:"Extension", hplcTag:"Retrofit", c1Tag:"C1 OEB5", hipoTag:"HIPO lab",
 extSec:"I. B902 East Extension", extSecs:"Scitech · RIBA 1 · 300291-RE-0001",
 ext2t:"Extension · Summary", ext2s:"22 May 2026 · A1",
 extK1:"FS done", extK1d:"RIBA 1",
 extK2:"£78.1M", extK2d:"Project OOM",
-extK3:"Aug 2030", extK3d:"Programme end (+3 months)",
+extK3:"May 2030", extK3d:"Programme end (held per group)",
 extB1:"~600 m² east extension, 4 floors + mezzanine, reactors, H₂ suite, 3 filter dryers, utilities.",
 extB2:"Option 1 — remove/relocate H₂ building; tie to B902 lower floors.",
-extB3:"FS complete; RIBA 2 Concept re-baselined to Oct 2026 (was Jul 2026, +3 months).",
+extB3:"FS complete; May 2030 completion held per group direction on the consultant master programme — the later RIBA 2 start must be absorbed within the stages.",
 ext4t:"Extension · Scope", ext4s:"Option 1",
 ext4b1:"~3,099 m² GIFA; ~1.5 m flood lift", ext4b2:"Second escape stair; blast panels", ext4b3:"BREEAM pre-assessment baseline",
 ext5t:"Extension · Investment", ext5s:"300291-CM-0001",
@@ -470,7 +469,7 @@ ext6kOom:"Total OOM", ext6kBase:"Direct works (incl. 25%)", ext6kRisk:"Other cos
 extCost:''' + json.dumps(EXT_COST_I18N_EN, ensure_ascii=False) + r''',extChart:''' + json.dumps(EXT_CHART_I18N_EN, ensure_ascii=False) + r''',
 extChL:"Project OOM — three blocks", extChR:"Direct works — line items",
 ext8t:"Extension · Programme", ext8s:"300291-PM-PR-0002",
-extGSub:"Master programme · re-baselined to a Sep 2026 start (+3 months on the June basis)",
+extGSub:"Master programme · consultant programme retained; May 2030 completion held per group direction",
 extGFs:"FS RIBA 1", extGR2:"Concept RIBA 2", extGR3:"Scheme RIBA 3", extGPl:"Planning",
 extGR4:"Detail RIBA 4", extGEq:"Long-lead equip.", extGMed:"Medium-lead equip.", extGPre:"Pre-construction",
 extGR5:"Construction RIBA 5", extGCo:"Commissioning", extGEn:"Validation/complete",
@@ -550,18 +549,20 @@ hipoK1:"Concept stage", hipoK1d:"Cost plan / programme / risk register",
 hipoK2:"£4.56M", hipoK2d:"COST LIMIT (incl. inflation)",
 hipoK3:"17 Sep 2027", hipoK3d:"Completion per concept programme",
 hipoK4:"215 m²", hipoK4d:"GIFA (lab ~182 + write-up ~33)",
-hipoB1:"Scope: alterations to the existing G-128 suite forming lab and write-up areas, 215 m² GIFA; isolators carried as provisional allowances (4 nr × £150,000 + 1 nr × £100,000).",
+hipoB1:"Scope: alterations to the existing G-128 suite forming lab and write-up areas, 215 m² GIFA; isolators carried in the cost plan as provisional allowances (4 nr × £150,000 + 1 nr × £100,000).",
 hipoB2:"Investment: COST LIMIT (incl. inflation) £4,562,044; VAT excluded; estimate accuracy range £3.74M – £4.99M.",
 hipoB3:"Build-up: building works £1.95M + professional services £0.14M + client equipment £1.98M + risk allowance £0.40M + inflation £0.10M.",
 hipoB4:"Programme: draft concept programme runs 262 working days from the 01 Sep 2026 funding approval and decision to proceed, completing 17 Sep 2027; isolators delivered to site 02 Jun 2027.",
-hipoB5:"To confirm: the concept documents do not define a target OEB level (isolators are provisional allowances); the client equipment figure refers to a separate equipment list not included in this pack.",
+hipoB5:"New: budget pricing received from two isolator suppliers — Howorth (Q26543, 11 Aug 2026) single chamber dispensing isolator £250,000 per unit; ILC Dover (JS26-11384-0, 22 Jul 2026) reactor charging flexible isolator package £115,800.",
+hipoB6:"To confirm: the concept documents still do not define a target OEB level (the ILC Dover quotation is priced at OEB 4, 1–10 µg/m³); the client equipment figure refers to a separate equipment list not included in this pack.",
 hipo3t:"HIPO lab · Scope", hipo3s:"Per the G-128 concept cost plan line items",
 hipoS1:"Scope & areas", hipoS1a:"Alterations to the existing G-128 suite (G128 and G128A–D); 215 m² GIFA",
 hipoS1b:"Lab area ~182 m² (services rate basis) + write-up area ~33 m² (carpet quantity)",
 hipoS1c:"Blockwork wall between G128 and G128D taken down; 2 pass-through hatches and 2 doorways formed through reinforced concrete wall",
-hipoS2:"Isolators & lab equipment", hipoS2a:"Isolator provisional allowances: 4 nr × £150,000 + 1 nr × £100,000 (£700,000 total)",
-hipoS2b:"Fume cupboards: existing assumed serviceable, only a £20,000 servicing/repair allowance; new units remain a TBC item on the programme",
-hipoS2c:"SF6 testing allowance £20,000; furniture allowance covers lockers, step-over bench, mobile benches, BIBO bins",
+hipoS2:"Isolators & lab equipment", hipoS2a:"Cost plan provisional allowances: 4 nr × £150,000 + 1 nr × £100,000 (£700,000 total)",
+hipoS2b:"Budget pricing received: Howorth single chamber dispensing isolator £250,000 per unit; ILC Dover reactor charging flexible isolator package £115,800",
+hipoS2c:"Fume cupboards: existing assumed serviceable, only a £20,000 servicing/repair allowance; new units remain a TBC item on the programme",
+hipoS2d:"SF6 testing allowance £20,000; furniture allowance covers lockers, step-over bench, mobile benches, BIBO bins",
 hipoS3:"Building & finishes", hipoS3a:"Strip out: furniture and lab equipment clearance, floor and ceiling removal, gas / ductwork / electrical / detectors / Crowcon removal",
 hipoS3b:"New works: wall lining 475 m², new partitions 40 m²; 5 single-leaf + 1 leaf-and-half hygienic doorsets, 2 timber doors, 4 doors refurbished",
 hipoS3c:"Finishes: sheet vinyl floor 173 m², metal suspended ceiling 173 m², carpet to write-up area 33 m²",
@@ -574,7 +575,24 @@ hipo6kTotal:"COST LIMIT (incl. inflation)", hipo6kBuild:"Total Building Works", 
 hipo6kRisk:"Risk allowance", hipo6kRange:"Estimate accuracy range",
 hipoCost:''' + json.dumps(HIPO_COST_I18N_EN, ensure_ascii=False) + r''',hipoChart:''' + json.dumps(HIPO_CHART_I18N_EN, ensure_ascii=False) + r''',
 hipoChL:"COST LIMIT build-up", hipoChR:"Building works — breakdown",
-hipoRiskNote:"Risk register (raised 02 Aug 2026; 12 risks, all Open, owner Employer): net total £397,875, range £146,633 – £649,117. Largest most-likely exposures: AHU dilapidated or insufficient requiring replacement (£250,000), end user requirement changes (£200,000), budget insufficiency (£200,000), design development changes (£95,000). Also flagged: isolator manufacture/delivery extending from ~3 months to 5–8 months (£20,000/month) and new fume cupboards if existing units prove unusable (worst case £150,000).",
+hipoRiskNote:"Risk register (raised 02 Aug 2026; 12 risks, all Open, owner Employer): net total £397,875, range £146,633 – £649,117. Largest most-likely exposures: AHU dilapidated or insufficient requiring replacement (£250,000), end user requirement changes (£200,000), budget insufficiency (£200,000), design development changes (£95,000). Also flagged: isolator manufacture/delivery extending from ~3 months to 5–8 months (£20,000/month) and new fume cupboards if existing units prove unusable (worst case £150,000). Note: the ILC Dover quotation states ~20 weeks from drawing approval, already beyond the ~3 month period assumed in the cost plan, so part of that delivery risk is now visible.",
+hipo8t:"HIPO lab · Isolator procurement & supplier quotations", hipo8s:"New external material · Howorth Q26543 (11 Aug 2026) / ILC Dover JS26-11384-0 (22 Jul 2026)",
+hipo8k1:"£250,000", hipo8k1d:"Howorth single chamber dispensing isolator (budget, per unit)",
+hipo8k2:"£115,800", hipo8k2d:"ILC Dover reactor charging isolator (package)",
+hipo8k3:"OEB 4", hipo8k3d:"Containment level quoted by ILC Dover (1–10 µg/m³)",
+hipo8k4:"~20 weeks", hipo8k4d:"ILC Dover lead time (from drawing approval)",
+hipo8c1:"Howorth Q26543 · fixed high-containment isolator",
+hipo8c1a:"Single chamber dispensing isolator £250,000: 4 × glove, pass box, N₂ purge, spray balls & wash gun; hazardous internal (Zone 21) and safe external",
+hipo8c1b:"Options: 1 × 190 RTP incl. 400 mm container £18,000; mock-up £17,000",
+hipo8c1c:"Basis Ex Works Howorth: packing, delivery, installation and commissioning to be quoted on confirmation of final designs; containment testing available via a third party",
+hipo8c1d:"Clare has replied that a more in-depth requirements discussion will follow once project funding is agreed (12 Aug 2026)",
+hipo8c2:"ILC Dover JS26-11384-0 · reactor charging flexible isolator",
+hipo8c2a:"Total £115,800 (EXW CH-Rossens, without VAT) = concept development £10,370 + flexible isolator £94,700 + documentation £5,060 + services £5,670; certificates (Pos 4.1) £2,750 priced separately",
+hipo8c2b:"Concept development scope: charging concept for the four reactors R19–R22, incl. on-site visit, concept and drawing, Teams presentation and firm quote; 1 engineer over 5 working days, ~50 hours ±10%",
+hipo8c2c:"Supply: 2 × stainless steel structure (approx. 1560×870×1860 mm, braked castors), 2 × 12″ BIBO canister kit with 14″ sleeve, 1 × 14″ crimp separation kit, 4 × 12″ canister kit with 5 liners, 4 × flexible enclosure (internal approx. 1500×700×900 mm, 4 EPDM gloves, 3 × P100 filter, ArmorFlex 113/114 antistatic)",
+hipo8c2d:"Technical basis: product contact AISI 316L, Ra ≤ 0.8 µm; ATEX product contact II 2G IIB T3 / II 2D IIIB T195 °C; containment OEB 4 (1–10 µg/m³), to be confirmed by SMEPAC testing in the actual set-up",
+hipo8c2e:"Commercial: payment 30% with order / 20% at drawing approval / 50% at FAT; quote valid 30 days; transport excluded; consumables ordered separately from the ILC Dover plant in Poland, with a 5% temporary surcharge on orders invoiced on or after 01 Jun 2026",
+hipo8note:"Basis notes and impact: (1) if G-128 requires fixed high-containment dispensing isolators of the Howorth type, the £150,000 per unit allowance in the cost plan is materially low (budget price £250,000 per unit, and neither quotation includes packing, delivery, installation or commissioning), so the £700,000 isolator allowance carries a gap to be re-tested at BoD and the ±10% estimate. (2) The ILC Dover containment level is OEB 4 (1–10 µg/m³), a different basis from the OEB 5 target discussed internally; re-quotation is required once the level is frozen. (3) The quoted concept development scope explicitly covers charging of the four reactors R19–R22, an existing-plant reactor charging duty that overlaps the C1 module flexible isolator scope; its cost allocation (HIPO lab vs C1 module) needs confirmation with the UK team, so this page presents it as external quotation benchmark only and it is not included in either line's investment total.",
 hipo7t:"HIPO lab · Programme", hipo7s:"Asymchem Concept Programme_260727 (DRAFT CONCEPT PROGRAMME)",
 hipo7k1:"262 days", hipo7k1d:"Total duration (working days)",
 hipo7k2:"01 Sep 2026", hipo7k2d:"Funding approval & decision to proceed",
@@ -588,8 +606,10 @@ hConstr:"Construction", hComm:"Commissioning & handover", hRisk:"Programme risk 
 hipoLegP:"Design / contract", hipoLegW:"Procurement / build / float", hipoLegB:"Construction / commissioning", hipoToday:"~Today",
 hipo9t:"HIPO lab · Decisions", hipo9s:"",
 hipo9d1:"Approve the 01 Sep 2026 funding approval and decision-to-proceed milestone (the concept programme runs 262 working days from it to completion on 17 Sep 2027)?",
-hipo9d2:"Freeze the target OEB level and user requirements (BoD) first? The concept documents define no level and isolators are provisional allowances, so this directly sets equipment specification and the available supplier pool.",
-hipo9d3:"Commission the AHU condition survey and confirm whether the existing fume cupboards can be re-used? These are the two largest register items (£250,000 most likely / £150,000 worst case).",
+hipo9d2:"Freeze the target OEB level and user requirements (BoD) first? The concept documents define no level and the ILC Dover quotation is priced at OEB 4 (1–10 µg/m³); the level sets equipment specification and the available supplier pool, and re-quotation follows once frozen.",
+hipo9d3:"Re-test the isolator budget basis? Howorth's budget price of £250,000 per unit exceeds the £150,000 per unit allowance in the cost plan, and neither quotation includes packing, delivery, installation or commissioning.",
+hipo9d4:"Confirm whether the ILC Dover quotation (R19–R22 reactor charging) belongs to the HIPO lab or the C1 module? The scope overlaps the C1 flexible isolators, and until allocation is agreed it is not added to either line's investment total.",
+hipo9d5:"Commission the AHU condition survey and confirm whether the existing fume cupboards can be re-used? These are the two largest register items (£250,000 most likely / £150,000 worst case).",
 pDec1:"Four workstreams — separate funding paths; ext/retrofit = feasibility, C1 = internal estimate, HIPO lab = concept cost plan.",
 pDec2:"Extension: RIBA 2 and modular study.",
 pDec3:"Retrofit + C1: plan joint delivery; link retrofit FEED/procurement with C1 scope finalisation.",
@@ -681,7 +701,7 @@ return `
 <div class="card"><div class="chart-title">${t("extChL")}</div><div class="chart-wrap tall"><canvas id="cExt1"></canvas></div></div>
 <div class="card"><div class="chart-title">${t("extChR")}</div><div class="chart-wrap tall"><canvas id="cExt2"></canvas></div></div></div></section>
 
-<section class="slide">${ganttHTML(GANTT_EXT,new Date("2026-07-01"),new Date("2030-08-07"),EXT_KEYS,["2026","2027","2028","2029","2030"],"''' + TODAY + r'''","extGSub",{d:"extLegD",p:"extLegP",b:"extLegB",c:"extLegM",today:"extToday"})}</section>
+<section class="slide">${ganttHTML(GANTT_EXT,new Date("2026-07-01"),new Date("2030-05-07"),EXT_KEYS,["2026","2027","2028","2029","2030"],"''' + TODAY + r'''","extGSub",{d:"extLegD",p:"extLegP",b:"extLegB",c:"extLegM",today:"extToday"})}</section>
 
 <section class="slide"><h1>${t("ext9t")}</h1>
 <ul class="decision-list">
@@ -782,12 +802,12 @@ ${ganttHTML(GANTT_C1,new Date("2026-08-01"),new Date("2027-10-31"),C1_KEYS,["202
 <div class="kpi hipo"><div class="val">${t("hipoK2")}</div><div class="lbl">${t("hipoK2d")}</div></div>
 <div class="kpi hipo"><div class="val">${t("hipoK3")}</div><div class="lbl">${t("hipoK3d")}</div></div>
 <div class="kpi hipo"><div class="val">${t("hipoK4")}</div><div class="lbl">${t("hipoK4d")}</div></div></div>
-<ul><li>${t("hipoB1")}</li><li>${t("hipoB2")}</li><li>${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li></ul></section>
+<ul><li>${t("hipoB1")}</li><li>${t("hipoB2")}</li><li>${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li><li>${t("hipoB6")}</li></ul></section>
 
 <section class="slide"><h1>${t("hipo3t")}</h1><h2>${t("hipo3s")}</h2>
 <div class="scope-grid">
 <div class="card"><h3>${t("hipoS1")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS1a")}</li><li>${t("hipoS1b")}</li><li>${t("hipoS1c")}</li></ul></div>
-<div class="card"><h3>${t("hipoS2")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS2a")}</li><li>${t("hipoS2b")}</li><li>${t("hipoS2c")}</li></ul></div>
+<div class="card"><h3>${t("hipoS2")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS2a")}</li><li>${t("hipoS2b")}</li><li>${t("hipoS2c")}</li><li>${t("hipoS2d")}</li></ul></div>
 <div class="card"><h3>${t("hipoS3")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS3a")}</li><li>${t("hipoS3b")}</li><li>${t("hipoS3c")}</li></ul></div>
 <div class="card"><h3>${t("hipoS4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS4a")}</li><li>${t("hipoS4b")}</li><li>${t("hipoS4c")}</li></ul></div></div></section>
 
@@ -814,9 +834,25 @@ ${ganttHTML(GANTT_C1,new Date("2026-08-01"),new Date("2027-10-31"),C1_KEYS,["202
 <div class="kpi hipo"><div class="val">${t("hipo7k4")}</div><div class="lbl">${t("hipo7k4d")}</div></div></div>
 ${ganttHTML(GANTT_HIPO,new Date("2026-08-01"),new Date("2027-10-01"),HIPO_KEYS,["2026 H2","2027 H1","2027 H2"],"''' + TODAY + r'''","hipoGSub",{p:"hipoLegP",w:"hipoLegW",b:"hipoLegB",today:"hipoToday"})}</section>
 
+<section class="slide" data-charts="hipoQuote"><h1>${t("hipo8t")}</h1><h2>${t("hipo8s")}</h2>
+<div class="invest-kpi-row cols4">
+<div class="invest-kpi highlight"><div class="ik-val">${fm(''' + str(HOWORTH_ISOLATOR) + r''')}</div><div class="ik-lbl">${t("hipo8k1d")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(''' + str(ILC_TOTAL) + r''')}</div><div class="ik-lbl">${t("hipo8k2d")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${t("hipo8k3")}</div><div class="ik-lbl">${t("hipo8k3d")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${t("hipo8k4")}</div><div class="ik-lbl">${t("hipo8k4d")}</div></div></div>
+<div class="scope-grid" style="grid-template-columns:1fr 1.25fr">
+<div class="card"><h3>${t("hipo8c1")}</h3>
+<ul style="font-size:.75rem;margin-top:.3rem"><li>${t("hipo8c1a")}</li><li>${t("hipo8c1b")}</li><li>${t("hipo8c1c")}</li><li>${t("hipo8c1d")}</li></ul>
+<div class="chart-wrap" style="height:130px;margin-top:.4rem"><canvas id="cQuote2"></canvas></div></div>
+<div class="card"><h3>${t("hipo8c2")}</h3>
+<ul style="font-size:.75rem;margin-top:.3rem"><li>${t("hipo8c2a")}</li><li>${t("hipo8c2b")}</li><li>${t("hipo8c2c")}</li><li>${t("hipo8c2d")}</li><li>${t("hipo8c2e")}</li></ul>
+<div class="chart-wrap" style="height:130px;margin-top:.4rem"><canvas id="cQuote1"></canvas></div></div></div>
+<div class="note">${t("hipo8note")}</div></section>
+
 <section class="slide"><h1>${t("hipo9t")}</h1>
 <ul class="decision-list">
-<li class="hipo">${t("hipo9d1")}</li><li class="hipo">${t("hipo9d2")}</li><li class="hipo">${t("hipo9d3")}</li></ul></section>
+<li class="hipo">${t("hipo9d1")}</li><li class="hipo">${t("hipo9d2")}</li><li class="hipo">${t("hipo9d3")}</li>
+<li class="hipo">${t("hipo9d4")}</li><li class="hipo">${t("hipo9d5")}</li></ul></section>
 
 <section class="slide"><h1>${t("pDecT")}</h1>
 <ul class="decision-list">
@@ -850,6 +886,7 @@ if(which==="ext"&&!chartsBuilt.ext){buildExtInvestmentCharts();chartsBuilt.ext=t
 if(which==="hplc"&&!chartsBuilt.hplc){buildHplcInvestmentCharts();chartsBuilt.hplc=true;}
 if(which==="c1"&&!chartsBuilt.c1){buildC1InvestmentCharts();chartsBuilt.c1=true;}
 if(which==="hipo"&&!chartsBuilt.hipo){buildHipoInvestmentCharts();chartsBuilt.hipo=true;}
+if(which==="hipoQuote"&&!chartsBuilt.hipoQuote){buildHipoQuoteCharts();chartsBuilt.hipoQuote=true;}
 }
 
 function applyLang(){
