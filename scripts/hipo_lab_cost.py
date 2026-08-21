@@ -127,7 +127,11 @@ DONUT_ITEMS = [
 
 # ------------------------------------------------------------- programme
 # Asymchem Concept Programme_260727: 262 days, Tue 01/09/26 - Fri 17/09/27.
-# g[1], g[2] = bar geometry; g[6] = display label.
+# Clare (21 Aug 2026) asked for +6 weeks to cover the time to start the work and
+# the funding decision; that shift is applied in the build script, not here.
+# g[1], g[2] = bar geometry.
+PROGRAMME_DAYS = 262
+SHIFT_WEEKS_CLARE = 6
 GANTT_HIPO = [
     [
         "hFund",
