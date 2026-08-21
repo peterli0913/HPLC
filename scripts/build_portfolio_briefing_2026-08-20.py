@@ -210,15 +210,26 @@ HIPO_TOOLTIP_PATCH = {
         "隔离器安装、二次机电、吊顶与地面、家具与设备安装。",
     ),
     "hRisk": (
-        "Programme risk allowance (15 days); concept programme end 29 Oct 2027. "
-        "Delivery target stated as November 2027 to cover the start-up and funding decision.",
-        "进度风险预留（15 天）；概念进度落点 2027-10-29。"
-        "考虑启动准备与资金决策时间，交付目标按 2027 年 11 月。",
+        "Programme risk allowance; activities complete late Oct 2027 and the remaining float "
+        "runs to the delivery target of 12 Nov 2027.",
+        "进度风险预留；各项活动于 2027 年 10 月下旬完成，余量至交付目标 2027-11-12。",
     ),
 }
 
-GANTT_HIPO_SHIFTED = _patch_tooltips(
-    shift_gantt_days(GANTT_HIPO, HIPO_SHIFT_DAYS), HIPO_TOOLTIP_PATCH
+# Delivery target is stated as November 2027, so the closing programme-risk bar
+# runs to mid-November rather than stopping at the mechanical +6 week date.
+HIPO_DELIVERY_DATE = "2027-11-12"
+
+
+def _extend_last_bar(rows: list, end: str) -> list:
+    out = [list(r) for r in rows]
+    out[-1][2] = end
+    return out
+
+
+GANTT_HIPO_SHIFTED = _extend_last_bar(
+    _patch_tooltips(shift_gantt_days(GANTT_HIPO, HIPO_SHIFT_DAYS), HIPO_TOOLTIP_PATCH),
+    HIPO_DELIVERY_DATE,
 )
 
 # Extension OOM totals from ext_feasibility_cost (CM-0001)
@@ -409,7 +420,6 @@ c1K2:"£2.48M", c1K2d:"项目总投资估算",
 c1K3:"2027-10", c1K3d:"安装与确认目标（+3 个月）",
 c1B1:"范围：二层物料分装与首层最终包装固定隔离器；HVAC 升级；进出气闸联锁及雾化淋浴；覆盖各单元操作与废物流的定制柔性隔离器。",
 c1B2:"估算：已取得供应商预算报价 —— ILC Dover 反应釜投料柔性隔离器整包 £115,800（含 R19–R22 投料方案概念设计）；Howorth 单腔分装隔离器 £250,000/台。两者均为 Ex Works 口径，不含包装、运输、安装与调试。",
-c1B5:"报价前提：以上为预算价，最终费用取决于项目范围最终确认的密闭等级（ILC Dover 现报价按 OEB 4、1–10 µg/m³）。",
 c1B3:"交付关联：须与厂房内改造（制备 HPLC + 冻干）同步完成，方能为制备 HPLC 操作提供 OEB5 能力。",
 c1B4:"周期：假设与改造项目一并批准；制备 HPLC 单元驱动 C1 模块升级交付时间线。",
 c13t:"C1 · 范围",
@@ -419,7 +429,7 @@ c1S3:"柔性隔离", c1S3a:"多台定制柔性隔离器", c1S3b:"覆盖模块内
 c1S4:"估价依据（供应商报价）",
 c1S4a:"柔性隔离器：ILC Dover JS26-11384-0（2026-07-22）整包 £115,800，EXW，不含运输安装；交期约 20 周（图纸批准后）",
 c1S4b:"固定隔离器：Howorth Q26543（2026-08-11）单腔分装隔离器 £250,000/台；选项 190 RTP £18,000、样机 £17,000",
-c1S4c:"均为预算价，最终费用取决于范围确认的密闭等级；HVAC 与气闸尚无详细报价支撑",
+c1S4c:"HVAC 与气闸尚无详细报价支撑",
 c15t:"C1 · 投资总览", c15s:"内部估算 · 主设备 + 30% 项目预备费",
 c15oom:"项目总投资估算",
 c16t:"C1 · 投资结构", c16s:"主设备小计 / 全项目预备费",
@@ -461,7 +471,7 @@ hipoS3c:"装饰：实验室卷材乙烯地面 173 m²、金属吊顶 173 m²、�
 hipoS4:"机电、安全与业主供货", hipoS4a:"暖通 £217,920：AHU 恢复使用、全套风管与送回风、袋进袋出 HEPA 排风过滤、BMS 升级、系统平衡",
 hipoS4b:"电气 £107,380、消防喷淋 £30,030、门禁/布线/CCTV/火警 £51,345、实验室气体管道 £63,700、雾化淋浴 £35,000",
 hipoS4c:"业主（凯莱英）供货并安装设备 £1,975,045",
-hipoScopeNote:"风险与前提：正在就厂房改造事宜征求 DPML 同意 —— 改造完成后实验室将无法按当前运行状态交还 DPML，该沟通进展由 Clare 跟进。另一项前提是与 DPH 签署租赁协议前可接受的支出水平，以及协议签署前能否开始厂房改造，目前为本项目最大的不确定性。",
+hipoScopeNote:"风险与前提：正在就厂房改造事宜征求 DPML 同意 —— 改造完成后实验室将无法按当前运行状态交还 DPML，该沟通进展由 Clare 跟进。",
 hipo5t:"高活实验室 · 投资总览", hipo5s:"G-128 Concept Cost Plan · 报告日期 2026-08-06 · GIFA 215 m²",
 hipo6t:"高活实验室 · 投资结构", hipo6s:"项目投资构成与建筑工程费分项",
 hipo6kTotal:"项目投资（含通胀）", hipo6kBuild:"建筑工程费合计", hipo6kEquip:"业主（凯莱英）供货设备",
@@ -472,18 +482,18 @@ hipo7t:"高活实验室 · 周期", hipo7s:"Asymchem Concept Programme_260727（
 hipo7k1:"262 天", hipo7k1d:"总工期（工作日，不含新增 6 周）",
 hipo7k2:"2026-10-13", hipo7k2d:"资金批准与推进决定（+6 周）",
 hipo7k3:"2027-07-14", hipo7k3d:"隔离器到场",
-hipo7k4:"2027-11", hipo7k4d:"计划交付（含 15 天进度风险预留）",
-hipoGSub:"概念进度（草案）· 整体顺延 6 周后示意，条块落点至 2027-10-29",
-hipoProgNote:"进度说明：为覆盖启动准备与资金决策所需时间，概念进度整体顺延 6 周（Clare，2026-08-21），交付目标定为 2027 年 11 月。后续设计推进中部分工作有并行压缩的空间，但取决于最终确认的风险处理方式与可接受的风险水平。",
+hipo7k4:"2027-11-12", hipo7k4d:"计划交付（含进度风险预留）",
+hipoGSub:"概念进度（草案）· 各项活动整体顺延 6 周，交付目标 2027 年 11 月",
+hipoProgNote:"进度说明：为覆盖启动准备与资金决策所需时间，各项活动在概念进度基础上整体顺延 6 周（Clare，2026-08-21），活动于 2027 年 10 月下旬完成，余量计入末段进度风险预留，交付目标 2027 年 11 月。后续设计推进中部分工作有并行压缩的空间，但取决于最终确认的风险处理方式与可接受的风险水平。",
 hFund:"资金批准节点", hConsult:"顾问任命 + BoD", hContractor:"主承包商招标任命", hAward:"合同授予与动员",
 hSurvey:"勘查与项目控制", hLabDesign:"实验室设计", hCdm:"CDM", hIso:"隔离器采购制造",
 hFume:"通风柜采购（待定）", hFurn:"实验室家具采购", hTrade:"分包工程招标",
-hConstr:"施工", hComm:"调试与移交", hRisk:"进度风险预留→竣工",
+hConstr:"施工", hComm:"调试与移交", hRisk:"进度风险预留→交付",
 hipoLegP:"设计/合约", hipoLegW:"采购/制造/预留", hipoLegB:"施工/调试", hipoToday:"约今",
 hipo9t:"高活实验室 · 决策", hipo9s:"",
 hipo9d1:"是否批准资金与推进决定节点？概念进度以此为起点，262 个工作日加 6 周启动与决策时间，计划交付 2027 年 11 月。",
 hipo9d2:"是否安排 AHU 状况核查与既有通风柜可用性确认？二者为风险登记册中金额最高的两项。",
-hipo9d3:"在与 DPH 签署租赁协议前，可接受的支出水平如何界定？协议签署前能否开始厂房改造？同时需取得 DPML 对改造的同意（改造后实验室无法按当前运行状态交还）。",
+hipo9d3:"是否推进 DPML 对厂房改造的同意事宜？改造完成后实验室将无法按当前运行状态交还 DPML。",
 pEnd:"谢谢", pEnds:"",
 },
 en:{
@@ -567,7 +577,6 @@ c1K2:"£2.48M", c1K2d:"Total CAPEX estimate",
 c1K3:"Oct 2027", c1K3d:"Install & qualification target (+3 months)",
 c1B1:"Scope: fixed isolators (2nd floor dispensing, GF pack-off); HVAC upgrades; entry/exit airlock interlocks incl. mist showers; bespoke flexible isolators for unit ops and waste streams.",
 c1B2:"Estimate: supplier budget costs now received — ILC Dover reactor charging flexible isolator package £115,800 (incl. concept development for the R19–R22 charging scheme); Howorth single chamber dispensing isolator £250,000 per unit. Both Ex Works, excluding packing, delivery, installation and commissioning.",
-c1B5:"Basis: these are budget prices; the final cost will depend on the level of containment agreed in the project scope (ILC Dover currently quoted at OEB 4, 1–10 µg/m³).",
 c1B3:"Delivery link: must be delivered with retrofit (prep HPLC + lyoph) for OEB5 prep HPLC capability.",
 c1B4:"Programme: assumes joint approval with retrofit; prep HPLC unit drives C1 module upgrade delivery timeline.",
 c13t:"C1 · Scope",
@@ -577,7 +586,7 @@ c1S3:"Flexible isolation", c1S3a:"Multiple bespoke flexible isolator systems", c
 c1S4:"Pricing basis (supplier quotations)",
 c1S4a:"Flexible isolators: ILC Dover JS26-11384-0 (22 Jul 2026), £115,800 package, EXW, excl. delivery and installation; ~20 weeks from drawing approval",
 c1S4b:"Fixed isolators: Howorth Q26543 (11 Aug 2026), single chamber dispensing isolator £250,000 per unit; options 190 RTP £18,000, mock-up £17,000",
-c1S4c:"Both are budget prices; final cost depends on the containment level agreed in scope. HVAC and airlocks have no detailed quotes yet",
+c1S4c:"HVAC and airlocks have no detailed quotes yet",
 c15t:"C1 · Investment", c15s:"Internal estimate · equipment + 30% project contingency",
 c15oom:"Total CAPEX Estimate",
 c16t:"C1 · Structure", c16s:"Equipment subtotal / project contingency",
@@ -619,7 +628,7 @@ hipoS3c:"Finishes: sheet vinyl floor 173 m², metal suspended ceiling 173 m², c
 hipoS4:"Services, safety & client equipment", hipoS4a:"HVAC £217,920: AHU back into use, full ductwork with supply diffusers and extract grilles, bag-in/bag-out HEPA on extract, BMS upgrade, balancing",
 hipoS4b:"Electrical £107,380; sprinklers £30,030; access control / cabling / CCTV / fire alarm £51,345; laboratory gas pipework £63,700; mist shower £35,000",
 hipoS4c:"Client (Asymchem) supplied and installed equipment £1,975,045",
-hipoScopeNote:"Risk and prerequisite: agreement is being sought from DPML for the facility modifications — once complete, the lab could not be returned to DPML in its current operational state; Clare is following up on the status of that conversation. The other prerequisite is the level of spending acceptable ahead of a lease agreement with DPH, and whether facility changes can begin before an agreement is signed — currently the largest area of uncertainty on this project.",
+hipoScopeNote:"Risk and prerequisite: agreement is being sought from DPML for the facility modifications — once complete, the lab could not be returned to DPML in its current operational state; Clare is following up on the status of that conversation.",
 hipo5t:"HIPO lab · Investment", hipo5s:"G-128 Concept Cost Plan · report date 06 Aug 2026 · 215 m² GIFA",
 hipo6t:"HIPO lab · Structure", hipo6s:"Project investment build-up and building works breakdown",
 hipo6kTotal:"Project investment (incl. inflation)", hipo6kBuild:"Total Building Works", hipo6kEquip:"Client (Asymchem) equipment",
@@ -630,18 +639,18 @@ hipo7t:"HIPO lab · Programme", hipo7s:"Asymchem Concept Programme_260727 (DRAFT
 hipo7k1:"262 days", hipo7k1d:"Total duration (working days, excl. the added 6 weeks)",
 hipo7k2:"13 Oct 2026", hipo7k2d:"Funding approval & decision to proceed (+6 weeks)",
 hipo7k3:"14 Jul 2027", hipo7k3d:"Isolators delivered to site",
-hipo7k4:"Nov 2027", hipo7k4d:"Planned delivery (incl. 15 days programme risk)",
-hipoGSub:"Draft concept programme · shown shifted out 6 weeks; bars run to 29 Oct 2027",
-hipoProgNote:"Programme note: the concept programme is shifted out 6 weeks to cover the time to start the work and the funding decision (Clare, 21 Aug 2026), giving a delivery target of November 2027. There may be opportunities to run some activities in parallel as the programme develops, but this will depend on the risk approach agreed and the level of acceptable risk.",
+hipo7k4:"12 Nov 2027", hipo7k4d:"Planned delivery (incl. programme risk allowance)",
+hipoGSub:"Draft concept programme · activities shifted out 6 weeks; delivery target November 2027",
+hipoProgNote:"Programme note: all activities are shifted out 6 weeks from the concept programme to cover the time to start the work and the funding decision (Clare, 21 Aug 2026); activities complete in late October 2027 with the remaining float held in the closing programme-risk allowance, giving a delivery target of November 2027. There may be opportunities to run some activities in parallel as the programme develops, but this will depend on the risk approach agreed and the level of acceptable risk.",
 hFund:"Funding approval", hConsult:"Consultants + BoD", hContractor:"Principal contractor tender", hAward:"Contract award & mobilise",
 hSurvey:"Surveys & project control", hLabDesign:"Lab design", hCdm:"CDM", hIso:"Isolator procurement & build",
 hFume:"Fume cupboards (TBC)", hFurn:"Laboratory furniture", hTrade:"Trade contractor procurement",
-hConstr:"Construction", hComm:"Commissioning & handover", hRisk:"Programme risk → completion",
+hConstr:"Construction", hComm:"Commissioning & handover", hRisk:"Programme risk → delivery",
 hipoLegP:"Design / contract", hipoLegW:"Procurement / build / float", hipoLegB:"Construction / commissioning", hipoToday:"~Today",
 hipo9t:"HIPO lab · Decisions", hipo9s:"",
 hipo9d1:"Approve the funding approval and decision-to-proceed milestone? The concept programme runs 262 working days from it plus 6 weeks for start-up and the funding decision, giving planned delivery in November 2027.",
 hipo9d2:"Commission the AHU condition survey and confirm whether the existing fume cupboards can be re-used? These are the two largest items in the risk register.",
-hipo9d3:"What level of spending is acceptable ahead of a lease agreement with DPH, and can facility changes begin before an agreement is signed? DPML agreement for the modifications is also required, since the lab could not then be returned in its current operational state.",
+hipo9d3:"Proceed with securing DPML agreement for the facility modifications? Once complete, the lab could not be returned to DPML in its current operational state.",
 pEnd:"Thank you", pEnds:"",
 }
 };
@@ -785,7 +794,7 @@ ${ganttHTML(GANTT_HPLC,new Date("2026-05-01"),new Date("2028-03-31"),HPLC_KEYS,[
 <div class="kpi c1"><div class="val">${t("c1K1")}</div><div class="lbl">${t("c1K1d")}</div></div>
 <div class="kpi c1"><div class="val">${t("c1K2")}</div><div class="lbl">${t("c1K2d")}</div></div>
 <div class="kpi c1"><div class="val">${t("c1K3")}</div><div class="lbl">${t("c1K3d")}</div></div></div>
-<ul><li>${t("c1B1")}</li><li>${t("c1B2")}</li><li>${t("c1B5")}</li><li>${t("c1B3")}</li><li>${t("c1B4")}</li></ul></section>
+<ul><li>${t("c1B1")}</li><li>${t("c1B2")}</li><li>${t("c1B3")}</li><li>${t("c1B4")}</li></ul></section>
 
 <section class="slide"><h1>${t("c13t")}</h1>
 <div class="scope-grid">
