@@ -471,7 +471,6 @@ c1S3:"柔性隔离", c1S3a:"多台定制柔性隔离器", c1S3b:"覆盖模块内
 c1S4:"估价依据（供应商报价）",
 c1S4a:"柔性隔离器：ILC Dover JS26-11384-0（2026-07-22）整包 £115,800，EXW，不含运输安装；交期约 20 周（图纸批准后）",
 c1S4b:"固定隔离器：Howorth Q26543（2026-08-11）单腔分装隔离器 £250,000/台；选项 190 RTP £18,000、样机 £17,000",
-c1S4c:"HVAC 与气闸尚无详细报价支撑",
 c15t:"C1 · 投资总览", c15s:"内部估算 · 主设备 + 30% 项目预备费",
 c15oom:"项目总投资估算",
 c16t:"C1 · 投资结构", c16s:"主设备小计 / 全项目预备费",
@@ -535,7 +534,6 @@ hipoLegP:"设计/合约", hipoLegW:"采购/制造/预留", hipoLegB:"施工/调�
 hipo9t:"高活实验室 · 决策", hipo9s:"",
 hipo9d1:"是否批准资金与推进决定节点？概念进度以此为起点，262 个工作日加 6 周启动与决策时间，计划交付 2027 年 11 月。",
 hipo9d2:"是否安排 AHU 状况核查与既有通风柜可用性确认？二者为风险登记册中金额最高的两项。",
-hipo9d3:"是否推进 DPML 对厂房改造的同意事宜？改造完成后实验室将无法按当前运行状态交还 DPML。",
 pEnd:"谢谢", pEnds:"",
 },
 en:{
@@ -628,7 +626,6 @@ c1S3:"Flexible isolation", c1S3a:"Multiple bespoke flexible isolator systems", c
 c1S4:"Pricing basis (supplier quotations)",
 c1S4a:"Flexible isolators: ILC Dover JS26-11384-0 (22 Jul 2026), £115,800 package, EXW, excl. delivery and installation; ~20 weeks from drawing approval",
 c1S4b:"Fixed isolators: Howorth Q26543 (11 Aug 2026), single chamber dispensing isolator £250,000 per unit; options 190 RTP £18,000, mock-up £17,000",
-c1S4c:"HVAC and airlocks have no detailed quotes yet",
 c15t:"C1 · Investment", c15s:"Internal estimate · equipment + 30% project contingency",
 c15oom:"Total CAPEX Estimate",
 c16t:"C1 · Structure", c16s:"Equipment subtotal / project contingency",
@@ -692,7 +689,6 @@ hipoLegP:"Design / contract", hipoLegW:"Procurement / build / float", hipoLegB:"
 hipo9t:"HIPO lab · Decisions", hipo9s:"",
 hipo9d1:"Approve the funding approval and decision-to-proceed milestone? The concept programme runs 262 working days from it plus 6 weeks for start-up and the funding decision, giving planned delivery in November 2027.",
 hipo9d2:"Commission the AHU condition survey and confirm whether the existing fume cupboards can be re-used? These are the two largest items in the risk register.",
-hipo9d3:"Proceed with securing DPML agreement for the facility modifications? Once complete, the lab could not be returned to DPML in its current operational state.",
 pEnd:"Thank you", pEnds:"",
 }
 };
@@ -843,7 +839,7 @@ ${ganttHTML(GANTT_HPLC,new Date("2026-05-01"),new Date("2028-03-31"),HPLC_KEYS,[
 <div class="card"><h3>${t("c1S1")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S1a")}</li><li>${t("c1S1b")}</li></ul></div>
 <div class="card"><h3>${t("c1S2")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S2a")}</li><li>${t("c1S2b")}</li></ul></div>
 <div class="card"><h3>${t("c1S3")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S3a")}</li><li>${t("c1S3b")}</li></ul></div>
-<div class="card"><h3>${t("c1S4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("c1S4a")}</li><li>${t("c1S4b")}</li><li>${t("c1S4c")}</li></ul></div></div></section>
+<div class="card"><h3>${t("c1S4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("c1S4a")}</li><li>${t("c1S4b")}</li></ul></div></div></section>
 
 <section class="slide"><h1>${t("c15t")}</h1><h2>${t("c15s")}</h2>
 <div class="cost-scroll">${c1CostHTML()}</div></section>
@@ -914,7 +910,7 @@ ${ganttHTML(GANTT_HIPO,new Date("2026-09-01"),new Date("2027-12-15"),HIPO_KEYS,[
 
 <section class="slide"><h1>${t("hipo9t")}</h1>
 <ul class="decision-list">
-<li class="hipo">${t("hipo9d1")}</li><li class="hipo">${t("hipo9d2")}</li><li class="hipo">${t("hipo9d3")}</li></ul></section>
+<li class="hipo">${t("hipo9d1")}</li><li class="hipo">${t("hipo9d2")}</li></ul></section>
 
 <section class="slide title-slide"><h1>${t("pEnd")}</h1></section>`;
 }
