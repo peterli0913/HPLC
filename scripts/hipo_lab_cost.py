@@ -93,53 +93,53 @@ assert EQUIP_LIST_PURCHASE + EQUIP_LIST_EXISTING == EQUIP_LIST_TOTAL
 # Blank New/Existing cells are treated as New so the New ∩ Must-have total stays £1,957,045.
 # ne: N = New, E = Existing, N/E = mixed.
 EQUIP_ITEMS = [
-    {"id": "eq3", "group": "ARD/QC", "title": "HPLC System", "titleZh": "HPLC 系统", "location": "Room 2", "model": "1290 Infinity 3", "ne": "N", "cost": 300000},
-    {"id": "eq9", "group": "ARD/QC", "title": "HPLC/Mass Spectrometer System", "titleZh": "HPLC/质谱系统", "location": "Bench top", "model": "G7120A Highspeed Pump,", "ne": "N", "cost": 200000},
-    {"id": "eq16", "group": "ARD/QC", "title": "GCMS", "titleZh": "GCMS", "location": "or GCMS", "model": "", "ne": "N", "cost": 120000},
-    {"id": "eq17", "group": "ARD/QC", "title": "nitrogen gas generator", "titleZh": "氮气发生器", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000},
-    {"id": "eq18", "group": "ARD/QC", "title": "hydrogen gas generator", "titleZh": "氢气发生器", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000},
-    {"id": "eq19", "group": "ARD/QC", "title": "Electronic Pipette", "titleZh": "电动移液器", "location": "Benchtop", "model": "", "ne": "N", "cost": 1600},
-    {"id": "eq20", "group": "ARD/QC", "title": "Milli-Q", "titleZh": "Milli-Q", "location": "Undersink", "model": "IQ 7000 ?", "ne": "N", "cost": 20000},
-    {"id": "eq21", "group": "ARD/QC", "title": "Prep HPLC", "titleZh": "制备 HPLC", "location": "Large Fumehood", "model": "Newstyle NS 4330", "ne": "N", "cost": 50000},
-    {"id": "eq23", "group": "ARD/QC", "title": "pH", "titleZh": "pH 计", "location": "Fumhood", "model": "SevenExcellence", "ne": "N", "cost": 20000},
-    {"id": "eq25", "group": "ARD/QC", "title": "SFC", "titleZh": "SFC", "location": "Bench top", "model": "Acquity UPC2", "ne": "E", "cost": 150000},
-    {"id": "eq27", "group": "ARD/QC", "title": "GC", "titleZh": "GC", "location": "Bench top (if sapce is limited, remove another FH?)", "model": "8890B GC", "ne": "E", "cost": 80000},
-    {"id": "eq29", "group": "ARD/QC", "title": "Mass Spec", "titleZh": "质谱", "location": "Bench top", "model": "1290 Infinty 2", "ne": "N", "cost": 140000},
-    {"id": "eq30", "group": "ARD/QC", "title": "KF Coulimetric", "titleZh": "库仑法 KF", "location": "Fumehood", "model": "852 Titrando", "ne": "N", "cost": 45000},
-    {"id": "eq36", "group": "Isolators", "title": "Huber TC45 with immersion cooler", "titleZh": "Huber TC45 浸入式冷却器", "location": "Under isolator 2", "model": "TC45", "ne": "N", "cost": 4345},
-    {"id": "eq37", "group": "Isolators", "title": "Karl Fisher Titrator", "titleZh": "卡尔费休滴定仪", "location": "Isolator 1", "model": "T50", "ne": "N", "cost": 30000},
-    {"id": "eq38", "group": "Isolators", "title": "Benchtop Powder X-ray Diffractor", "titleZh": "台式粉末 X 射线衍射仪", "location": "Benchtop", "model": "Bruker", "ne": "E", "cost": 200000},
-    {"id": "eq39", "group": "Isolators", "title": "Particle Size", "titleZh": "粒度仪", "location": "Isolator 5", "model": "Mastersizer", "ne": "N", "cost": 160000},
-    {"id": "eq40", "group": "Isolators", "title": "Lyophiliser", "titleZh": "冻干机", "location": "Benchtop", "model": "tbc", "ne": "N", "cost": 100000},
-    {"id": "eq41", "group": "Isolators", "title": "Analytical Balance", "titleZh": "分析天平", "location": "Isolator 1", "model": "XP205", "ne": "N", "cost": 20000},
-    {"id": "eq42", "group": "Isolators", "title": "Microbalance", "titleZh": "微量天平", "location": "isolator 1", "model": "", "ne": "N", "cost": 25000},
-    {"id": "eq43", "group": "Isolators", "title": "Easymax Reactor System", "titleZh": "EasyMax 反应系统", "location": "isolator 3", "model": "Easymax 102", "ne": "N", "cost": 80000},
-    {"id": "eq45", "group": "Isolators", "title": "Chiller unit", "titleZh": "冷水机", "location": "under isolator 3", "model": "FL1703", "ne": "E", "cost": 12000},
-    {"id": "eq47", "group": "Isolators", "title": "Drying Oven", "titleZh": "干燥箱", "location": "Isolator 4", "model": "Vacucentre VC50", "ne": "N/E", "cost": 36000},
-    {"id": "eq48", "group": "Isolators", "title": "FTIR", "titleZh": "FTIR", "location": "Isolator 2", "model": "NICOLET APEX KBR WITH PURGE KIT", "ne": "E", "cost": 28000},
-    {"id": "eq53", "group": "CRD", "title": "Laboratory Fridge", "titleZh": "实验室冰箱", "location": "Room 4", "model": "", "ne": "N", "cost": 750},
-    {"id": "eq54", "group": "CRD", "title": "Laboratory Freezer", "titleZh": "实验室冰柜", "location": "Room 4", "model": "", "ne": "N", "cost": 750},
-    {"id": "eq55", "group": "CRD", "title": "Reactor Ready Twin reactor", "titleZh": "Reactor Ready 双反应釜", "location": "FH1", "model": "", "ne": "N", "cost": 20000},
-    {"id": "eq56", "group": "CRD", "title": "Mettler Toledo SP-50 Dosing units", "titleZh": "梅特勒 SP-50 加料单元", "location": "FH1", "model": "SP-50", "ne": "N", "cost": 1600},
-    {"id": "eq57", "group": "CRD", "title": "RX10 Controller", "titleZh": "RX10 控制器", "location": "FH1", "model": "", "ne": "N", "cost": 2400},
-    {"id": "eq58", "group": "CRD", "title": "Heidolph Motors", "titleZh": "Heidolph 电机", "location": "FH1", "model": "", "ne": "N", "cost": 1600},
-    {"id": "eq59", "group": "CRD", "title": "Reactor Ready Stand", "titleZh": "Reactor Ready 支架", "location": "FH1", "model": "", "ne": "N", "cost": 1000},
-    {"id": "eq60", "group": "CRD", "title": "Vacuum Pump", "titleZh": "真空泵", "location": "FH1", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000},
-    {"id": "eq61", "group": "CRD", "title": "Recirculating Chiller", "titleZh": "循环冷水机", "location": "FH1", "model": "Ministat 240", "ne": "N", "cost": 23000},
-    {"id": "eq62", "group": "CRD", "title": "Analytical Balance", "titleZh": "分析天平", "location": "Either/or", "model": "XP205", "ne": "N", "cost": 20000},
-    {"id": "eq63", "group": "CRD", "title": "Large Scale Balance", "titleZh": "大称量天平", "location": "Either/or", "model": "", "ne": "N", "cost": 1000},
-    {"id": "eq65", "group": "CRD", "title": "Easymax Reactor System", "titleZh": "EasyMax 反应系统", "location": "FH2", "model": "Easymax 102", "ne": "N", "cost": 160000},
-    {"id": "eq67", "group": "CRD", "title": "Chiller unit", "titleZh": "冷水机", "location": "FH2", "model": "FL1703", "ne": "N", "cost": 24000},
-    {"id": "eq70", "group": "CRD", "title": "Mettler Tolesdo SP-50 Dosing units", "titleZh": "梅特勒 SP-50 加料单元", "location": "FH3", "model": "SP-50", "ne": "N", "cost": 80000},
-    {"id": "eq71", "group": "CRD", "title": "Chiller unit", "titleZh": "冷水机", "location": "FH3", "model": "FL1703", "ne": "N", "cost": 12000},
-    {"id": "eq72", "group": "CRD", "title": "Stem blocks", "titleZh": "Stem 加热模块", "location": "FH3", "model": "", "ne": "N", "cost": 2000},
-    {"id": "eq73", "group": "CRD", "title": "Stirrer hotplate", "titleZh": "搅拌加热板", "location": "FH3", "model": "", "ne": "E", "cost": 1200},
-    {"id": "eq76", "group": "CRD", "title": "Biotage", "titleZh": "Biotage", "location": "FH4 - Flexible", "model": "F150  or F75? and UV monitor", "ne": "N", "cost": 12000},
-    {"id": "eq77", "group": "CRD", "title": "Rotary Evaporator", "titleZh": "旋转蒸发仪", "location": "FH4 - Flexible", "model": "HEI-VAP Expert", "ne": "N", "cost": 6000},
-    {"id": "eq78", "group": "CRD", "title": "Vacuum Pump", "titleZh": "真空泵", "location": "FH4 - Flexible", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000},
-    {"id": "eq82", "group": "CRD", "title": "Overhead stirrer", "titleZh": "顶置搅拌器", "location": "FH4 - Flexible", "model": "", "ne": "N", "cost": 1000},
-    {"id": "eq84", "group": "CRD", "title": "Software", "titleZh": "软件", "location": "Software", "model": "", "ne": "N", "cost": 200000},
-    {"id": "eq88", "group": "CRD", "title": "Dishwasher/glasswash", "titleZh": "器皿清洗机", "location": "Miscellaneous", "model": "Undercounter Laboratory Glassware Washer PG8583CD", "ne": "N", "cost": 10000},
+    {"id": "eq3", "group": "ARD/QC", "title": "HPLC System", "titleZh": "HPLC 系统", "location": "Room 2", "mfr": "Aglient Technologies", "ne": "N", "cost": 300000},
+    {"id": "eq9", "group": "ARD/QC", "title": "HPLC/Mass Spectrometer System", "titleZh": "HPLC/质谱系统", "location": "Bench top", "mfr": "Agilent Technologies", "ne": "N", "cost": 200000},
+    {"id": "eq16", "group": "ARD/QC", "title": "GCMS", "titleZh": "GCMS", "location": "or GCMS", "mfr": "", "ne": "N", "cost": 120000},
+    {"id": "eq17", "group": "ARD/QC", "title": "nitrogen gas generator", "titleZh": "氮气发生器", "location": "or GCMS", "mfr": "", "ne": "N", "cost": 8000},
+    {"id": "eq18", "group": "ARD/QC", "title": "hydrogen gas generator", "titleZh": "氢气发生器", "location": "or GCMS", "mfr": "", "ne": "N", "cost": 8000},
+    {"id": "eq19", "group": "ARD/QC", "title": "Electronic Pipette", "titleZh": "电动移液器", "location": "Benchtop", "mfr": "Handystep", "ne": "N", "cost": 1600},
+    {"id": "eq20", "group": "ARD/QC", "title": "Milli-Q", "titleZh": "Milli-Q", "location": "Undersink", "mfr": "Millipore", "ne": "N", "cost": 20000},
+    {"id": "eq21", "group": "ARD/QC", "title": "Prep HPLC", "titleZh": "制备 HPLC", "location": "Large Fumehood", "mfr": "Hanbon", "ne": "N", "cost": 50000},
+    {"id": "eq23", "group": "ARD/QC", "title": "pH", "titleZh": "pH 计", "location": "Fumhood", "mfr": "Mettler Toledo", "ne": "N", "cost": 20000},
+    {"id": "eq25", "group": "ARD/QC", "title": "SFC", "titleZh": "SFC", "location": "Bench top", "mfr": "Waters", "ne": "E", "cost": 150000},
+    {"id": "eq27", "group": "ARD/QC", "title": "GC", "titleZh": "GC", "location": "Bench top (if sapce is limited, remove another FH?)", "mfr": "Aglient", "ne": "E", "cost": 80000},
+    {"id": "eq29", "group": "ARD/QC", "title": "Mass Spec", "titleZh": "质谱", "location": "Bench top", "mfr": "Aglient", "ne": "N", "cost": 140000},
+    {"id": "eq30", "group": "ARD/QC", "title": "KF Coulimetric", "titleZh": "库仑法 KF", "location": "Fumehood", "mfr": "Metrohm", "ne": "N", "cost": 45000},
+    {"id": "eq36", "group": "Isolators", "title": "Huber TC45 with immersion cooler", "titleZh": "Huber TC45 浸入式冷却器", "location": "Under isolator 2", "mfr": "Huber", "ne": "N", "cost": 4345},
+    {"id": "eq37", "group": "Isolators", "title": "Karl Fisher Titrator", "titleZh": "卡尔费休滴定仪", "location": "Isolator 1", "mfr": "Mettler Toledo", "ne": "N", "cost": 30000},
+    {"id": "eq38", "group": "Isolators", "title": "Benchtop Powder X-ray Diffractor", "titleZh": "台式粉末 X 射线衍射仪", "location": "Benchtop", "mfr": "D2", "ne": "E", "cost": 200000},
+    {"id": "eq39", "group": "Isolators", "title": "Particle Size", "titleZh": "粒度仪", "location": "Isolator 5", "mfr": "Malvern", "ne": "N", "cost": 160000},
+    {"id": "eq40", "group": "Isolators", "title": "Lyophiliser", "titleZh": "冻干机", "location": "Benchtop", "mfr": "Tofflon", "ne": "N", "cost": 100000},
+    {"id": "eq41", "group": "Isolators", "title": "Analytical Balance", "titleZh": "分析天平", "location": "Isolator 1", "mfr": "Mettler Toledo", "ne": "N", "cost": 20000},
+    {"id": "eq42", "group": "Isolators", "title": "Microbalance", "titleZh": "微量天平", "location": "isolator 1", "mfr": "", "ne": "N", "cost": 25000},
+    {"id": "eq43", "group": "Isolators", "title": "Easymax Reactor System", "titleZh": "EasyMax 反应系统", "location": "isolator 3", "mfr": "Mettler Toledo", "ne": "N", "cost": 80000},
+    {"id": "eq45", "group": "Isolators", "title": "Chiller unit", "titleZh": "冷水机", "location": "under isolator 3", "mfr": "Julabo", "ne": "E", "cost": 12000},
+    {"id": "eq47", "group": "Isolators", "title": "Drying Oven", "titleZh": "干燥箱", "location": "Isolator 4", "mfr": "Salvis", "ne": "N/E", "cost": 36000},
+    {"id": "eq48", "group": "Isolators", "title": "FTIR", "titleZh": "FTIR", "location": "Isolator 2", "mfr": "Thermo", "ne": "E", "cost": 28000},
+    {"id": "eq53", "group": "CRD", "title": "Laboratory Fridge", "titleZh": "实验室冰箱", "location": "Room 4", "mfr": "Lec", "ne": "N", "cost": 750},
+    {"id": "eq54", "group": "CRD", "title": "Laboratory Freezer", "titleZh": "实验室冰柜", "location": "Room 4", "mfr": "Lec", "ne": "N", "cost": 750},
+    {"id": "eq55", "group": "CRD", "title": "Reactor Ready Twin reactor", "titleZh": "Reactor Ready 双反应釜", "location": "FH1", "mfr": "Reactor Ready vessels", "ne": "N", "cost": 20000},
+    {"id": "eq56", "group": "CRD", "title": "Mettler Toledo SP-50 Dosing units", "titleZh": "梅特勒 SP-50 加料单元", "location": "FH1", "mfr": "Mettler Toledo SP-50 Dosing units", "ne": "N", "cost": 1600},
+    {"id": "eq57", "group": "CRD", "title": "RX10 Controller", "titleZh": "RX10 控制器", "location": "FH1", "mfr": "RX10 Controller", "ne": "N", "cost": 2400},
+    {"id": "eq58", "group": "CRD", "title": "Heidolph Motors", "titleZh": "Heidolph 电机", "location": "FH1", "mfr": "Heidolph Motors", "ne": "N", "cost": 1600},
+    {"id": "eq59", "group": "CRD", "title": "Reactor Ready Stand", "titleZh": "Reactor Ready 支架", "location": "FH1", "mfr": "Reactor Ready Stand", "ne": "N", "cost": 1000},
+    {"id": "eq60", "group": "CRD", "title": "Vacuum Pump", "titleZh": "真空泵", "location": "FH1", "mfr": "Vacuubrand", "ne": "N", "cost": 5000},
+    {"id": "eq61", "group": "CRD", "title": "Recirculating Chiller", "titleZh": "循环冷水机", "location": "FH1", "mfr": "Huber", "ne": "N", "cost": 23000},
+    {"id": "eq62", "group": "CRD", "title": "Analytical Balance", "titleZh": "分析天平", "location": "Either/or", "mfr": "Mettler Toledo", "ne": "N", "cost": 20000},
+    {"id": "eq63", "group": "CRD", "title": "Large Scale Balance", "titleZh": "大称量天平", "location": "Either/or", "mfr": "Sartorius", "ne": "N", "cost": 1000},
+    {"id": "eq65", "group": "CRD", "title": "Easymax Reactor System", "titleZh": "EasyMax 反应系统", "location": "FH2", "mfr": "Mettler Toledo", "ne": "N", "cost": 160000},
+    {"id": "eq67", "group": "CRD", "title": "Chiller unit", "titleZh": "冷水机", "location": "FH2", "mfr": "Julabo", "ne": "N", "cost": 24000},
+    {"id": "eq70", "group": "CRD", "title": "Mettler Tolesdo SP-50 Dosing units", "titleZh": "梅特勒 SP-50 加料单元", "location": "FH3", "mfr": "Mettler Tolesdo SP-50 Dosing units", "ne": "N", "cost": 80000},
+    {"id": "eq71", "group": "CRD", "title": "Chiller unit", "titleZh": "冷水机", "location": "FH3", "mfr": "Julabo", "ne": "N", "cost": 12000},
+    {"id": "eq72", "group": "CRD", "title": "Stem blocks", "titleZh": "Stem 加热模块", "location": "FH3", "mfr": "Electrothermal", "ne": "N", "cost": 2000},
+    {"id": "eq73", "group": "CRD", "title": "Stirrer hotplate", "titleZh": "搅拌加热板", "location": "FH3", "mfr": "IKA", "ne": "E", "cost": 1200},
+    {"id": "eq76", "group": "CRD", "title": "Biotage", "titleZh": "Biotage", "location": "FH4 - Flexible", "mfr": "Biotage", "ne": "N", "cost": 12000},
+    {"id": "eq77", "group": "CRD", "title": "Rotary Evaporator", "titleZh": "旋转蒸发仪", "location": "FH4 - Flexible", "mfr": "Heidolph", "ne": "N", "cost": 6000},
+    {"id": "eq78", "group": "CRD", "title": "Vacuum Pump", "titleZh": "真空泵", "location": "FH4 - Flexible", "mfr": "Vacuubrand", "ne": "N", "cost": 5000},
+    {"id": "eq82", "group": "CRD", "title": "Overhead stirrer", "titleZh": "顶置搅拌器", "location": "FH4 - Flexible", "mfr": "", "ne": "N", "cost": 1000},
+    {"id": "eq84", "group": "CRD", "title": "Software", "titleZh": "软件", "location": "Software", "mfr": "", "ne": "N", "cost": 200000},
+    {"id": "eq88", "group": "CRD", "title": "Dishwasher/glasswash", "titleZh": "器皿清洗机", "location": "Miscellaneous", "mfr": "Miele", "ne": "N", "cost": 10000},
 ]
 assert sum(i["cost"] for i in EQUIP_ITEMS if i["ne"] != "E") == EQUIP_LIST_PURCHASE
 assert sum(i["cost"] for i in EQUIP_ITEMS) == EQUIP_LIST_TOTAL
@@ -663,7 +663,7 @@ if(!last||last.group!==it.group)groups.push({group:it.group,items:[it]});
 else last.items.push(it);
 });
 let html=`<table class="equip-table"><thead><tr>
-<th>${t("hipoEqColTitle")}</th><th>${t("hipoEqColLoc")}</th><th>${t("hipoEqColModel")}</th>
+<th>${t("hipoEqColTitle")}</th><th>${t("hipoEqColLoc")}</th><th>${t("hipoEqColMfr")}</th>
 <th>${t("hipoEqColNE")}</th><th class="cost">${t("hipoEqColCost")}</th>
 <th class="chk">${t("hipoEqColMust")}</th></tr></thead><tbody>`;
 groups.forEach(g=>{
@@ -671,7 +671,7 @@ html+=`<tr class="grp"><td colspan="6">${equipGroupLabel(g.group)}</td></tr>`;
 g.items.forEach(it=>{
 const checked=equipMust(it.id)?" checked":"";
 html+=`<tr data-id="${it.id}">
-<td>${equipTitle(it)}</td><td>${it.location||"—"}</td><td>${it.model||"—"}</td>
+<td>${equipTitle(it)}</td><td>${it.location||"—"}</td><td>${it.mfr||"—"}</td>
 <td class="${equipNeClass(it.ne)}">${equipNeLabel(it.ne)}</td>
 <td class="cost">${fm(it.cost)}</td>
 <td class="chk"><input type="checkbox" data-equip="${it.id}"${checked}></td>
