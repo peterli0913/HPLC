@@ -83,7 +83,7 @@ from hipo_lab_cost import (
 )
 
 ROOT = Path(__file__).resolve().parent
-OUT = Path("/workspace/汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-08-20.html")
+OUT = Path("/workspace/汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-08-24.html")
 
 
 def _load_module(name: str, path: Path):
@@ -242,7 +242,7 @@ HTML = r'''<!DOCTYPE html>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Asymchem UK — PDF Portfolio Briefing</title>
-<!-- build: portfolio-2026-08-20 rev 2026-08-20-hipo-lab-v1 -->
+<!-- build: portfolio-2026-08-24 rev 2026-08-24-hipo-equip -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root{--navy:#0f2b46;--teal:#009688;--accent:#c9a227;--ext:#1a4a6e;--hplc:#5b6eae;--c1:#8b6914;--hipo:#1f7a6f;--bg:#f4f6f8;--card:#fff;--text:#2c3e50;--muted:#5a6a7a;--warn:#b43a2a}
@@ -338,6 +338,7 @@ const GANTT_C1 = ''' + json.dumps(GANTT_C1_SHIFTED) + r''';
 const HIPO_COST_DATA = ''' + hipo_cost_data_json() + r''';
 const GANTT_HIPO = ''' + json.dumps(GANTT_HIPO_SHIFTED) + r''';
 const EQUIP_ITEMS = ''' + json.dumps(HIPO_EQUIP_ITEMS, ensure_ascii=False) + r''';
+const HIPO_OTHER = ''' + str(HIPO_TOTAL - HIPO_CLIENT_EQUIP) + r''';
 ''' + EXT_COST_RENDER_JS + HPLC_COST_RENDER_JS + C1_COST_RENDER_JS + HIPO_COST_RENDER_JS + HIPO_EQUIP_JS + r'''
 let lang="zh", idx=0, chartsBuilt = {};
 
@@ -345,7 +346,7 @@ const I18N={
 zh:{
 footer:"凯莱英 UK · Sandwich PDF 资本项目",
 nav:"← → 翻页", tag:"内部汇报 · 整体汇报",
-p1t:"凯莱英 UK · Sandwich PDF", p1s:"资本项目汇报", p1m:"B902 东侧扩建 + 厂房内 HPLC/冻干改造 + C1 模块 OEB5 升级 + OEB5 高活实验室 · 2026年8月",
+p1t:"凯莱英 UK · Sandwich PDF", p1s:"资本项目汇报", p1m:"B902 东侧扩建 + 厂房内 HPLC/冻干改造 + C1 模块 OEB5 升级 + OEB5 高活实验室 · 2026年8月24日",
 p2t:"项目概览", p2s:"四条独立工作流 · 可行性 / 概念 / 内部估算量级",
 p2th1:"子项目", p2th2:"范围", p2th3:"投资（估算量级）", p2th4:"关键节点",
 p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干燥", p2r1o:"£78.1M", p2r1d:"2030-05 竣工（保持）",
@@ -476,10 +477,10 @@ hipoS4c:"业主（凯莱英）供货并安装设备待采购 £1.96M",
 hipoS4d:"待采购分项：ARD/QC £912,600、隔离器内仪器 £455,345、CRD £589,100",
 hipoScopeNote:"风险与前提：正在就厂房改造事宜征求 DPML 同意 —— 改造完成后实验室将无法按当前运行状态交还 DPML，该沟通进展由 Clare 跟进。目前 DPML（Paul Bax，2026-08-21）原则上同意 PDF 与 DPH（含 G.128）拟议改造，最终以设计审查为准；可启动两项 Licence for Alteration，范围与图纸随设计深化补充。",
 hipoEqt:"业主（凯莱英）供货并安装设备", hipoEqs:"Equipment (supplied and installed by the Client)",
-hipoEqAll:"全部", hipoEqNew:"New", hipoEqExist:"Existing",
-hipoEqColTitle:"设备", hipoEqColLoc:"Location", hipoEqColModel:"Model", hipoEqColNE:"New / Existing",
-hipoEqColCost:"Cost", hipoEqColMust:"Must have",
-hipoEqTotal:"Total cost（New 且 Must have）",
+hipoEqAll:"全部", hipoEqNew:"新购", hipoEqExist:"既有", hipoEqNE:"新购/既有",
+hipoEqColTitle:"设备", hipoEqColLoc:"位置", hipoEqColModel:"型号", hipoEqColNE:"新购 / 既有",
+hipoEqColCost:"费用", hipoEqColMust:"必须",
+hipoEqTotal:"合计（新购且必须）",
 hipo5t:"高活实验室 · 投资总览", hipo5s:"G-128 Concept Cost Plan · 报告日期 2026-08-06 · GIFA 215 m²",
 hipo6t:"高活实验室 · 投资结构", hipo6s:"项目投资构成与建筑工程费分项",
 hipo6kTotal:"项目投资（含通胀）", hipo6kBuild:"建筑工程费合计", hipo6kEquip:"业主（凯莱英）供货设备",
@@ -506,7 +507,7 @@ pEnd:"谢谢", pEnds:"",
 en:{
 footer:"Asymchem UK · Sandwich PDF Portfolio",
 nav:"← → navigate", tag:"Internal · Portfolio briefing",
-p1t:"Asymchem UK · Sandwich PDF", p1s:"Capital Projects Briefing", p1m:"B902 extension + HPLC/lyoph retrofit + C1 OEB5 upgrade + OEB5 HIPO lab · August 2026",
+p1t:"Asymchem UK · Sandwich PDF", p1s:"Capital Projects Briefing", p1m:"B902 extension + HPLC/lyoph retrofit + C1 OEB5 upgrade + OEB5 HIPO lab · 24 August 2026",
 p2t:"Project overview", p2s:"Four workstreams · feasibility / concept / internal estimate",
 p2th1:"Workstream", p2th2:"Scope", p2th3:"Investment (estimate level)", p2th4:"Milestone",
 p2r1n:"B902 east extension", p2r1s:"New 4-floor + mezzanine", p2r1o:"£78.1M", p2r1d:"Complete May 2030 (held)",
@@ -637,7 +638,7 @@ hipoS4c:"Client (Asymchem) supplied and installed equipment — to purchase £1.
 hipoS4d:"To purchase by group: ARD/QC £912,600; isolator instruments £455,345; CRD £589,100",
 hipoScopeNote:"Risk and prerequisite: agreement is being sought from DPML for the facility modifications — once complete, the lab could not be returned to DPML in its current operational state; Clare is following up on the status of that conversation. DPML (Paul Bax, 21 Aug 2026) has now given in-principle approval of the proposed changes for both PDF and DPH (including G.128), subject to a final design review. Licences for Alteration can be initiated for both projects; scope and plans to follow as the designs develop.",
 hipoEqt:"Client (Asymchem) supplied and installed equipment", hipoEqs:"Equipment (supplied and installed by the Client)",
-hipoEqAll:"All", hipoEqNew:"New", hipoEqExist:"Existing",
+hipoEqAll:"All", hipoEqNew:"New", hipoEqExist:"Existing", hipoEqNE:"N/E",
 hipoEqColTitle:"Equipment", hipoEqColLoc:"Location", hipoEqColModel:"Model", hipoEqColNE:"New / Existing",
 hipoEqColCost:"Cost", hipoEqColMust:"Must have",
 hipoEqTotal:"Total cost (New and Must have)",
@@ -719,10 +720,10 @@ return `
 <tr><td><strong>${t("p2r1n")}</strong></td><td>${t("p2r1s")}</td><td>${t("p2r1o")}</td><td>${t("p2r1d")}</td></tr>
 <tr><td><strong>${t("p2r2n")}</strong></td><td>${t("p2r2s")}</td><td>${t("p2r2o")}</td><td>${t("p2r2d")}</td></tr>
 <tr><td><strong>${t("p2r3n")}</strong></td><td>${t("p2r3s")}</td><td>${t("p2r3o")}</td><td>${t("p2r3d")}</td></tr>
-<tr><td><strong>${t("p2r4n")}</strong></td><td>${t("p2r4s")}</td><td>${t("p2r4o")}</td><td>${t("p2r4d")}</td></tr>
+<tr><td><strong>${t("p2r4n")}</strong></td><td>${t("p2r4s")}</td><td id="hipoLiveP2Invest">${t("p2r4o")}</td><td>${t("p2r4d")}</td></tr>
 </tbody></table>
 <div class="callout">${t("p2link")}</div>
-<div class="note">${t("p2sum")}</div></div></section>
+<div class="note" id="hipoLiveP2sum">${t("p2sum")}</div></div></section>
 
 <section class="slide section-slide"><p><span class="tag ext">${t("extTag")}</span></p>
 <h1>${t("extSec")}</h1><p>${t("extSecs")}</p></section>
@@ -873,9 +874,9 @@ ${ganttHTML(GANTT_C1,new Date("2026-08-01"),new Date("2027-10-31"),C1_KEYS,["202
 
 <section class="slide" data-charts="hipo"><h1>${t("hipo6t")}</h1><h2>${t("hipo6s")}</h2>
 <div class="invest-kpi-row cols5">
-<div class="invest-kpi highlight"><div class="ik-val">${fm(''' + str(HIPO_TOTAL) + r''')}</div><div class="ik-lbl">${t("hipo6kTotal")}</div></div>
+<div class="invest-kpi highlight"><div class="ik-val" id="hipoLiveKpiProject">${fm(''' + str(HIPO_TOTAL) + r''')}</div><div class="ik-lbl">${t("hipo6kTotal")}</div></div>
 <div class="invest-kpi"><div class="ik-val">${fm(''' + str(HIPO_BUILDING_WORKS) + r''')}</div><div class="ik-lbl">${t("hipo6kBuild")}</div></div>
-<div class="invest-kpi"><div class="ik-val">${fm(''' + str(HIPO_CLIENT_EQUIP) + r''')}</div><div class="ik-lbl">${t("hipo6kEquip")}</div></div>
+<div class="invest-kpi"><div class="ik-val" id="hipoLiveKpiEquip">${fm(''' + str(HIPO_CLIENT_EQUIP) + r''')}</div><div class="ik-lbl">${t("hipo6kEquip")}</div></div>
 <div class="invest-kpi"><div class="ik-val">${fm(''' + str(HIPO_RISK_ALLOWANCE) + r''')}</div><div class="ik-lbl">${t("hipo6kRisk")}</div></div>
 <div class="invest-kpi"><div class="ik-val">${fm(''' + str(ACCURACY_LOWER) + r''')} – ${fm(''' + str(ACCURACY_UPPER) + r''')}</div><div class="ik-lbl">${t("hipo6kRange")}</div></div></div>
 <div class="grid-2">

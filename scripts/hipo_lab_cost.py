@@ -90,55 +90,56 @@ assert EQUIP_LIST_PURCHASE + EQUIP_LIST_EXISTING == EQUIP_LIST_TOTAL
 
 # Line items from Equipment List Costs for scoping 5 Aug.xlsx (Total Cost > 0).
 # Title falls back to Comments / Manufacturer when the Title cell is blank.
-# ne: N = New, E = Existing, N/E = mixed, blank = not marked.
+# Blank New/Existing cells are treated as New so the New ∩ Must-have total stays £1,957,045.
+# ne: N = New, E = Existing, N/E = mixed.
 EQUIP_ITEMS = [
-    {"id": "eq3", "group": "ARD/QC", "title": "HPLC System", "location": "Room 2", "model": "1290 Infinity 3", "ne": "N", "cost": 300000},
-    {"id": "eq9", "group": "ARD/QC", "title": "HPLC/Mass Spectrometer System", "location": "Bench top", "model": "G7120A Highspeed Pump,", "ne": "N", "cost": 200000},
-    {"id": "eq16", "group": "ARD/QC", "title": "GCMS", "location": "or GCMS", "model": "", "ne": "N", "cost": 120000},
-    {"id": "eq17", "group": "ARD/QC", "title": "nitrogen gas generator", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000},
-    {"id": "eq18", "group": "ARD/QC", "title": "hydrogen gas generator", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000},
-    {"id": "eq19", "group": "ARD/QC", "title": "Electronic Pipette", "location": "Benchtop", "model": "", "ne": "N", "cost": 1600},
-    {"id": "eq20", "group": "ARD/QC", "title": "MILLIQ", "location": "Undersink", "model": "IQ 7000 ?", "ne": "N", "cost": 20000},
-    {"id": "eq21", "group": "ARD/QC", "title": "Prep HPLC", "location": "Large Fumehood", "model": "Newstyle NS 4330", "ne": "N", "cost": 50000},
-    {"id": "eq23", "group": "ARD/QC", "title": "pH", "location": "Fumhood", "model": "SevenExcellence", "ne": "N", "cost": 20000},
-    {"id": "eq25", "group": "ARD/QC", "title": "SFC", "location": "Bench top", "model": "Acquity UPC2", "ne": "E", "cost": 150000},
-    {"id": "eq27", "group": "ARD/QC", "title": "GC", "location": "Bench top (if sapce is limited, remove another FH?)", "model": "8890B GC", "ne": "E", "cost": 80000},
-    {"id": "eq29", "group": "ARD/QC", "title": "Mass Spec", "location": "Bench top", "model": "1290 Infinty 2", "ne": "N", "cost": 140000},
-    {"id": "eq30", "group": "ARD/QC", "title": "KF Coulimetric", "location": "Fumehood", "model": "852 Titrando", "ne": "N", "cost": 45000},
-    {"id": "eq36", "group": "Isolators", "title": "Huber TC45 with immersion cooler", "location": "Under isolator 2", "model": "TC45", "ne": "", "cost": 4345},
-    {"id": "eq37", "group": "Isolators", "title": "Karl Fisher Titrator", "location": "Isolator 1", "model": "T50", "ne": "N", "cost": 30000},
-    {"id": "eq38", "group": "Isolators", "title": "Benchtop Powder X-ray Diffractor", "location": "Benchtop", "model": "Bruker", "ne": "E", "cost": 200000},
-    {"id": "eq39", "group": "Isolators", "title": "Particle Size", "location": "Isolator 5", "model": "Mastersizer", "ne": "N", "cost": 160000},
-    {"id": "eq40", "group": "Isolators", "title": "Lyophiliser", "location": "Benchtop", "model": "tbc", "ne": "N", "cost": 100000},
-    {"id": "eq41", "group": "Isolators", "title": "Analytical Balance", "location": "Isolator 1", "model": "XP205", "ne": "", "cost": 20000},
-    {"id": "eq42", "group": "Isolators", "title": "Microbalance", "location": "isolator 1", "model": "", "ne": "N", "cost": 25000},
-    {"id": "eq43", "group": "Isolators", "title": "Easymax Reactor System", "location": "isolator 3", "model": "Easymax 102", "ne": "N", "cost": 80000},
-    {"id": "eq45", "group": "Isolators", "title": "Chiller unit", "location": "under isolator 3", "model": "FL1703", "ne": "E", "cost": 12000},
-    {"id": "eq47", "group": "Isolators", "title": "Drying Oven", "location": "Isolator 4", "model": "Vacucentre VC50", "ne": "N/E", "cost": 36000},
-    {"id": "eq48", "group": "Isolators", "title": "FTIR", "location": "Isolator 2", "model": "NICOLET APEX KBR WITH PURGE KIT", "ne": "E", "cost": 28000},
-    {"id": "eq53", "group": "CRD", "title": "Laboratory Fridge", "location": "Room 4", "model": "", "ne": "", "cost": 750},
-    {"id": "eq54", "group": "CRD", "title": "Laboratory Freezer", "location": "Room 4", "model": "", "ne": "", "cost": 750},
-    {"id": "eq55", "group": "CRD", "title": "Reactor Ready Twin reactor", "location": "FH1", "model": "", "ne": "N", "cost": 20000},
-    {"id": "eq56", "group": "CRD", "title": "Mettler Toledo SP-50 Dosing units", "location": "FH1", "model": "SP-50", "ne": "N", "cost": 1600},
-    {"id": "eq57", "group": "CRD", "title": "RX10 Controller", "location": "FH1", "model": "", "ne": "N", "cost": 2400},
-    {"id": "eq58", "group": "CRD", "title": "Heidolph Motors", "location": "FH1", "model": "", "ne": "N", "cost": 1600},
-    {"id": "eq59", "group": "CRD", "title": "Reactor Ready Stand", "location": "FH1", "model": "", "ne": "N", "cost": 1000},
-    {"id": "eq60", "group": "CRD", "title": "Vacuum Pump", "location": "FH1", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000},
-    {"id": "eq61", "group": "CRD", "title": "Recirculating Chiller", "location": "FH1", "model": "Ministat 240", "ne": "N", "cost": 23000},
-    {"id": "eq62", "group": "CRD", "title": "Analytical Balance", "location": "Either/or", "model": "XP205", "ne": "N", "cost": 20000},
-    {"id": "eq63", "group": "CRD", "title": "Large Scale Balance", "location": "Either/or", "model": "", "ne": "N", "cost": 1000},
-    {"id": "eq65", "group": "CRD", "title": "Easymax Reactor System", "location": "FH2", "model": "Easymax 102", "ne": "N", "cost": 160000},
-    {"id": "eq67", "group": "CRD", "title": "Chiller unit", "location": "FH2", "model": "FL1703", "ne": "N", "cost": 24000},
-    {"id": "eq70", "group": "CRD", "title": "Mettler Tolesdo SP-50 Dosing units", "location": "FH3", "model": "SP-50", "ne": "N", "cost": 80000},
-    {"id": "eq71", "group": "CRD", "title": "Chiller unit", "location": "FH3", "model": "FL1703", "ne": "N", "cost": 12000},
-    {"id": "eq72", "group": "CRD", "title": "Stem blocks", "location": "FH3", "model": "", "ne": "N", "cost": 2000},
-    {"id": "eq73", "group": "CRD", "title": "Stirrer hotplate", "location": "FH3", "model": "", "ne": "E", "cost": 1200},
-    {"id": "eq76", "group": "CRD", "title": "Biotage", "location": "FH4 - Flexible", "model": "F150  or F75? and UV monitor", "ne": "N", "cost": 12000},
-    {"id": "eq77", "group": "CRD", "title": "Rotary Evaporator", "location": "FH4 - Flexible", "model": "HEI-VAP Expert", "ne": "N", "cost": 6000},
-    {"id": "eq78", "group": "CRD", "title": "Vacuum Pump", "location": "FH4 - Flexible", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000},
-    {"id": "eq82", "group": "CRD", "title": "Overhead stirrer", "location": "FH4 - Flexible", "model": "", "ne": "N", "cost": 1000},
-    {"id": "eq84", "group": "CRD", "title": "TBD", "location": "Software", "model": "", "ne": "", "cost": 200000},
-    {"id": "eq88", "group": "CRD", "title": "Dishwasher/glasswash", "location": "Miscellaneous", "model": "Undercounter Laboratory Glassware Washer PG8583CD", "ne": "N", "cost": 10000},
+    {"id": "eq3", "group": "ARD/QC", "title": "HPLC System", "titleZh": "HPLC 系统", "location": "Room 2", "model": "1290 Infinity 3", "ne": "N", "cost": 300000},
+    {"id": "eq9", "group": "ARD/QC", "title": "HPLC/Mass Spectrometer System", "titleZh": "HPLC/质谱系统", "location": "Bench top", "model": "G7120A Highspeed Pump,", "ne": "N", "cost": 200000},
+    {"id": "eq16", "group": "ARD/QC", "title": "GCMS", "titleZh": "GCMS", "location": "or GCMS", "model": "", "ne": "N", "cost": 120000},
+    {"id": "eq17", "group": "ARD/QC", "title": "nitrogen gas generator", "titleZh": "氮气发生器", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000},
+    {"id": "eq18", "group": "ARD/QC", "title": "hydrogen gas generator", "titleZh": "氢气发生器", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000},
+    {"id": "eq19", "group": "ARD/QC", "title": "Electronic Pipette", "titleZh": "电动移液器", "location": "Benchtop", "model": "", "ne": "N", "cost": 1600},
+    {"id": "eq20", "group": "ARD/QC", "title": "Milli-Q", "titleZh": "Milli-Q", "location": "Undersink", "model": "IQ 7000 ?", "ne": "N", "cost": 20000},
+    {"id": "eq21", "group": "ARD/QC", "title": "Prep HPLC", "titleZh": "制备 HPLC", "location": "Large Fumehood", "model": "Newstyle NS 4330", "ne": "N", "cost": 50000},
+    {"id": "eq23", "group": "ARD/QC", "title": "pH", "titleZh": "pH 计", "location": "Fumhood", "model": "SevenExcellence", "ne": "N", "cost": 20000},
+    {"id": "eq25", "group": "ARD/QC", "title": "SFC", "titleZh": "SFC", "location": "Bench top", "model": "Acquity UPC2", "ne": "E", "cost": 150000},
+    {"id": "eq27", "group": "ARD/QC", "title": "GC", "titleZh": "GC", "location": "Bench top (if sapce is limited, remove another FH?)", "model": "8890B GC", "ne": "E", "cost": 80000},
+    {"id": "eq29", "group": "ARD/QC", "title": "Mass Spec", "titleZh": "质谱", "location": "Bench top", "model": "1290 Infinty 2", "ne": "N", "cost": 140000},
+    {"id": "eq30", "group": "ARD/QC", "title": "KF Coulimetric", "titleZh": "库仑法 KF", "location": "Fumehood", "model": "852 Titrando", "ne": "N", "cost": 45000},
+    {"id": "eq36", "group": "Isolators", "title": "Huber TC45 with immersion cooler", "titleZh": "Huber TC45 浸入式冷却器", "location": "Under isolator 2", "model": "TC45", "ne": "N", "cost": 4345},
+    {"id": "eq37", "group": "Isolators", "title": "Karl Fisher Titrator", "titleZh": "卡尔费休滴定仪", "location": "Isolator 1", "model": "T50", "ne": "N", "cost": 30000},
+    {"id": "eq38", "group": "Isolators", "title": "Benchtop Powder X-ray Diffractor", "titleZh": "台式粉末 X 射线衍射仪", "location": "Benchtop", "model": "Bruker", "ne": "E", "cost": 200000},
+    {"id": "eq39", "group": "Isolators", "title": "Particle Size", "titleZh": "粒度仪", "location": "Isolator 5", "model": "Mastersizer", "ne": "N", "cost": 160000},
+    {"id": "eq40", "group": "Isolators", "title": "Lyophiliser", "titleZh": "冻干机", "location": "Benchtop", "model": "tbc", "ne": "N", "cost": 100000},
+    {"id": "eq41", "group": "Isolators", "title": "Analytical Balance", "titleZh": "分析天平", "location": "Isolator 1", "model": "XP205", "ne": "N", "cost": 20000},
+    {"id": "eq42", "group": "Isolators", "title": "Microbalance", "titleZh": "微量天平", "location": "isolator 1", "model": "", "ne": "N", "cost": 25000},
+    {"id": "eq43", "group": "Isolators", "title": "Easymax Reactor System", "titleZh": "EasyMax 反应系统", "location": "isolator 3", "model": "Easymax 102", "ne": "N", "cost": 80000},
+    {"id": "eq45", "group": "Isolators", "title": "Chiller unit", "titleZh": "冷水机", "location": "under isolator 3", "model": "FL1703", "ne": "E", "cost": 12000},
+    {"id": "eq47", "group": "Isolators", "title": "Drying Oven", "titleZh": "干燥箱", "location": "Isolator 4", "model": "Vacucentre VC50", "ne": "N/E", "cost": 36000},
+    {"id": "eq48", "group": "Isolators", "title": "FTIR", "titleZh": "FTIR", "location": "Isolator 2", "model": "NICOLET APEX KBR WITH PURGE KIT", "ne": "E", "cost": 28000},
+    {"id": "eq53", "group": "CRD", "title": "Laboratory Fridge", "titleZh": "实验室冰箱", "location": "Room 4", "model": "", "ne": "N", "cost": 750},
+    {"id": "eq54", "group": "CRD", "title": "Laboratory Freezer", "titleZh": "实验室冰柜", "location": "Room 4", "model": "", "ne": "N", "cost": 750},
+    {"id": "eq55", "group": "CRD", "title": "Reactor Ready Twin reactor", "titleZh": "Reactor Ready 双反应釜", "location": "FH1", "model": "", "ne": "N", "cost": 20000},
+    {"id": "eq56", "group": "CRD", "title": "Mettler Toledo SP-50 Dosing units", "titleZh": "梅特勒 SP-50 加料单元", "location": "FH1", "model": "SP-50", "ne": "N", "cost": 1600},
+    {"id": "eq57", "group": "CRD", "title": "RX10 Controller", "titleZh": "RX10 控制器", "location": "FH1", "model": "", "ne": "N", "cost": 2400},
+    {"id": "eq58", "group": "CRD", "title": "Heidolph Motors", "titleZh": "Heidolph 电机", "location": "FH1", "model": "", "ne": "N", "cost": 1600},
+    {"id": "eq59", "group": "CRD", "title": "Reactor Ready Stand", "titleZh": "Reactor Ready 支架", "location": "FH1", "model": "", "ne": "N", "cost": 1000},
+    {"id": "eq60", "group": "CRD", "title": "Vacuum Pump", "titleZh": "真空泵", "location": "FH1", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000},
+    {"id": "eq61", "group": "CRD", "title": "Recirculating Chiller", "titleZh": "循环冷水机", "location": "FH1", "model": "Ministat 240", "ne": "N", "cost": 23000},
+    {"id": "eq62", "group": "CRD", "title": "Analytical Balance", "titleZh": "分析天平", "location": "Either/or", "model": "XP205", "ne": "N", "cost": 20000},
+    {"id": "eq63", "group": "CRD", "title": "Large Scale Balance", "titleZh": "大称量天平", "location": "Either/or", "model": "", "ne": "N", "cost": 1000},
+    {"id": "eq65", "group": "CRD", "title": "Easymax Reactor System", "titleZh": "EasyMax 反应系统", "location": "FH2", "model": "Easymax 102", "ne": "N", "cost": 160000},
+    {"id": "eq67", "group": "CRD", "title": "Chiller unit", "titleZh": "冷水机", "location": "FH2", "model": "FL1703", "ne": "N", "cost": 24000},
+    {"id": "eq70", "group": "CRD", "title": "Mettler Tolesdo SP-50 Dosing units", "titleZh": "梅特勒 SP-50 加料单元", "location": "FH3", "model": "SP-50", "ne": "N", "cost": 80000},
+    {"id": "eq71", "group": "CRD", "title": "Chiller unit", "titleZh": "冷水机", "location": "FH3", "model": "FL1703", "ne": "N", "cost": 12000},
+    {"id": "eq72", "group": "CRD", "title": "Stem blocks", "titleZh": "Stem 加热模块", "location": "FH3", "model": "", "ne": "N", "cost": 2000},
+    {"id": "eq73", "group": "CRD", "title": "Stirrer hotplate", "titleZh": "搅拌加热板", "location": "FH3", "model": "", "ne": "E", "cost": 1200},
+    {"id": "eq76", "group": "CRD", "title": "Biotage", "titleZh": "Biotage", "location": "FH4 - Flexible", "model": "F150  or F75? and UV monitor", "ne": "N", "cost": 12000},
+    {"id": "eq77", "group": "CRD", "title": "Rotary Evaporator", "titleZh": "旋转蒸发仪", "location": "FH4 - Flexible", "model": "HEI-VAP Expert", "ne": "N", "cost": 6000},
+    {"id": "eq78", "group": "CRD", "title": "Vacuum Pump", "titleZh": "真空泵", "location": "FH4 - Flexible", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000},
+    {"id": "eq82", "group": "CRD", "title": "Overhead stirrer", "titleZh": "顶置搅拌器", "location": "FH4 - Flexible", "model": "", "ne": "N", "cost": 1000},
+    {"id": "eq84", "group": "CRD", "title": "Software", "titleZh": "软件", "location": "Software", "model": "", "ne": "N", "cost": 200000},
+    {"id": "eq88", "group": "CRD", "title": "Dishwasher/glasswash", "titleZh": "器皿清洗机", "location": "Miscellaneous", "model": "Undercounter Laboratory Glassware Washer PG8583CD", "ne": "N", "cost": 10000},
 ]
 assert sum(i["cost"] for i in EQUIP_ITEMS if i["ne"] != "E") == EQUIP_LIST_PURCHASE
 assert sum(i["cost"] for i in EQUIP_ITEMS) == EQUIP_LIST_TOTAL
@@ -504,13 +505,15 @@ def hipo_cost_data_json() -> str:
 
 HIPO_COST_RENDER_JS = r"""
 function hipoCostLabels(){return I18N[lang].hipoCost;}
-function hipoLeaf(id,amt,depth){
+function hipoLeaf(id,amt,depth,amtId){
 const L=hipoCostLabels();
 const pad=depth===3?" cost-leaf-l3":"";
-return `<div class="cost-leaf cost-leaf-sub${pad}"><span>${L[id]}</span><span>${fm(Number(amt)||0)}</span></div>`;
+const idAttr=amtId?` id="${amtId}"`:"";
+return `<div class="cost-leaf cost-leaf-sub${pad}"><span>${L[id]}</span><span${idAttr}>${fm(Number(amt)||0)}</span></div>`;
 }
-function hipoSectionHd(title,total){
-return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(Number(total)||0)}</span>`;
+function hipoSectionHd(title,total,amtId){
+const idAttr=amtId?` id="${amtId}"`:"";
+return `<span class="cost-section-title">${title}</span><span class="cost-section-amt"${idAttr}>${fm(Number(total)||0)}</span>`;
 }
 function hipoSubHd(title,total){
 return `<span class="cost-label">${title}</span><span class="cost-amt">${fm(Number(total)||0)}</span>`;
@@ -541,20 +544,22 @@ const buildBlock=`<details class="cost-section" open><summary class="cost-sectio
 <div class="cost-section-body">${buildBody}</div></details>`;
 const profBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secProf,D.profServices)}</summary>
 <div class="cost-section-body">${hipoLeaf("prof",ln.prof,3)}</div></details>`;
-const equipBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secEquip,D.clientEquip)}</summary>
-<div class="cost-section-body">${hipoLeaf("equip",ln.equip,3)}</div></details>`;
+const equipBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secEquip,D.clientEquip,"hipoLiveEquipSec")}</summary>
+<div class="cost-section-body">${hipoLeaf("equip",ln.equip,3,"hipoLiveEquipLeaf")}</div></details>`;
 const riskBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secRisk,D.riskAllowance)}</summary>
 <div class="cost-section-body">${hipoLeaf("risk",ln.risk,3)}</div></details>`;
 const infBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secInf,D.inflation)}</summary>
 <div class="cost-section-body">${hipoLeaf("inflation",ln.inflation,3)}</div></details>`;
-return `<div class="cost-total-bar"><span>${L.capex}</span><span>${fm(D.total)}</span></div>${buildBlock}${profBlock}${equipBlock}${riskBlock}${infBlock}`;
+return `<div class="cost-total-bar"><span>${L.capex}</span><span id="hipoLiveProjectBar">${fm(D.total)}</span></div>${buildBlock}${profBlock}${equipBlock}${riskBlock}${infBlock}`;
 }
+let _hipoBarChart=null;
 function buildHipoInvestmentCharts(){
-const zh=lang==="zh",D=HIPO_COST_DATA,Lc=I18N[lang].hipoChart||{};
+const D=HIPO_COST_DATA,Lc=I18N[lang].hipoChart||{};
 const el1=document.getElementById("cHipo1"),el2=document.getElementById("cHipo2");
 if(!el1||!el2)return;
+if(_hipoBarChart){_hipoBarChart.destroy();_hipoBarChart=null;}
 const S=D.chartStack;
-new Chart(el1,{type:"bar",data:{labels:[Lc.stackAxis],datasets:[
+_hipoBarChart=new Chart(el1,{type:"bar",data:{labels:[Lc.stackAxis],datasets:[
 {label:Lc.stackBuilding,data:[S.building],backgroundColor:"#0f2b46"},
 {label:Lc.stackProf,data:[S.prof],backgroundColor:"#2e6da4"},
 {label:Lc.stackEquip,data:[S.equip],backgroundColor:"#1f7a6f"},
@@ -567,6 +572,7 @@ const labels=ids.map(id=>(I18N[lang].hipoCost[id]||id));
 new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,
 backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#1f7a6f","#5b6eae","#c9a227","#9aa8b6"]}]},
 options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:7.5},boxWidth:9}}}}});
+syncHipoLiveTotals();
 }
 """
 
@@ -575,19 +581,46 @@ let EQUIP_MUST={};
 let EQUIP_FILTER="all";
 function equipIsNew(it){return it.ne!=="E";}
 function equipMust(id){return EQUIP_MUST[id]!==false;}
+function equipTitle(it){return lang==="zh"?(it.titleZh||it.title):it.title;}
+function equipGroupLabel(g){return lang==="zh"&&g==="Isolators"?"隔离器":g;}
 function equipNeLabel(ne){
 if(ne==="N")return t("hipoEqNew");
 if(ne==="E")return t("hipoEqExist");
-if(ne==="N/E")return "N/E";
-return "—";
+if(ne==="N/E")return t("hipoEqNE");
+return t("hipoEqNew");
 }
-function equipNeClass(ne){return ne==="E"?"ne-E":(ne==="N"||ne==="N/E"?"ne-N":"");}
+function equipNeClass(ne){return ne==="E"?"ne-E":"ne-N";}
 function equipNewMustTotal(){
 return EQUIP_ITEMS.reduce((s,it)=>s+(equipIsNew(it)&&equipMust(it.id)?it.cost:0),0);
 }
+function fmM(n){return "£"+(n/1e6).toFixed(2)+"M";}
+function hipoLiveProject(){return HIPO_OTHER+equipNewMustTotal();}
+function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+function syncHipoLiveTotals(){
+const equip=equipNewMustTotal();
+const project=HIPO_OTHER+equip;
+const inB=5.33+2.48+project/1e6;
+setTxt("equipTotalAmt",fm(equip));
+setTxt("hipoLiveEquipSec",fm(equip));
+setTxt("hipoLiveEquipLeaf",fm(equip));
+setTxt("hipoLiveProjectBar",fm(project));
+setTxt("hipoLiveKpiEquip",fm(equip));
+setTxt("hipoLiveKpiProject",fm(project));
+setTxt("hipoLiveP2Invest",fmM(project));
+const p2=document.getElementById("hipoLiveP2sum");
+if(p2){
+p2.textContent=lang==="zh"
+?`厂房内三条线合计（改造 £5.33M + C1 £2.48M + 高活实验室 ${fmM(project)}）约 ${"£"+inB.toFixed(2)+"M"}，不含 902 东侧扩建。各线口径不同：扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。`
+:`The three in-building lines total ~${"£"+inB.toFixed(2)+"M"} (retrofit £5.33M + C1 £2.48M + HIPO lab ${fmM(project)}), excluding the B902 east extension. Estimate bases differ: extension and retrofit are feasibility level, C1 is an internal estimate, the HIPO lab is a concept cost plan.`;
+}
+if(_hipoBarChart){
+_hipoBarChart.data.datasets[2].data[0]=equip;
+_hipoBarChart.options.scales.x.max=project*1.02;
+_hipoBarChart.update();
+}
+}
 function renderEquipPage(){
 const wrap=document.getElementById("equipTableWrap");
-const totalEl=document.getElementById("equipTotalAmt");
 if(!wrap)return;
 const groups=[];
 EQUIP_ITEMS.forEach(it=>{
@@ -602,11 +635,11 @@ let html=`<table class="equip-table"><thead><tr>
 <th>${t("hipoEqColNE")}</th><th class="cost">${t("hipoEqColCost")}</th>
 <th class="chk">${t("hipoEqColMust")}</th></tr></thead><tbody>`;
 groups.forEach(g=>{
-html+=`<tr class="grp"><td colspan="6">${g.group}</td></tr>`;
+html+=`<tr class="grp"><td colspan="6">${equipGroupLabel(g.group)}</td></tr>`;
 g.items.forEach(it=>{
 const checked=equipMust(it.id)?" checked":"";
 html+=`<tr data-id="${it.id}">
-<td>${it.title}</td><td>${it.location||"—"}</td><td>${it.model||"—"}</td>
+<td>${equipTitle(it)}</td><td>${it.location||"—"}</td><td>${it.model||"—"}</td>
 <td class="${equipNeClass(it.ne)}">${equipNeLabel(it.ne)}</td>
 <td class="cost">${fm(it.cost)}</td>
 <td class="chk"><input type="checkbox" data-equip="${it.id}"${checked}></td>
@@ -615,17 +648,16 @@ html+=`<tr data-id="${it.id}">
 });
 html+="</tbody></table>";
 wrap.innerHTML=html;
-if(totalEl)totalEl.textContent=fm(equipNewMustTotal());
 document.querySelectorAll(".equip-filters button").forEach(btn=>{
 btn.classList.toggle("active",btn.dataset.filter===EQUIP_FILTER);
 });
 wrap.querySelectorAll("input[data-equip]").forEach(box=>{
 box.addEventListener("change",()=>{
 EQUIP_MUST[box.dataset.equip]=box.checked;
-if(document.getElementById("equipTotalAmt"))
-document.getElementById("equipTotalAmt").textContent=fm(equipNewMustTotal());
+syncHipoLiveTotals();
 });
 });
+syncHipoLiveTotals();
 }
 function bindEquipPage(){
 document.querySelectorAll(".equip-filters button").forEach(btn=>{
