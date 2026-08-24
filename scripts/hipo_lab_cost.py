@@ -87,6 +87,62 @@ assert (
     == EQUIP_LIST_PURCHASE
 )
 assert EQUIP_LIST_PURCHASE + EQUIP_LIST_EXISTING == EQUIP_LIST_TOTAL
+
+# Line items from Equipment List Costs for scoping 5 Aug.xlsx (Total Cost > 0).
+# Title falls back to Comments / Manufacturer when the Title cell is blank.
+# ne: N = New, E = Existing, N/E = mixed, blank = not marked.
+EQUIP_ITEMS = [
+    {"id": "eq3", "group": "ARD/QC", "title": "HPLC System", "location": "Room 2", "model": "1290 Infinity 3", "ne": "N", "cost": 300000},
+    {"id": "eq9", "group": "ARD/QC", "title": "HPLC/Mass Spectrometer System", "location": "Bench top", "model": "G7120A Highspeed Pump,", "ne": "N", "cost": 200000},
+    {"id": "eq16", "group": "ARD/QC", "title": "GCMS", "location": "or GCMS", "model": "", "ne": "N", "cost": 120000},
+    {"id": "eq17", "group": "ARD/QC", "title": "nitrogen gas generator", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000},
+    {"id": "eq18", "group": "ARD/QC", "title": "hydrogen gas generator", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000},
+    {"id": "eq19", "group": "ARD/QC", "title": "Electronic Pipette", "location": "Benchtop", "model": "", "ne": "N", "cost": 1600},
+    {"id": "eq20", "group": "ARD/QC", "title": "MILLIQ", "location": "Undersink", "model": "IQ 7000 ?", "ne": "N", "cost": 20000},
+    {"id": "eq21", "group": "ARD/QC", "title": "Prep HPLC", "location": "Large Fumehood", "model": "Newstyle NS 4330", "ne": "N", "cost": 50000},
+    {"id": "eq23", "group": "ARD/QC", "title": "pH", "location": "Fumhood", "model": "SevenExcellence", "ne": "N", "cost": 20000},
+    {"id": "eq25", "group": "ARD/QC", "title": "SFC", "location": "Bench top", "model": "Acquity UPC2", "ne": "E", "cost": 150000},
+    {"id": "eq27", "group": "ARD/QC", "title": "GC", "location": "Bench top (if sapce is limited, remove another FH?)", "model": "8890B GC", "ne": "E", "cost": 80000},
+    {"id": "eq29", "group": "ARD/QC", "title": "Mass Spec", "location": "Bench top", "model": "1290 Infinty 2", "ne": "N", "cost": 140000},
+    {"id": "eq30", "group": "ARD/QC", "title": "KF Coulimetric", "location": "Fumehood", "model": "852 Titrando", "ne": "N", "cost": 45000},
+    {"id": "eq36", "group": "Isolators", "title": "Huber TC45 with immersion cooler", "location": "Under isolator 2", "model": "TC45", "ne": "", "cost": 4345},
+    {"id": "eq37", "group": "Isolators", "title": "Karl Fisher Titrator", "location": "Isolator 1", "model": "T50", "ne": "N", "cost": 30000},
+    {"id": "eq38", "group": "Isolators", "title": "Benchtop Powder X-ray Diffractor", "location": "Benchtop", "model": "Bruker", "ne": "E", "cost": 200000},
+    {"id": "eq39", "group": "Isolators", "title": "Particle Size", "location": "Isolator 5", "model": "Mastersizer", "ne": "N", "cost": 160000},
+    {"id": "eq40", "group": "Isolators", "title": "Lyophiliser", "location": "Benchtop", "model": "tbc", "ne": "N", "cost": 100000},
+    {"id": "eq41", "group": "Isolators", "title": "Analytical Balance", "location": "Isolator 1", "model": "XP205", "ne": "", "cost": 20000},
+    {"id": "eq42", "group": "Isolators", "title": "Microbalance", "location": "isolator 1", "model": "", "ne": "N", "cost": 25000},
+    {"id": "eq43", "group": "Isolators", "title": "Easymax Reactor System", "location": "isolator 3", "model": "Easymax 102", "ne": "N", "cost": 80000},
+    {"id": "eq45", "group": "Isolators", "title": "Chiller unit", "location": "under isolator 3", "model": "FL1703", "ne": "E", "cost": 12000},
+    {"id": "eq47", "group": "Isolators", "title": "Drying Oven", "location": "Isolator 4", "model": "Vacucentre VC50", "ne": "N/E", "cost": 36000},
+    {"id": "eq48", "group": "Isolators", "title": "FTIR", "location": "Isolator 2", "model": "NICOLET APEX KBR WITH PURGE KIT", "ne": "E", "cost": 28000},
+    {"id": "eq53", "group": "CRD", "title": "Laboratory Fridge", "location": "Room 4", "model": "", "ne": "", "cost": 750},
+    {"id": "eq54", "group": "CRD", "title": "Laboratory Freezer", "location": "Room 4", "model": "", "ne": "", "cost": 750},
+    {"id": "eq55", "group": "CRD", "title": "Reactor Ready Twin reactor", "location": "FH1", "model": "", "ne": "N", "cost": 20000},
+    {"id": "eq56", "group": "CRD", "title": "Mettler Toledo SP-50 Dosing units", "location": "FH1", "model": "SP-50", "ne": "N", "cost": 1600},
+    {"id": "eq57", "group": "CRD", "title": "RX10 Controller", "location": "FH1", "model": "", "ne": "N", "cost": 2400},
+    {"id": "eq58", "group": "CRD", "title": "Heidolph Motors", "location": "FH1", "model": "", "ne": "N", "cost": 1600},
+    {"id": "eq59", "group": "CRD", "title": "Reactor Ready Stand", "location": "FH1", "model": "", "ne": "N", "cost": 1000},
+    {"id": "eq60", "group": "CRD", "title": "Vacuum Pump", "location": "FH1", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000},
+    {"id": "eq61", "group": "CRD", "title": "Recirculating Chiller", "location": "FH1", "model": "Ministat 240", "ne": "N", "cost": 23000},
+    {"id": "eq62", "group": "CRD", "title": "Analytical Balance", "location": "Either/or", "model": "XP205", "ne": "N", "cost": 20000},
+    {"id": "eq63", "group": "CRD", "title": "Large Scale Balance", "location": "Either/or", "model": "", "ne": "N", "cost": 1000},
+    {"id": "eq65", "group": "CRD", "title": "Easymax Reactor System", "location": "FH2", "model": "Easymax 102", "ne": "N", "cost": 160000},
+    {"id": "eq67", "group": "CRD", "title": "Chiller unit", "location": "FH2", "model": "FL1703", "ne": "N", "cost": 24000},
+    {"id": "eq70", "group": "CRD", "title": "Mettler Tolesdo SP-50 Dosing units", "location": "FH3", "model": "SP-50", "ne": "N", "cost": 80000},
+    {"id": "eq71", "group": "CRD", "title": "Chiller unit", "location": "FH3", "model": "FL1703", "ne": "N", "cost": 12000},
+    {"id": "eq72", "group": "CRD", "title": "Stem blocks", "location": "FH3", "model": "", "ne": "N", "cost": 2000},
+    {"id": "eq73", "group": "CRD", "title": "Stirrer hotplate", "location": "FH3", "model": "", "ne": "E", "cost": 1200},
+    {"id": "eq76", "group": "CRD", "title": "Biotage", "location": "FH4 - Flexible", "model": "F150  or F75? and UV monitor", "ne": "N", "cost": 12000},
+    {"id": "eq77", "group": "CRD", "title": "Rotary Evaporator", "location": "FH4 - Flexible", "model": "HEI-VAP Expert", "ne": "N", "cost": 6000},
+    {"id": "eq78", "group": "CRD", "title": "Vacuum Pump", "location": "FH4 - Flexible", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000},
+    {"id": "eq82", "group": "CRD", "title": "Overhead stirrer", "location": "FH4 - Flexible", "model": "", "ne": "N", "cost": 1000},
+    {"id": "eq84", "group": "CRD", "title": "TBD", "location": "Software", "model": "", "ne": "", "cost": 200000},
+    {"id": "eq88", "group": "CRD", "title": "Dishwasher/glasswash", "location": "Miscellaneous", "model": "Undercounter Laboratory Glassware Washer PG8583CD", "ne": "N", "cost": 10000},
+]
+assert sum(i["cost"] for i in EQUIP_ITEMS if i["ne"] != "E") == EQUIP_LIST_PURCHASE
+assert sum(i["cost"] for i in EQUIP_ITEMS) == EQUIP_LIST_TOTAL
+
 SUBTOTAL_2 = 4_067_985
 RISK_ALLOWANCE = 397_875  # 13.1 design development risk (13.2 incl. above)
 COST_LIMIT_EXCL_INF = 4_465_860
@@ -316,7 +372,7 @@ HIPO_COST_I18N_ZH = {
     "secProf": "8 专业服务费 Professional Services",
     "prof": "项目管理（合同前 33 周 / 合同后 22 周 / 缺陷期）、设计支持、商务支持与合同管理",
     "secEquip": "9 业主（凯莱英）供货并安装设备 Equipment (supplied and installed by the Client)",
-    "equip": "依据《Equipment List Costs for scoping 5 Aug》：清单合计 £2,428,245，待采购 £1,957,045；本项按成本计划计列 £1,975,045",
+    "equip": "待采购 £1.96M（《Equipment List Costs for scoping 5 Aug》）",
     "secRisk": "10 风险预备费 Risk Allowance Estimate",
     "risk": "10.1 设计发展风险（依风险登记册）",
     "secInf": "11 通胀 Inflation（2.15%）",
@@ -361,7 +417,7 @@ HIPO_COST_I18N_EN = {
     "secProf": "8 Professional Services",
     "prof": "Project management (pre-contract 33 wks / post-contract 22 wks / defects), design support, commercial support & contract administration",
     "secEquip": "9 Equipment (supplied and installed by the Client)",
-    "equip": "Per \"Equipment List Costs for scoping 5 Aug\": list total £2,428,245, of which £1,957,045 To Purchase; this cost-plan line carries £1,975,045",
+    "equip": "To purchase £1.96M (Equipment List Costs for scoping 5 Aug)",
     "secRisk": "10 Risk Allowance Estimate",
     "risk": "10.1 Design development risk (refer to risk register)",
     "secInf": "11 Inflation (2.15%)",
@@ -514,9 +570,89 @@ options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"ri
 }
 """
 
+HIPO_EQUIP_JS = r"""
+let EQUIP_MUST={};
+let EQUIP_FILTER="all";
+function equipIsNew(it){return it.ne!=="E";}
+function equipMust(id){return EQUIP_MUST[id]!==false;}
+function equipNeLabel(ne){
+if(ne==="N")return t("hipoEqNew");
+if(ne==="E")return t("hipoEqExist");
+if(ne==="N/E")return "N/E";
+return "—";
+}
+function equipNeClass(ne){return ne==="E"?"ne-E":(ne==="N"||ne==="N/E"?"ne-N":"");}
+function equipNewMustTotal(){
+return EQUIP_ITEMS.reduce((s,it)=>s+(equipIsNew(it)&&equipMust(it.id)?it.cost:0),0);
+}
+function renderEquipPage(){
+const wrap=document.getElementById("equipTableWrap");
+const totalEl=document.getElementById("equipTotalAmt");
+if(!wrap)return;
+const groups=[];
+EQUIP_ITEMS.forEach(it=>{
+if(EQUIP_FILTER==="new"&&!equipIsNew(it))return;
+if(EQUIP_FILTER==="existing"&&equipIsNew(it))return;
+const last=groups[groups.length-1];
+if(!last||last.group!==it.group)groups.push({group:it.group,items:[it]});
+else last.items.push(it);
+});
+let html=`<table class="equip-table"><thead><tr>
+<th>${t("hipoEqColTitle")}</th><th>${t("hipoEqColLoc")}</th><th>${t("hipoEqColModel")}</th>
+<th>${t("hipoEqColNE")}</th><th class="cost">${t("hipoEqColCost")}</th>
+<th class="chk">${t("hipoEqColMust")}</th></tr></thead><tbody>`;
+groups.forEach(g=>{
+html+=`<tr class="grp"><td colspan="6">${g.group}</td></tr>`;
+g.items.forEach(it=>{
+const checked=equipMust(it.id)?" checked":"";
+html+=`<tr data-id="${it.id}">
+<td>${it.title}</td><td>${it.location||"—"}</td><td>${it.model||"—"}</td>
+<td class="${equipNeClass(it.ne)}">${equipNeLabel(it.ne)}</td>
+<td class="cost">${fm(it.cost)}</td>
+<td class="chk"><input type="checkbox" data-equip="${it.id}"${checked}></td>
+</tr>`;
+});
+});
+html+="</tbody></table>";
+wrap.innerHTML=html;
+if(totalEl)totalEl.textContent=fm(equipNewMustTotal());
+document.querySelectorAll(".equip-filters button").forEach(btn=>{
+btn.classList.toggle("active",btn.dataset.filter===EQUIP_FILTER);
+});
+wrap.querySelectorAll("input[data-equip]").forEach(box=>{
+box.addEventListener("change",()=>{
+EQUIP_MUST[box.dataset.equip]=box.checked;
+if(document.getElementById("equipTotalAmt"))
+document.getElementById("equipTotalAmt").textContent=fm(equipNewMustTotal());
+});
+});
+}
+function bindEquipPage(){
+document.querySelectorAll(".equip-filters button").forEach(btn=>{
+btn.onclick=()=>{EQUIP_FILTER=btn.dataset.filter;renderEquipPage();};
+});
+renderEquipPage();
+}
+"""
+
 HIPO_COST_CSS = """
 .kpi.hipo{border-left-color:var(--hipo)}
 .tag.hipo{background:var(--hipo)}
 .invest-kpi-row.cols5{grid-template-columns:repeat(5,1fr)}
 .decision-list li.hipo{border-left-color:var(--hipo)}
+.equip-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.7rem;margin-bottom:.45rem;flex-wrap:wrap}
+.equip-filters{display:flex;gap:.35rem}
+.equip-filters button{border:1px solid #dde3e8;background:#fff;color:var(--muted);font-size:.72rem;font-weight:600;padding:.28rem .7rem;border-radius:6px;cursor:pointer}
+.equip-filters button.active{background:var(--hipo);color:#fff;border-color:var(--hipo)}
+.equip-total{margin:0;flex:1;min-width:220px}
+.equip-table-wrap{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid #e8ecf0;border-radius:10px}
+.equip-table{width:100%;border-collapse:collapse;font-size:.68rem}
+.equip-table th{position:sticky;top:0;background:#f3f6f8;z-index:1;font-size:.64rem;color:var(--navy);padding:.32rem .4rem}
+.equip-table td{padding:.26rem .4rem;vertical-align:middle}
+.equip-table .grp td{background:#e8f2f0;color:var(--navy);font-weight:700;font-size:.7rem}
+.equip-table .ne-N{color:#1f7a6f;font-weight:600}
+.equip-table .ne-E{color:#8a6d3b;font-weight:600}
+.equip-table .cost{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.equip-table .chk{text-align:center;width:4.2rem}
+.equip-table input[type=checkbox]{width:14px;height:14px;accent-color:#1f7a6f;cursor:pointer}
 """
