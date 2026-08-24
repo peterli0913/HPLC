@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Asymchem UK — PDF Portfolio Briefing</title>
+<!-- build: portfolio-2026-08-20 rev 2026-08-20-hipo-lab-v1 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#0f2b46;--teal:#009688;--accent:#c9a227;--ext:#1a4a6e;--hplc:#5b6eae;--c1:#8b6914;--hipo:#1f7a6f;--bg:#f4f6f8;--card:#fff;--text:#2c3e50;--muted:#5a6a7a;--warn:#b43a2a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
+.slide{display:none;height:100vh;padding:2rem 2.8rem 3.2rem;flex-direction:column;animation:fade .3s ease}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.top-bar{position:fixed;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--navy),var(--teal),var(--accent));z-index:100}
+.lang-switch{position:fixed;top:.9rem;right:1.2rem;z-index:101;display:flex;border-radius:6px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.12);border:1px solid #dde3e8}
+.lang-switch button{border:none;padding:.38rem .8rem;font-size:.78rem;cursor:pointer;background:#fff;color:var(--muted);font-weight:600}
+.lang-switch button.active{background:var(--navy);color:#fff}
+h1{font-size:1.65rem;color:var(--navy);font-weight:700;margin-bottom:.28rem}
+h2{font-size:.92rem;color:var(--muted);font-weight:400;margin-bottom:.7rem}
+.tag{display:inline-block;background:var(--navy);color:#fff;font-size:.66rem;padding:.16rem .48rem;border-radius:3px}
+.tag.ext{background:var(--ext)} .tag.hplc{background:var(--hplc)} .tag.c1{background:var(--c1)} .tag.hipo{background:var(--hipo)}
+ul{margin-left:1.1rem;line-height:1.55;font-size:.88rem} li{margin-bottom:.34rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;flex:1;min-height:0}
+.card{background:var(--card);border-radius:10px;padding:1rem;border:1px solid #e8ecf0;box-shadow:0 2px 12px rgba(15,43,70,.06)}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:.65rem}
+.kpi-row.cols3{grid-template-columns:repeat(3,1fr)}
+.kpi{background:var(--card);border-radius:10px;padding:.6rem .7rem;border-left:4px solid var(--teal)}
+.kpi.ext{border-left-color:var(--ext)} .kpi.hplc{border-left-color:var(--hplc)} .kpi.c1{border-left-color:var(--c1)} .kpi.hipo{border-left-color:var(--hipo)}
+.kpi .val{font-size:1.02rem;font-weight:700;color:var(--navy)} .kpi .lbl{font-size:.66rem;color:var(--muted);margin-top:.1rem;line-height:1.28}
+table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem .45rem;border-bottom:1px solid #eef1f4;text-align:left} th{color:var(--navy)}
+.footer{position:fixed;bottom:0;left:0;right:0;padding:.4rem 2.8rem;font-size:.68rem;color:var(--muted);background:rgba(255,255,255,.96);border-top:1px solid #e8ecf0;display:flex;justify-content:space-between}
+.title-slide{justify-content:center;text-align:center;padding-top:2.5rem} .title-slide h1{font-size:1.8rem}
+.section-slide{justify-content:center;text-align:center} .section-slide h1{font-size:2rem}
+.section-slide p{color:var(--muted);margin-top:.6rem;font-size:.95rem}
+.chart-title{font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.35rem;text-align:center}
+.chart-wrap{height:200px;position:relative} .chart-wrap.tall{height:240px}
+.invest-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.65rem}
+.invest-kpi-row.cols4{grid-template-columns:repeat(4,1fr)}
+.invest-kpi-row.cols2{grid-template-columns:repeat(2,1fr)}
+.invest-kpi{background:linear-gradient(160deg,#f8fafb,#fff);border:1px solid #e8ecf0;border-radius:10px;padding:.5rem;text-align:center}
+.invest-kpi.highlight{border-color:#d4b84a;background:linear-gradient(160deg,#fffdf5,#fff)}
+.invest-kpi .ik-val{font-size:.95rem;font-weight:700;color:var(--navy)}
+.invest-kpi .ik-lbl{font-size:.62rem;color:var(--muted);margin-top:.15rem}
+.cost-scroll{flex:1;overflow-y:auto;min-height:0}
+
+.cost-section{border:1px solid #c5d0dc;border-radius:10px;margin-bottom:.5rem;background:#fff;box-shadow:0 1px 6px rgba(15,43,70,.05)}
+.cost-section>summary.cost-section-hd{display:flex;justify-content:space-between;align-items:center;gap:.65rem;padding:.55rem .7rem;cursor:pointer;list-style:none;background:linear-gradient(180deg,#eef3f8,#f8fafb)}
+.cost-section>summary::-webkit-details-marker{display:none}
+.cost-section-title{font-size:.86rem;font-weight:700;color:var(--navy);line-height:1.3;flex:1;min-width:0}
+.cost-section-amt{flex-shrink:0;font-size:.9rem;font-weight:700;color:#fff;background:var(--navy);padding:.28rem .65rem;border-radius:6px;white-space:nowrap}
+.cost-section-body{padding:0 .4rem .4rem}
+.cost-item.cost-item-sub{border:none;border-radius:0;margin-bottom:0;background:transparent;box-shadow:none}
+.cost-item.cost-item-sub>summary{padding:.26rem .5rem .26rem .85rem;font-size:.74rem;font-weight:400;background:transparent}
+.cost-item.cost-item-sub>summary .cost-label{color:#9aa8b6;font-weight:500}
+.cost-item.cost-item-sub>summary .cost-amt{color:#8b98a6;font-weight:600;font-size:.72rem}
+.cost-item.cost-item-sub .cost-children{padding:.1rem .5rem .25rem 1.35rem;border-top:none}
+.cost-item.cost-item-sub[data-no-body]>summary{cursor:default}
+.cost-subtotal{display:flex;justify-content:space-between;align-items:center;padding:.4rem .6rem;margin:.2rem 0 .1rem;font-size:.78rem;font-weight:600;color:var(--navy);background:#e8eef4;border:1px solid #cfd8e3;border-radius:6px}
+.cost-subtotal span:last-child{font-weight:700}
+.cost-risk-line{display:flex;justify-content:space-between;padding:.32rem .55rem;font-size:.74rem;color:#7a8794;border-top:1px dashed #e2e8ee;margin-top:.1rem;font-style:italic}
+.cost-section-total{display:flex;justify-content:space-between;padding:.4rem .55rem;margin-top:.2rem;border-radius:6px;background:linear-gradient(90deg,#0f2b46,#1a4a6e);color:#fff;font-size:.8rem;font-weight:700}
+.cost-leaf.cost-leaf-sub{display:flex;justify-content:space-between;padding:.28rem .55rem .28rem .85rem;font-size:.74rem;color:#9aa8b6}
+.cost-leaf.cost-leaf-sub span:last-child{color:#8b98a6;font-weight:600}
+.cost-bullets{list-style:none;margin:.05rem 0 0;padding:0;font-size:.67rem;color:#a8b4c0;line-height:1.4}
+.cost-bullets li{margin-bottom:.12rem;padding-left:.55rem;position:relative}
+.cost-bullets li::before{content:"·";position:absolute;left:0;color:#c5cdd6}
+.invest-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.65rem}
+.invest-kpi{background:linear-gradient(160deg,#f8fafb,#fff);border:1px solid #e8ecf0;border-radius:10px;padding:.5rem;text-align:center}
+.invest-kpi.highlight{border-color:#d4b84a;background:linear-gradient(160deg,#fffdf5,#fff)}
+.invest-kpi .ik-val{font-size:.95rem;font-weight:700;color:var(--navy)}
+.invest-kpi .ik-lbl{font-size:.62rem;color:var(--muted);margin-top:.15rem}
+
+.cost-section{border:1px solid #c5d0dc;border-radius:10px;margin-bottom:.5rem;background:#fff;box-shadow:0 1px 6px rgba(15,43,70,.05)}
+.cost-section>summary.cost-section-hd{display:flex;justify-content:space-between;align-items:center;gap:.65rem;padding:.55rem .7rem;cursor:pointer;list-style:none;background:linear-gradient(180deg,#eef3f8,#f8fafb)}
+.cost-section>summary::-webkit-details-marker{display:none}
+.cost-section-title{font-size:.86rem;font-weight:700;color:var(--navy);line-height:1.3;flex:1;min-width:0}
+.cost-section-amt{flex-shrink:0;font-size:.9rem;font-weight:700;color:#fff;background:var(--navy);padding:.28rem .65rem;border-radius:6px;white-space:nowrap}
+.cost-section-body{padding:0 .4rem .4rem}
+.cost-item.cost-item-sub{border:none;border-radius:0;margin-bottom:0;background:transparent;box-shadow:none}
+.cost-item.cost-item-sub>summary{padding:.26rem .5rem .26rem .85rem;font-size:.74rem;font-weight:400;background:transparent}
+.cost-item.cost-item-sub>summary .cost-label{color:#9aa8b6;font-weight:500}
+.cost-item.cost-item-sub>summary .cost-amt{color:#8b98a6;font-weight:600;font-size:.72rem}
+.cost-item.cost-item-sub .cost-children{padding:.1rem .5rem .25rem 1.35rem;border-top:none}
+.cost-item.cost-item-sub[data-no-body]>summary{cursor:default}
+.cost-subtotal{display:flex;justify-content:space-between;align-items:center;padding:.4rem .6rem;margin:.2rem 0 .1rem;font-size:.78rem;font-weight:600;color:var(--navy);background:#e8eef4;border:1px solid #cfd8e3;border-radius:6px}
+.cost-subtotal span:last-child{font-weight:700}
+.cost-risk-line{display:flex;justify-content:space-between;padding:.32rem .55rem;font-size:.74rem;color:#7a8794;border-top:1px dashed #e2e8ee;margin-top:.1rem;font-style:italic}
+.cost-section-total{display:flex;justify-content:space-between;padding:.4rem .55rem;margin-top:.2rem;border-radius:6px;background:linear-gradient(90deg,#0f2b46,#1a4a6e);color:#fff;font-size:.8rem;font-weight:700}
+.cost-leaf.cost-leaf-sub{display:flex;justify-content:space-between;padding:.28rem .55rem .28rem .85rem;font-size:.74rem;color:#9aa8b6}
+.cost-leaf.cost-leaf-sub span:last-child{color:#8b98a6;font-weight:600}
+.cost-bullets{list-style:none;margin:.05rem 0 0;padding:0;font-size:.67rem;color:#a8b4c0;line-height:1.4}
+.cost-bullets li{margin-bottom:.12rem;padding-left:.55rem;position:relative}
+.cost-bullets li::before{content:"·";position:absolute;left:0;color:#c5cdd6}
+.invest-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.65rem}
+.invest-kpi{background:linear-gradient(160deg,#f8fafb,#fff);border:1px solid #e8ecf0;border-radius:10px;padding:.5rem;text-align:center}
+.invest-kpi.highlight{border-color:#d4b84a;background:linear-gradient(160deg,#fffdf5,#fff)}
+.invest-kpi .ik-val{font-size:.95rem;font-weight:700;color:var(--navy)}
+.invest-kpi .ik-lbl{font-size:.62rem;color:var(--muted);margin-top:.15rem}
+
+.cost-item-l2{border:1px solid #d4dde6;border-radius:8px;margin:.28rem 0;background:linear-gradient(180deg,#f3f7fb,#f8fafb);box-shadow:0 1px 4px rgba(15,43,70,.04)}
+.cost-item-l2>summary{padding:.4rem .6rem .4rem 1rem;font-size:.8rem;font-weight:600}
+.cost-item-l2>summary .cost-label{color:var(--navy);font-weight:700}
+.cost-item-l2>summary .cost-amt{font-size:.82rem;font-weight:700;color:var(--navy);background:#e2eaf2;padding:.18rem .5rem;border-radius:5px}
+.cost-item-l2 .cost-children{padding:.15rem .5rem .35rem 1.35rem;border-top:1px solid #e4eaf0}
+.cost-leaf-l3{padding-left:.35rem}
+.invest-kpi-row.direct-sub{margin-top:-.15rem;margin-bottom:.55rem}
+.invest-kpi-mid{border-color:#b8c5d4;background:linear-gradient(160deg,#eef3f8,#f6f9fb)}
+.invest-kpi-mid .ik-val{font-size:.88rem}
+.invest-kpi-mid .ik-lbl{font-size:.6rem;font-weight:600;color:#4a5f73}
+
+.kpi.hipo{border-left-color:var(--hipo)}
+.tag.hipo{background:var(--hipo)}
+.invest-kpi-row.cols5{grid-template-columns:repeat(5,1fr)}
+.decision-list li.hipo{border-left-color:var(--hipo)}
+.equip-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.7rem;margin-bottom:.45rem;flex-wrap:wrap}
+.equip-filters{display:flex;gap:.35rem}
+.equip-filters button{border:1px solid #dde3e8;background:#fff;color:var(--muted);font-size:.72rem;font-weight:600;padding:.28rem .7rem;border-radius:6px;cursor:pointer}
+.equip-filters button.active{background:var(--hipo);color:#fff;border-color:var(--hipo)}
+.equip-total{margin:0;flex:1;min-width:220px}
+.equip-table-wrap{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid #e8ecf0;border-radius:10px}
+.equip-table{width:100%;border-collapse:collapse;font-size:.68rem}
+.equip-table th{position:sticky;top:0;background:#f3f6f8;z-index:1;font-size:.64rem;color:var(--navy);padding:.32rem .4rem}
+.equip-table td{padding:.26rem .4rem;vertical-align:middle}
+.equip-table .grp td{background:#e8f2f0;color:var(--navy);font-weight:700;font-size:.7rem}
+.equip-table .ne-N{color:#1f7a6f;font-weight:600}
+.equip-table .ne-E{color:#8a6d3b;font-weight:600}
+.equip-table .cost{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.equip-table .chk{text-align:center;width:4.2rem}
+.equip-table input[type=checkbox]{width:14px;height:14px;accent-color:#1f7a6f;cursor:pointer}
+
+.cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.5rem .7rem;margin-bottom:.4rem;font-size:.86rem;display:flex;justify-content:space-between;align-items:center}
+.cost-item{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:.28rem;background:#fff}
+.cost-item>summary{display:flex;align-items:center;padding:.38rem .55rem;cursor:pointer;list-style:none;font-size:.78rem}
+.cost-item>summary::-webkit-details-marker{display:none}
+.cost-label{flex:1;font-weight:600;color:var(--navy)} .cost-amt{font-weight:700}
+.cost-children{padding:0 .5rem .4rem .7rem;border-top:1px solid #f0f2f5}
+.cost-leaf{display:flex;justify-content:space-between;font-size:.72rem;padding:.2rem 0;color:var(--muted)}
+.cost-sub summary{display:flex;justify-content:space-between;font-size:.74rem;padding:.28rem 0;cursor:pointer;list-style:none;color:var(--muted)}
+.cost-sub ul{list-style:none;padding:0} .cost-sub li{display:flex;justify-content:space-between;font-size:.68rem;padding:.1rem 0}
+.note{font-size:.72rem;color:var(--muted);margin-top:.35rem;line-height:1.4}
+.scope-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.scope-grid h3{font-size:.84rem;color:var(--navy);margin-bottom:.3rem}
+.compare-table td:last-child,.compare-table th:last-child{text-align:right;font-weight:600}
+.gantt-wrap{flex:1;min-height:0;background:var(--card);border-radius:10px;padding:.7rem;border:1px solid #e8ecf0;display:flex;flex-direction:column}
+.gantt-axis{display:flex;justify-content:space-between;font-size:.63rem;color:var(--muted);padding:0 .15rem .22rem 7.5rem;border-bottom:1px solid #dde3e8;margin-bottom:.22rem}
+.gantt-body{flex:1;overflow-y:auto}
+.gantt-row{display:grid;grid-template-columns:7rem 1fr 6rem;gap:.35rem;margin-bottom:.35rem;align-items:center}
+.gantt-label{font-size:.63rem;font-weight:600;color:var(--navy);text-align:right;line-height:1.1}
+.gantt-track{position:relative;height:19px;background:#eef2f6;border-radius:4px}
+.gantt-bar{position:absolute;top:2px;height:15px;border-radius:3px;min-width:3px;cursor:pointer}
+.gantt-bar.done{background:var(--teal)} .gantt-bar.plan{background:#1a4a6e}
+.gantt-bar.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 5px,#8f7db8 5px,#8f7db8 10px)}
+.gantt-bar.warn{background:var(--accent)} .gantt-bar.build{background:#2e6da4} .gantt-bar.staff{background:#5b6eae}
+.gantt-dates{font-size:.58rem;color:var(--muted);white-space:nowrap;line-height:1.2;text-align:right}
+.gantt-legend{font-size:.6rem;color:var(--muted);margin-top:.3rem;display:flex;gap:.55rem;flex-wrap:wrap}
+.gantt-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:.15rem;vertical-align:middle}
+.today-line{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);z-index:2;pointer-events:none}
+.today-tag{position:absolute;top:-10px;font-size:.52rem;color:var(--warn);transform:translateX(-50%);white-space:nowrap}
+#tip{position:fixed;z-index:300;max-width:360px;background:var(--navy);color:#fff;padding:.5rem .65rem;border-radius:8px;font-size:.72rem;line-height:1.45;pointer-events:none;opacity:0;transition:opacity .12s;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+#tip.show{opacity:1} #tip .td{color:#8ecec6;font-size:.65rem;margin-bottom:.15rem}
+.decision-list{list-style:none;margin:0;padding:0}
+.decision-list li{border:1px solid #e8ecf0;border-left:4px solid var(--teal);padding:.7rem .9rem;margin-bottom:.45rem;border-radius:0 8px 8px 0;font-size:.86rem;background:var(--card)}
+.decision-list li.ext{border-left-color:var(--ext)} .decision-list li.hplc{border-left-color:var(--hplc)} .decision-list li.c1{border-left-color:var(--c1)} .decision-list li.hipo{border-left-color:var(--hipo)}
+.callout{border-left:4px solid var(--warn);background:linear-gradient(90deg,#fff8f6,#fff);border-radius:0 8px 8px 0;padding:.65rem .85rem;margin-top:.55rem;font-size:.82rem;line-height:1.5;color:var(--text)}
+</style>
+</head>
+<body>
+<div class="top-bar"></div>
+<div class="lang-switch"><button id="btnZh" class="active" type="button">中文</button><button id="btnEn" type="button">EN</button></div>
+<div id="tip"><div class="td"></div><div class="tb"></div></div>
+<div id="deck"></div>
+<div class="footer"><span id="footerText"></span><span id="navHint"></span><span id="counter"></span></div>
+<script>
+const GANTT_EXT = [["gFs", "2026-05-01", "2026-05-31", "done", "RIBA 1 Feasibility complete. Report A1: 22 May 2026.", "RIBA 1 \u53ef\u884c\u6027\u7814\u7a76\u5b8c\u6210\uff1b\u62a5\u544a A1\uff1a2026-05-22\u3002"], ["gR2", "2026-07-15", "2027-02-23", "plan", "RIBA 2 Concept Design (160 days). Concept report & stage gate Feb 2027.", "RIBA 2 \u6982\u5ff5\u8bbe\u8ba1\uff08160 \u5929\uff09\uff1b2027-02 \u6982\u5ff5\u62a5\u544a\u4e0e\u9636\u6bb5\u8bc4\u5ba1\u3002"], ["gR3", "2027-02-17", "2027-09-28", "plan", "RIBA 3 Scheme Design (8 months).", "RIBA 3 \u65b9\u6848\u8bbe\u8ba1\uff088 \u4e2a\u6708\uff09\u3002"], ["gPlan", "2027-10-26", "2028-03-21", "warn", "Planning: submission Dec 2027, statutory period, consent target 21 Mar 2028.", "\u89c4\u5212\uff1a2027-12 \u63d0\u4ea4\uff0c\u6cd5\u5b9a\u5ba1\u6279\u671f\uff0c\u76ee\u6807\u8bb8\u53ef 2028-03-21\u3002"], ["gR4", "2027-10-27", "2028-06-06", "plan", "RIBA 4 Detailed Design.", "RIBA 4 \u8be6\u7ec6\u8bbe\u8ba1\u3002"], ["gEquip", "2028-03-08", "2029-07-24", "warn", "Long-lead procurement (18 mo): Hastelloy vessels, overheads, filter dryers, etc.", "\u957f\u5468\u671f\u8bbe\u5907\u91c7\u8d2d\uff0818 \u4e2a\u6708\uff09\uff1aHastelloy \u91dc\u3001\u6865\u67b6\u3001\u8fc7\u6ee4\u5e72\u71e5\u673a\u7b49\u3002"], ["gMed", "2028-04-12", "2028-08-02", "plan", "Medium-lead procurement (4 mo): AHUs, valves, etc.", "\u4e2d\u7b49\u5468\u671f\u8bbe\u5907\u91c7\u8d2d\uff084 \u4e2a\u6708\uff09\uff1aAHU\u3001\u9600\u95e8\u7b49\u3002"], ["gPre", "2028-07-05", "2028-08-01", "plan", "Pre-construction mobilisation & site set-up.", "\u65bd\u5de5\u524d\u52a8\u5458\u4e0e\u73b0\u573a\u4e34\u5efa\u3002"], ["gR5", "2028-08-02", "2029-11-13", "build", "RIBA 5 Construction (335 days): enabling, piling, structure, fit-out.", "RIBA 5 \u65bd\u5de5\uff08335 \u5929\uff09\uff1a\u62c6\u9664\u4e34\u5efa\u3001\u6869\u57fa\u3001\u7ed3\u6784\u3001\u88c5\u4fee\u673a\u7535\u3002"], ["gComm", "2029-11-14", "2029-12-18", "build", "Commissioning & setting to work (programme \u00a71.13).", "\u8c03\u8bd5\u4e0e\u6295\u8fd0\u51c6\u5907\uff08\u8fdb\u5ea6\u8ba1\u5212 \u00a71.13\uff09\u3002"], ["gEnd", "2029-12-19", "2030-05-07", "warn", "Validation, handover, project complete (07 May 2030).", "\u786e\u8ba4\u9a8c\u8bc1\u3001\u79fb\u4ea4\uff1b\u9879\u76ee\u5b8c\u6210 2030-05-07\u3002"]];
+const GANTT_HPLC = [["gFs", "2026-05-19", "2026-05-26", "done", "FS report P01 (19 May 2026); programme baseline from 26 May 2026 (Fig. 1).", "\u53ef\u884c\u6027\u7814\u7a76 P01\uff082026-05-19\uff09\uff1b\u8fdb\u5ea6\u57fa\u51c6\u81ea 2026-05-26 \u8d77\uff08\u56fe 1\uff09\u3002"], ["gEng", "2026-09-01", "2026-10-01", "staff", "Await SW engineer Keith to complete continuous hydrogenation project duties before transferring to this project.", "\u7b49\u5f85 SW \u5de5\u7a0b\u5e08 Keith \u5b8c\u6210\u8fde\u7eed\u6c22\u5316\u9879\u76ee\u76f8\u5173\u4e8b\u52a1\u540e\u8f6c\u5165\u672c\u9879\u76ee\u3002"], ["gFeed", "2026-10-13", "2027-01-18", "assume", "FEED 12\u201314 weeks (\u00a74.3): illustrative, after engineer mobilisation.", "FEED 12\u201314 \u5468\uff08\u00a74.3\uff09\uff1a\u793a\u610f\uff0c\u5de5\u7a0b\u5e08\u5c31\u4f4d\u540e\u542f\u52a8\u3002"], ["gDd", "2027-01-19", "2027-06-07", "assume", "Detailed design 18\u201320 weeks (\u00a74.3): assumed after FEED, bar shows 20 weeks.", "\u8be6\u7ec6\u8bbe\u8ba1 18\u201320 \u5468\uff08\u00a74.3\uff09\uff1a\u5047\u8bbe\u63a5 FEED \u540e\u542f\u52a8\uff0c\u6761\u5757\u6309 20 \u5468\u793a\u610f\u3002"], ["gLySpec", "2026-09-23", "2026-11-17", "warn", "Lyoph spec + funding/deposit (Fig. 1).", "\u51bb\u5e72\u673a\u89c4\u683c\u786e\u5b9a\u548c\u8d44\u91d1\u5ba1\u6279\uff08\u56fe 1\uff09\u3002"], ["gLyMfg", "2026-11-25", "2027-08-03", "warn", "Lyophiliser build: 9 months (Fig. 1).", "\u51bb\u5e72\u673a\u5236\u9020\uff1a9 \u4e2a\u6708\uff08\u56fe 1\uff09\u3002"], ["gLyFat", "2027-08-04", "2027-09-07", "warn", "Lyoph FAT + remediation (Fig. 1).", "\u51bb\u5e72\u673a FAT\uff08\u56fe 1\uff09\u3002"], ["gLyShip", "2027-09-08", "2027-12-27", "warn", "Lyoph shipping + installation (Fig. 1).", "\u51bb\u5e72\u673a\u8fd0\u8f93\u5b89\u88c5\uff08\u56fe 1\uff09\u3002"], ["gLyVal", "2027-12-28", "2028-03-06", "warn", "Lyoph validation to PQ complete (Fig. 1).", "\u51bb\u5e72\u9a8c\u8bc1\u81f3 PQ \u5b8c\u6210\uff08\u56fe 1\uff09\u3002"], ["gHplcSpec", "2026-12-15", "2027-02-09", "plan", "HPLC spec + funding/deposit (Fig. 1).", "HPLC \u89c4\u683c\u786e\u5b9a\u548c\u8d44\u91d1\u5ba1\u6279\uff08\u56fe 1\uff09\u3002"], ["gHplcMfg", "2027-02-17", "2027-06-22", "plan", "HPLC manufacture: 18 weeks (Fig. 1).", "HPLC \u5236\u9020\uff1a18 \u5468\uff08\u56fe 1\uff09\u3002"], ["gHplcFat", "2027-06-23", "2027-07-19", "plan", "HPLC FAT + remediation (Fig. 1).", "HPLC FAT\uff08\u56fe 1\uff09\u3002"], ["gHplcShip", "2027-07-27", "2027-09-28", "plan", "HPLC shipping + installation (Fig. 1).", "HPLC \u8fd0\u8f93\u5b89\u88c5\uff08\u56fe 1\uff09\u3002"], ["gTanks", "2026-11-18", "2027-08-31", "plan", "Procure mobile head tanks \u2014 RB Plant (Fig. 1).", "\u79fb\u52a8\u5934\u7f50\u91c7\u8d2d\uff08RB Plant\uff09\uff08\u56fe 1\uff09\u3002"], ["gWaste", "2026-11-18", "2027-08-17", "plan", "Procure waste tank \u2014 RB Plant (Fig. 1).", "\u5e9f\u6db2\u7f50\u91c7\u8d2d\uff08RB Plant\uff09\uff08\u56fe 1\uff09\u3002"], ["gRetrofit", "2027-04-21", "2027-08-13", "build", "Retrofit / demolition / airlock (Fig. 1; \u00a74.3 ~20 wk).", "\u6539\u9020\uff08\u62c6\u9664\u3001\u6c14\u95f8\u3001\u5206\u533a\u7b49\uff09\uff08\u56fe 1\uff1b\u00a74.3 \u7ea6 20 \u5468\uff09\u3002"]];
+const CAPEX = {"total": 5329100, "feasBase": 3783000};
+const HPLC_RISK = {"base": 3783000, "oom": 5329100, "subtotal": 4099300, "project_cont": 1229800};
+const HPLC_COST_DATA = {"oom": 5329100, "directTotal": 3026800, "indirectTotal": 1072500, "subtotal": 4099300, "projectCont": 1229800, "genTotal": 1229800, "projectContPct": 30, "mainEquipSub": 1575000, "mainEquipTotal": 2047500, "mainPriceRisk": 472500, "infraSub": 753300, "infraTotal": 979300, "infraPriceRisk": 226000, "indirectSub": 825000, "indirectPriceRisk": 247500, "lines": {"lyo": 967000, "hplc": 358000, "tanks": 200000, "pumps": 50000, "civil": 326000, "mech": 264000, "elec": 128000, "hvac": 35300, "feed": 225000, "design": 289000, "cdm": 235000, "comm": 76000}, "chartStack": {"direct_total": 3026800, "indirect_total": 1072500, "gen_total": 1229800}, "chartDonut": [2047500, 979300], "chartDonutIds": ["sec1", "sec2"], "chartDonutDetail": [967000, 358000, 200000, 50000, 326000, 264000, 128000, 35300], "chartDonutDetailIds": ["lyo", "hplc", "tanks", "pumps", "civil", "mech", "elec", "hvac"]};
+const EXT_OOM = 78108089;
+const EXT_COST_DATA = {"oom": 78108089, "baseSub": 47591969, "baseRisk": 11897992, "baseTotal": 59489961, "baseRiskPct": 25, "otherSub": 4062357, "otherCont": 1015589, "otherTotal": 5077946, "otherContPct": 25, "confBase": 51654326, "confidence": 12913582, "confPct": 25, "riskReg": 626600, "genTotal": 13540182, "baseItems": [{"id": "fac", "amount": 254960, "lines": [[154960, "0.1"], [50000, "0.2"], [50000, "0.3"]]}, {"id": "sub", "amount": 1499680, "lines": [[1239680, "1.1"], [150000, "1.2"], [40000, "1.3"], [70000, "1.4"]]}, {"id": "sup", "amount": 3942636, "lines": []}, {"id": "int", "amount": 1270672, "lines": [[309920, "3.1"], [449384, "3.2"], [511368, "3.3"]]}, {"id": "fit", "amount": 154960, "lines": []}, {"id": "bld", "amount": 9532716, "lines": [[166808, "5.1"], [4165824, "5.2"], [2506484, "5.3"], [627200, "5.4"], [1966400, "5.5"]]}, {"id": "proc", "amount": 23249083, "lines": []}, {"id": "prefab", "amount": 0, "lines": []}, {"id": "exist", "amount": 204000, "lines": [[80000, "7.1"], [40000, "7.2"], [84000, "7.3"]]}, {"id": "ext", "amount": 1859520, "lines": []}, {"id": "pre", "amount": 3357458, "lines": []}, {"id": "ohp", "amount": 2266284, "lines": []}], "otherItems": [{"id": "design", "amount": 3807357}, {"id": "survey", "amount": 80000}, {"id": "breeam", "amount": 150000}, {"id": "plan", "amount": 25000}, {"id": "client", "amount": 0}], "chartStack": {"base_total": 59489961, "other_total": 5077946, "general_risk": 13540182}, "chartDonut": [254960, 1499680, 3942636, 1270672, 154960, 9532716, 23249083, 204000, 1859520, 3357458, 2266284], "chartDonutIds": ["fac", "sub", "sup", "int", "fit", "bld", "proc", "exist", "ext", "pre", "ohp"]};
+const C1_COST_DATA = {"oom": 2476500, "equipSub": 1905000, "projectCont": 571500, "contPct": 30, "genTotal": 571500, "isoFixed": 1000000, "hvacGroup": 575000, "flexGroup": 330000, "lines": {"iso2f": 500000, "isoGF": 500000, "hvac": 350000, "airlock": 225000, "flex": 330000}, "chartStack": {"equip_sub": 1905000, "project_cont": 571500}, "chartDonut": [1000000, 575000, 330000], "chartDonutIds": ["sec1", "sec2", "sec3"]};
+const GANTT_C1 = [["c1Scope", "2026-10-01", "2026-11-30", "plan", "Finalise scope (8 weeks), aligned with retrofit approval.", "\u8303\u56f4\u5b9a\u7a3f\uff088 \u5468\uff09\uff0c\u5047\u8bbe\u4e0e\u6539\u9020\u9879\u76ee\u4e00\u5e76\u6279\u51c6\u3002", "2026/10 \u2013 2026/12"], ["c1Dd", "2026-12-01", "2027-02-28", "plan", "Detailed design (12 weeks).", "\u8be6\u7ec6\u8bbe\u8ba1\uff0812 \u5468\uff09\u3002", "2026/12 \u2013 2027/03"], ["c1Build", "2027-03-01", "2027-07-30", "warn", "Place orders & equipment build (20 weeks).", "\u4e0b\u5355\u53ca\u8bbe\u5907\u5236\u9020\uff0820 \u5468\uff09\u3002", "2027/03 \u2013 2027/08"], ["c1IQ", "2027-08-01", "2027-09-30", "build", "Installation & qualification (8 weeks).", "\u5b89\u88c5\u4e0e\u786e\u8ba4\uff088 \u5468\uff09\u3002", "2027/08 \u2013 2027/10"]];
+const HIPO_COST_DATA = {"total": 4562044, "buildingWorks": 1951140, "facBuildSub": 1495729, "profServices": 141800, "clientEquip": 1975045, "riskAllowance": 397875, "inflation": 96184, "groups": {"sec0": 65567, "sec2": 68690, "sec3": 58898, "sec4": 765000, "sec5": 537574, "sec9": 362500, "sec10": 92911}, "lines": {"fw1": 46967, "fw2": 18600, "ss1": 42440, "ss2": 26250, "fin1": 9810, "fin2": 23631, "fin3": 25457, "ffeIso4": 600000, "ffeIso1": 100000, "ffeFume": 20000, "ffeSf6": 20000, "ffeFurn": 20000, "ffeWrite": 5000, "sv3": 3000, "sv4": 38600, "sv6": 217920, "sv8": 107380, "sv11": 30030, "sv12": 51345, "sv13": 63700, "sv14": 25599, "pre1": 10500, "pre2": 21000, "pre3": 331000, "sec10": 92911, "prof": 141800, "equip": 1975045, "risk": 397875, "inflation": 96184}, "chartStack": {"building": 1951140, "prof": 141800, "equip": 1975045, "risk": 397875, "inflation": 96184}, "chartDonut": [65567, 68690, 58898, 765000, 537574, 362500, 92911], "chartDonutIds": ["sec0", "sec2", "sec3", "sec4", "sec5", "sec9", "sec10"]};
+const GANTT_HIPO = [["hFund", "2026-10-13", "2026-10-20", "warn", "Asymchem funding approval & decision to proceed \u2014 milestone 13 Oct 2026 (0 days).", "\u51ef\u83b1\u82f1\u8d44\u91d1\u6279\u51c6\u4e0e\u63a8\u8fdb\u51b3\u5b9a \u2014 \u8282\u70b9 2026-10-13\uff080 \u5929\uff09\u3002"], ["hConsult", "2026-10-13", "2026-10-26", "plan", "Appoint consultant team (5 days); draft Basis of Design (10 days).", "\u987e\u95ee\u56e2\u961f\u4efb\u547d\uff085 \u5929\uff09\uff1b\u7f16\u5236\u8bbe\u8ba1\u57fa\u7840 BoD \u8349\u6848\uff0810 \u5929\uff09\u3002"], ["hContractor", "2026-10-27", "2026-11-30", "plan", "Engage and appoint principal contractor (25 days): draft contract, enquiry/ITT, negotiate contractor's fee.", "\u4e3b\u627f\u5305\u5546\u63a5\u6d3d\u4e0e\u4efb\u547d\uff0825 \u5929\uff09\uff1a\u5408\u540c\u8d77\u8349\u3001\u62db\u6807\u8be2\u4ef7\uff08ITT\uff09\u3001\u627f\u5305\u5546\u8d39\u7387\u8c08\u5224\u3002"], ["hAward", "2026-11-30", "2026-12-28", "plan", "Contract award milestone 30 Nov 2026; mobilise & contract (20 days).", "\u5408\u540c\u6388\u4e88\u8282\u70b9 2026-11-30\uff1b\u52a8\u5458\u4e0e\u7b7e\u7ea6\uff0820 \u5929\uff09\u3002"], ["hSurvey", "2026-12-29", "2027-02-24", "plan", "Design stage (35 days): specify and organise initial site surveys and investigations; prepare initial project control documents & PEP.", "\u8bbe\u8ba1\u9636\u6bb5\uff0835 \u5929\uff09\uff1a\u73b0\u573a\u52d8\u67e5\u4e0e\u8c03\u67e5\u7684\u754c\u5b9a\u3001\u7ec4\u7ec7\u4e0e\u6267\u884c\uff1b\u7f16\u5236\u521d\u7248\u9879\u76ee\u63a7\u5236\u6587\u4ef6\u4e0e PEP\u3002"], ["hLabDesign", "2026-12-29", "2027-04-14", "plan", "Lab design (70 days): user meeting / RFI / BoD confirmation, concept & co-ordinated design, equipment specification & schedules, detailed design, cost estimate +/-10%, building control.", "\u5b9e\u9a8c\u5ba4\u8bbe\u8ba1\uff0870 \u5929\uff09\uff1a\u7528\u6237\u4f1a\u8bae / RFI / BoD \u786e\u8ba4\uff0c\u6982\u5ff5\u4e0e\u534f\u8c03\u8bbe\u8ba1\uff0c\u8bbe\u5907\u89c4\u683c\u4e0e\u6e05\u5355\uff0c\u8be6\u7ec6\u8bbe\u8ba1\uff0c\u00b110% \u8d39\u7528\u4f30\u7b97\uff0c\u5efa\u7b51\u5ba1\u6279\u3002"], ["hCdm", "2026-12-29", "2027-09-30", "plan", "CDM (187 days): review/prepare PCI, submit F10, construction phase plan, H&S file / O&M.", "CDM\uff08187 \u5929\uff09\uff1aPCI \u5ba1\u6838\u4e0e\u7f16\u5236\u3001F10 \u63d0\u4ea4\u3001\u65bd\u5de5\u9636\u6bb5\u8ba1\u5212\u3001\u5065\u5eb7\u5b89\u5168\u6863\u6848 / O&M\u3002"], ["hIso", "2027-01-12", "2027-07-14", "warn", "Isolators (120 days): vendor shortlisting & T&Cs, tender & approval, order placed, drawings approved, manufacture [12 weeks?], delivery to site 14 Jul 2027.", "\u9694\u79bb\u5668\uff08120 \u5929\uff09\uff1a\u4f9b\u5e94\u5546\u77ed\u540d\u5355\u4e0e\u5546\u52a1\u6761\u6b3e\u3001\u62db\u6807\u4e0e\u6279\u51c6\u3001\u4e0b\u5355\u3001\u56fe\u7eb8\u6279\u51c6\u3001\u5236\u9020\uff0812 \u5468\uff1f\uff09\u30012027-07-14 \u5230\u573a\u3002"], ["hFume", "2027-01-12", "2027-07-14", "warn", "Fume cupboards (new? TBC) \u2014 120 days, same procurement route as isolators.", "\u901a\u98ce\u67dc\uff08\u662f\u5426\u65b0\u8d2d\u5f85\u5b9a\uff09\u2014 120 \u5929\uff0c\u91c7\u8d2d\u8def\u5f84\u540c\u9694\u79bb\u5668\u3002"], ["hFurn", "2027-01-12", "2027-06-11", "warn", "Laboratory furniture (100 days): shortlist, tender, order, manufacture, delivery to site 11 Jun 2027.", "\u5b9e\u9a8c\u5ba4\u5bb6\u5177\uff08100 \u5929\uff09\uff1a\u77ed\u540d\u5355\u3001\u62db\u6807\u3001\u4e0b\u5355\u3001\u5236\u9020\u30012027-06-11 \u5230\u573a\u3002"], ["hTrade", "2027-01-12", "2027-05-28", "warn", "Works procurement \u2014 trade contractors (90 days): shortlist/PQQ, tendering and approval in principle, final price and contract based on detailed design.", "\u5206\u5305\u5de5\u7a0b\u91c7\u8d2d\uff0890 \u5929\uff09\uff1a\u77ed\u540d\u5355 / PQQ\u3001\u62db\u6807\u4e0e\u539f\u5219\u6027\u6279\u51c6\u3001\u57fa\u4e8e\u8be6\u7ec6\u8bbe\u8ba1\u7684\u6700\u7ec8\u4ef7\u683c\u4e0e\u5408\u540c\u3002"], ["hConstr", "2027-05-31", "2027-09-16", "build", "Construction from 31 May 2027: strip out / MEP divestment and demolition, walls and doors, write-up area, 1st fix MEP, decoration, isolator installation, 2nd fix MEP, ceilings and floors, furniture and equipment.", "\u65bd\u5de5\u81ea 2027-05-31 \u8d77\uff1a\u62c6\u9664\u4e0e\u673a\u7535\u64a4\u9664\u3001\u5899\u4f53\u4e0e\u95e8\u3001\u529e\u516c\u533a\u3001\u4e00\u6b21\u673a\u7535\u3001\u88c5\u9970\u3001\u9694\u79bb\u5668\u5b89\u88c5\u3001\u4e8c\u6b21\u673a\u7535\u3001\u540a\u9876\u4e0e\u5730\u9762\u3001\u5bb6\u5177\u4e0e\u8bbe\u5907\u5b89\u88c5\u3002"], ["hComm", "2027-09-17", "2027-10-07", "build", "Test & commission HVAC, isolators, fume cupboards and equipment (10 days); pharmaceutical clean and handover (5 days).", "\u6696\u901a\u3001\u9694\u79bb\u5668\u3001\u901a\u98ce\u67dc\u53ca\u8bbe\u5907\u6d4b\u8bd5\u8c03\u8bd5\uff0810 \u5929\uff09\uff1b\u836f\u54c1\u7ea7\u6e05\u6d01\u4e0e\u79fb\u4ea4\uff085 \u5929\uff09\u3002"], ["hRisk", "2027-10-08", "2027-11-12", "warn", "Programme risk allowance; activities complete late Oct 2027 and the remaining float runs to the delivery target of 12 Nov 2027.", "\u8fdb\u5ea6\u98ce\u9669\u9884\u7559\uff1b\u5404\u9879\u6d3b\u52a8\u4e8e 2027 \u5e74 10 \u6708\u4e0b\u65ec\u5b8c\u6210\uff0c\u4f59\u91cf\u81f3\u4ea4\u4ed8\u76ee\u6807 2027-11-12\u3002"]];
+const EQUIP_ITEMS = [{"id": "eq3", "group": "ARD/QC", "title": "HPLC System", "location": "Room 2", "model": "1290 Infinity 3", "ne": "N", "cost": 300000}, {"id": "eq9", "group": "ARD/QC", "title": "HPLC/Mass Spectrometer System", "location": "Bench top", "model": "G7120A Highspeed Pump,", "ne": "N", "cost": 200000}, {"id": "eq16", "group": "ARD/QC", "title": "GCMS", "location": "or GCMS", "model": "", "ne": "N", "cost": 120000}, {"id": "eq17", "group": "ARD/QC", "title": "nitrogen gas generator", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000}, {"id": "eq18", "group": "ARD/QC", "title": "hydrogen gas generator", "location": "or GCMS", "model": "", "ne": "N", "cost": 8000}, {"id": "eq19", "group": "ARD/QC", "title": "Electronic Pipette", "location": "Benchtop", "model": "", "ne": "N", "cost": 1600}, {"id": "eq20", "group": "ARD/QC", "title": "MILLIQ", "location": "Undersink", "model": "IQ 7000 ?", "ne": "N", "cost": 20000}, {"id": "eq21", "group": "ARD/QC", "title": "Prep HPLC", "location": "Large Fumehood", "model": "Newstyle NS 4330", "ne": "N", "cost": 50000}, {"id": "eq23", "group": "ARD/QC", "title": "pH", "location": "Fumhood", "model": "SevenExcellence", "ne": "N", "cost": 20000}, {"id": "eq25", "group": "ARD/QC", "title": "SFC", "location": "Bench top", "model": "Acquity UPC2", "ne": "E", "cost": 150000}, {"id": "eq27", "group": "ARD/QC", "title": "GC", "location": "Bench top (if sapce is limited, remove another FH?)", "model": "8890B GC", "ne": "E", "cost": 80000}, {"id": "eq29", "group": "ARD/QC", "title": "Mass Spec", "location": "Bench top", "model": "1290 Infinty 2", "ne": "N", "cost": 140000}, {"id": "eq30", "group": "ARD/QC", "title": "KF Coulimetric", "location": "Fumehood", "model": "852 Titrando", "ne": "N", "cost": 45000}, {"id": "eq36", "group": "Isolators", "title": "Huber TC45 with immersion cooler", "location": "Under isolator 2", "model": "TC45", "ne": "", "cost": 4345}, {"id": "eq37", "group": "Isolators", "title": "Karl Fisher Titrator", "location": "Isolator 1", "model": "T50", "ne": "N", "cost": 30000}, {"id": "eq38", "group": "Isolators", "title": "Benchtop Powder X-ray Diffractor", "location": "Benchtop", "model": "Bruker", "ne": "E", "cost": 200000}, {"id": "eq39", "group": "Isolators", "title": "Particle Size", "location": "Isolator 5", "model": "Mastersizer", "ne": "N", "cost": 160000}, {"id": "eq40", "group": "Isolators", "title": "Lyophiliser", "location": "Benchtop", "model": "tbc", "ne": "N", "cost": 100000}, {"id": "eq41", "group": "Isolators", "title": "Analytical Balance", "location": "Isolator 1", "model": "XP205", "ne": "", "cost": 20000}, {"id": "eq42", "group": "Isolators", "title": "Microbalance", "location": "isolator 1", "model": "", "ne": "N", "cost": 25000}, {"id": "eq43", "group": "Isolators", "title": "Easymax Reactor System", "location": "isolator 3", "model": "Easymax 102", "ne": "N", "cost": 80000}, {"id": "eq45", "group": "Isolators", "title": "Chiller unit", "location": "under isolator 3", "model": "FL1703", "ne": "E", "cost": 12000}, {"id": "eq47", "group": "Isolators", "title": "Drying Oven", "location": "Isolator 4", "model": "Vacucentre VC50", "ne": "N/E", "cost": 36000}, {"id": "eq48", "group": "Isolators", "title": "FTIR", "location": "Isolator 2", "model": "NICOLET APEX KBR WITH PURGE KIT", "ne": "E", "cost": 28000}, {"id": "eq53", "group": "CRD", "title": "Laboratory Fridge", "location": "Room 4", "model": "", "ne": "", "cost": 750}, {"id": "eq54", "group": "CRD", "title": "Laboratory Freezer", "location": "Room 4", "model": "", "ne": "", "cost": 750}, {"id": "eq55", "group": "CRD", "title": "Reactor Ready Twin reactor", "location": "FH1", "model": "", "ne": "N", "cost": 20000}, {"id": "eq56", "group": "CRD", "title": "Mettler Toledo SP-50 Dosing units", "location": "FH1", "model": "SP-50", "ne": "N", "cost": 1600}, {"id": "eq57", "group": "CRD", "title": "RX10 Controller", "location": "FH1", "model": "", "ne": "N", "cost": 2400}, {"id": "eq58", "group": "CRD", "title": "Heidolph Motors", "location": "FH1", "model": "", "ne": "N", "cost": 1600}, {"id": "eq59", "group": "CRD", "title": "Reactor Ready Stand", "location": "FH1", "model": "", "ne": "N", "cost": 1000}, {"id": "eq60", "group": "CRD", "title": "Vacuum Pump", "location": "FH1", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000}, {"id": "eq61", "group": "CRD", "title": "Recirculating Chiller", "location": "FH1", "model": "Ministat 240", "ne": "N", "cost": 23000}, {"id": "eq62", "group": "CRD", "title": "Analytical Balance", "location": "Either/or", "model": "XP205", "ne": "N", "cost": 20000}, {"id": "eq63", "group": "CRD", "title": "Large Scale Balance", "location": "Either/or", "model": "", "ne": "N", "cost": 1000}, {"id": "eq65", "group": "CRD", "title": "Easymax Reactor System", "location": "FH2", "model": "Easymax 102", "ne": "N", "cost": 160000}, {"id": "eq67", "group": "CRD", "title": "Chiller unit", "location": "FH2", "model": "FL1703", "ne": "N", "cost": 24000}, {"id": "eq70", "group": "CRD", "title": "Mettler Tolesdo SP-50 Dosing units", "location": "FH3", "model": "SP-50", "ne": "N", "cost": 80000}, {"id": "eq71", "group": "CRD", "title": "Chiller unit", "location": "FH3", "model": "FL1703", "ne": "N", "cost": 12000}, {"id": "eq72", "group": "CRD", "title": "Stem blocks", "location": "FH3", "model": "", "ne": "N", "cost": 2000}, {"id": "eq73", "group": "CRD", "title": "Stirrer hotplate", "location": "FH3", "model": "", "ne": "E", "cost": 1200}, {"id": "eq76", "group": "CRD", "title": "Biotage", "location": "FH4 - Flexible", "model": "F150  or F75? and UV monitor", "ne": "N", "cost": 12000}, {"id": "eq77", "group": "CRD", "title": "Rotary Evaporator", "location": "FH4 - Flexible", "model": "HEI-VAP Expert", "ne": "N", "cost": 6000}, {"id": "eq78", "group": "CRD", "title": "Vacuum Pump", "location": "FH4 - Flexible", "model": "PC3001 Vario Plus", "ne": "N", "cost": 5000}, {"id": "eq82", "group": "CRD", "title": "Overhead stirrer", "location": "FH4 - Flexible", "model": "", "ne": "N", "cost": 1000}, {"id": "eq84", "group": "CRD", "title": "TBD", "location": "Software", "model": "", "ne": "", "cost": 200000}, {"id": "eq88", "group": "CRD", "title": "Dishwasher/glasswash", "location": "Miscellaneous", "model": "Undercounter Laboratory Glassware Washer PG8583CD", "ne": "N", "cost": 10000}];
+
+function extCostLabels(){return I18N[lang].extCost;}
+function extBullets(id){const b=I18N[lang].extCost.bullets;return (b&&b[id])?b[id]:[];}
+function extCostItemHTML(id,amt){
+const L=extCostLabels();
+const bullets=extBullets(id);
+const bl=bullets.length?`<ul class="cost-bullets">${bullets.map(x=>`<li>${x}</li>`).join("")}</ul>`:"";
+const body=bl?`<div class="cost-children">${bl}</div>`:"";
+return `<details class="cost-item cost-item-sub"${bl?"":" data-no-body"}><summary><span class="cost-label">${L[id]}</span><span class="cost-amt">${fm(amt)}</span></summary>${body}</details>`;
+}
+function extSectionHd(title,total){
+return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(total)}</span>`;
+}
+function extCostHTML(){
+const D=EXT_COST_DATA,L=extCostLabels();
+let baseItems=D.baseItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,it.amount)).join("");
+const baseBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secBase,D.baseTotal)}</summary>
+<div class="cost-section-body">${baseItems}
+<div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.baseSub)}</span></div>
+<div class="cost-risk-line"><span>${L.baseRisk}</span><span>${fm(D.baseRisk)}</span></div></div></details>`;
+let otherItems=D.otherItems.filter(it=>it.amount>0).map(it=>extCostItemHTML(it.id,it.amount)).join("");
+const otherBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secOther,D.otherTotal)}</summary>
+<div class="cost-section-body">${otherItems}
+<div class="cost-subtotal"><span>${L.subtotal}</span><span>${fm(D.otherSub)}</span></div>
+<div class="cost-risk-line"><span>${L.otherCont}</span><span>${fm(D.otherCont)}</span></div></div></details>`;
+const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${extSectionHd(L.secGen,D.genTotal)}</summary>
+<div class="cost-section-body">
+<div class="cost-leaf cost-leaf-sub"><span>${L.confidence}</span><span>${fm(D.confidence)}</span></div>
+<div class="cost-leaf cost-leaf-sub"><span>${L.riskReg}</span><span>${fm(D.riskReg)}</span></div></div></details>`;
+return `<div class="cost-total-bar"><span>${L.oom}</span><span>${fm(D.oom)}</span></div>${baseBlock}${otherBlock}${genBlock}`;
+}
+function buildExtInvestmentCharts(){
+const zh=lang==="zh",D=EXT_COST_DATA,Lc=I18N[lang].extChart||{};
+const el1=document.getElementById("cExt1")||document.getElementById("c1");
+const el2=document.getElementById("cExt2")||document.getElementById("c2");
+if(!el1||!el2)return;
+new Chart(el1,{type:"bar",data:{labels:[zh?"项目 OOM":"Project OOM"],datasets:[
+{label:Lc.stackBase||"Base",data:[D.baseTotal],backgroundColor:"#0f2b46"},
+{label:Lc.stackOther||"Other",data:[D.otherTotal],backgroundColor:"#009688"},
+{label:Lc.stackGen||"Risk",data:[D.genTotal],backgroundColor:"#c9a227"}]},
+options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
+scales:{x:{stacked:true,max:D.oom*1.02,ticks:{callback:v=>"£"+(v/1e6).toFixed(1)+"M"}},y:{stacked:true,display:false}}}});
+const ids=D.chartDonutIds,amts=D.chartDonut;
+const labels=ids.map(id=>(I18N[lang].extCost[id]||id));
+new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,backgroundColor:["#1a4a6e","#2e6da4","#5a8ab8","#4a7ba8","#009688","#4db6ac","#c9a227","#8a9bae","#6d8ea8","#3d6a8e","#7eb8b0","#5c7a94"]}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:8},boxWidth:10}}}}});
+}
+
+function hplcCostLabels(){return I18N[lang].hplcCost;}
+function hplcLeaf(id,amt,depth){
+const L=hplcCostLabels();
+const pad=depth===3?" cost-leaf-l3":"";
+return `<div class="cost-leaf cost-leaf-sub${pad}"><span>${L[id]}</span><span>${fm(Number(amt)||0)}</span></div>`;
+}
+function hplcSectionHd(title,total){
+return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(Number(total)||0)}</span>`;
+}
+function hplcSubSectionHd(title,total){
+return `<span class="cost-label">${title}</span><span class="cost-amt">${fm(Number(total)||0)}</span>`;
+}
+function hplcCostHTML(){
+const D=HPLC_COST_DATA,L=hplcCostLabels(),ln=D.lines||{};
+const mainBlock=`<details class="cost-item cost-item-sub cost-item-l2" open><summary>${hplcSubSectionHd(L.sec1,D.mainEquipTotal)}</summary>
+<div class="cost-children">
+${hplcLeaf("lyo",ln.lyo,3)}${hplcLeaf("hplc",ln.hplc,3)}${hplcLeaf("tanks",ln.tanks,3)}${hplcLeaf("pumps",ln.pumps,3)}
+${hplcLeaf("mainPrice",D.mainPriceRisk,3)}
+</div></details>`;
+const infraBlock=`<details class="cost-item cost-item-sub cost-item-l2" open><summary>${hplcSubSectionHd(L.sec2,D.infraTotal)}</summary>
+<div class="cost-children">
+${hplcLeaf("civil",ln.civil,3)}${hplcLeaf("mech",ln.mech,3)}${hplcLeaf("elec",ln.elec,3)}${hplcLeaf("hvac",ln.hvac,3)}
+${hplcLeaf("infraPrice",D.infraPriceRisk,3)}
+</div></details>`;
+const directBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secDirect,D.directTotal)}</summary>
+<div class="cost-section-body">${mainBlock}${infraBlock}</div></details>`;
+const indirectBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secIndirect,D.indirectTotal)}</summary>
+<div class="cost-section-body">
+${hplcLeaf("feed",ln.feed,3)}${hplcLeaf("design",ln.design,3)}${hplcLeaf("cdm",ln.cdm,3)}${hplcLeaf("comm",ln.comm,3)}${hplcLeaf("indirectPrice",D.indirectPriceRisk,3)}
+</div></details>`;
+const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hplcSectionHd(L.secGen,D.genTotal)}</summary>
+<div class="cost-section-body">
+${hplcLeaf("projectCont",D.projectCont,3)}
+</div></details>`;
+return `<div class="cost-total-bar"><span>${L.capex}</span><span>${fm(D.oom)}</span></div>${directBlock}${indirectBlock}${genBlock}`;
+}
+function buildHplcInvestmentCharts(){
+const zh=lang==="zh",D=HPLC_COST_DATA,Lc=I18N[lang].hplcChart||{};
+const el1=document.getElementById("cHplc1")||document.getElementById("c1");
+const el2=document.getElementById("cHplc2")||document.getElementById("c2");
+if(!el1||!el2)return;
+new Chart(el1,{type:"bar",data:{labels:[zh?"项目总投资":"Total CAPEX"],datasets:[
+{label:Lc.stackDirect||"Direct",data:[D.directTotal],backgroundColor:"#0f2b46"},
+{label:Lc.stackIndirect||"Indirect",data:[D.indirectTotal],backgroundColor:"#009688"},
+{label:Lc.stackGen||"Contingency",data:[D.genTotal],backgroundColor:"#c9a227"}]},
+options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
+scales:{x:{stacked:true,max:D.oom*1.02,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M"}},y:{stacked:true,display:false}}}});
+const ids=D.chartDonutIds,amts=D.chartDonut;
+const labels=ids.map(id=>(I18N[lang].hplcCost[id]||id));
+new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#5b6eae","#4a7ba8","#009688","#4db6ac","#7eb8b0"]}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:8},boxWidth:10}}}}});
+}
+
+function c1CostLabels(){return I18N[lang].c1Cost;}
+function c1Leaf(id,amt,depth){
+const L=c1CostLabels();
+const pad=depth===3?" cost-leaf-l3":"";
+return `<div class="cost-leaf cost-leaf-sub${pad}"><span>${L[id]}</span><span>${fm(Number(amt)||0)}</span></div>`;
+}
+function c1SectionHd(title,total){
+return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(Number(total)||0)}</span>`;
+}
+function c1SubSectionHd(title,total){
+return `<span class="cost-label">${title}</span><span class="cost-amt">${fm(Number(total)||0)}</span>`;
+}
+function c1CostHTML(){
+const D=C1_COST_DATA,L=c1CostLabels(),ln=D.lines||{};
+const isoBlock=`<details class="cost-item cost-item-sub cost-item-l2" open><summary>${c1SubSectionHd(L.sec1,D.isoFixed)}</summary>
+<div class="cost-children">${c1Leaf("iso2f",ln.iso2f,3)}${c1Leaf("isoGF",ln.isoGF,3)}</div></details>`;
+const hvacBlock=`<details class="cost-item cost-item-sub cost-item-l2" open><summary>${c1SubSectionHd(L.sec2,D.hvacGroup)}</summary>
+<div class="cost-children">${c1Leaf("hvac",ln.hvac,3)}${c1Leaf("airlock",ln.airlock,3)}</div></details>`;
+const flexBlock=`<details class="cost-item cost-item-sub cost-item-l2" open><summary>${c1SubSectionHd(L.sec3,D.flexGroup)}</summary>
+<div class="cost-children">${c1Leaf("flex",ln.flex,3)}</div></details>`;
+const equipBlock=`<details class="cost-section" open><summary class="cost-section-hd">${c1SectionHd(L.secEquip,D.equipSub)}</summary>
+<div class="cost-section-body">${isoBlock}${hvacBlock}${flexBlock}</div></details>`;
+const genBlock=`<details class="cost-section" open><summary class="cost-section-hd">${c1SectionHd(L.secGen,D.genTotal)}</summary>
+<div class="cost-section-body">${c1Leaf("projectCont",D.projectCont,3)}</div></details>`;
+return `<div class="cost-total-bar"><span>${L.capex}</span><span>${fm(D.oom)}</span></div>${equipBlock}${genBlock}`;
+}
+function buildC1InvestmentCharts(){
+const zh=lang==="zh",D=C1_COST_DATA,Lc=I18N[lang].c1Chart||{};
+const el1=document.getElementById("cC11")||document.getElementById("c1");
+const el2=document.getElementById("cC12")||document.getElementById("c2");
+if(!el1||!el2)return;
+new Chart(el1,{type:"bar",data:{labels:[zh?"项目总投资":"Total CAPEX"],datasets:[
+{label:Lc.stackEquip||"Equipment",data:[D.equipSub],backgroundColor:"#0f2b46"},
+{label:Lc.stackCont||"Contingency",data:[D.projectCont],backgroundColor:"#c9a227"}]},
+options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},
+scales:{x:{stacked:true,max:D.oom*1.02,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M"}},y:{stacked:true,display:false}}}});
+const ids=D.chartDonutIds,amts=D.chartDonut;
+const labels=ids.map(id=>(I18N[lang].c1Cost[id]||id));
+new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,backgroundColor:["#0f2b46","#1a4a6e","#2e6da4"]}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:8},boxWidth:10}}}}});
+}
+
+function hipoCostLabels(){return I18N[lang].hipoCost;}
+function hipoLeaf(id,amt,depth){
+const L=hipoCostLabels();
+const pad=depth===3?" cost-leaf-l3":"";
+return `<div class="cost-leaf cost-leaf-sub${pad}"><span>${L[id]}</span><span>${fm(Number(amt)||0)}</span></div>`;
+}
+function hipoSectionHd(title,total){
+return `<span class="cost-section-title">${title}</span><span class="cost-section-amt">${fm(Number(total)||0)}</span>`;
+}
+function hipoSubHd(title,total){
+return `<span class="cost-label">${title}</span><span class="cost-amt">${fm(Number(total)||0)}</span>`;
+}
+function hipoGroup(id,leaves){
+const D=HIPO_COST_DATA,L=hipoCostLabels(),ln=D.lines||{};
+const body=leaves.map(k=>hipoLeaf(k,ln[k],3)).join("");
+return `<details class="cost-item cost-item-sub cost-item-l2" open><summary>${hipoSubHd(L[id],D.groups[id])}</summary>
+<div class="cost-children">${body}</div></details>`;
+}
+function hipoGroupFlat(id){
+const D=HIPO_COST_DATA,L=hipoCostLabels();
+return `<details class="cost-item cost-item-sub cost-item-l2" data-no-body><summary>${hipoSubHd(L[id],D.groups[id])}</summary></details>`;
+}
+function hipoCostHTML(){
+const D=HIPO_COST_DATA,L=hipoCostLabels(),ln=D.lines||{};
+const buildBody=[
+hipoGroup("sec0",["fw1","fw2"]),
+hipoGroup("sec2",["ss1","ss2"]),
+hipoGroup("sec3",["fin1","fin2","fin3"]),
+hipoGroup("sec4",["ffeIso4","ffeIso1","ffeFume","ffeSf6","ffeFurn","ffeWrite"]),
+hipoGroup("sec5",["sv3","sv4","sv6","sv8","sv11","sv12","sv13","sv14"]),
+`<div class="cost-subtotal"><span>${L.subBuild}</span><span>${fm(D.facBuildSub)}</span></div>`,
+hipoGroup("sec9",["pre1","pre2","pre3"]),
+hipoGroupFlat("sec10"),
+].join("");
+const buildBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secBuild,D.buildingWorks)}</summary>
+<div class="cost-section-body">${buildBody}</div></details>`;
+const profBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secProf,D.profServices)}</summary>
+<div class="cost-section-body">${hipoLeaf("prof",ln.prof,3)}</div></details>`;
+const equipBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secEquip,D.clientEquip)}</summary>
+<div class="cost-section-body">${hipoLeaf("equip",ln.equip,3)}</div></details>`;
+const riskBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secRisk,D.riskAllowance)}</summary>
+<div class="cost-section-body">${hipoLeaf("risk",ln.risk,3)}</div></details>`;
+const infBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secInf,D.inflation)}</summary>
+<div class="cost-section-body">${hipoLeaf("inflation",ln.inflation,3)}</div></details>`;
+return `<div class="cost-total-bar"><span>${L.capex}</span><span>${fm(D.total)}</span></div>${buildBlock}${profBlock}${equipBlock}${riskBlock}${infBlock}`;
+}
+function buildHipoInvestmentCharts(){
+const zh=lang==="zh",D=HIPO_COST_DATA,Lc=I18N[lang].hipoChart||{};
+const el1=document.getElementById("cHipo1"),el2=document.getElementById("cHipo2");
+if(!el1||!el2)return;
+const S=D.chartStack;
+new Chart(el1,{type:"bar",data:{labels:[Lc.stackAxis],datasets:[
+{label:Lc.stackBuilding,data:[S.building],backgroundColor:"#0f2b46"},
+{label:Lc.stackProf,data:[S.prof],backgroundColor:"#2e6da4"},
+{label:Lc.stackEquip,data:[S.equip],backgroundColor:"#1f7a6f"},
+{label:Lc.stackRisk,data:[S.risk],backgroundColor:"#c9a227"},
+{label:Lc.stackInf,data:[S.inflation],backgroundColor:"#9aa8b6"}]},
+options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{font:{size:8},boxWidth:10}}},
+scales:{x:{stacked:true,max:D.total*1.02,ticks:{callback:v=>"£"+(v/1e6).toFixed(2)+"M"}},y:{stacked:true,display:false}}}});
+const ids=D.chartDonutIds,amts=D.chartDonut;
+const labels=ids.map(id=>(I18N[lang].hipoCost[id]||id));
+new Chart(el2,{type:"doughnut",data:{labels,datasets:[{data:amts,
+backgroundColor:["#0f2b46","#1a4a6e","#2e6da4","#1f7a6f","#5b6eae","#c9a227","#9aa8b6"]}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{size:7.5},boxWidth:9}}}}});
+}
+
+let EQUIP_MUST={};
+let EQUIP_FILTER="all";
+function equipIsNew(it){return it.ne!=="E";}
+function equipMust(id){return EQUIP_MUST[id]!==false;}
+function equipNeLabel(ne){
+if(ne==="N")return t("hipoEqNew");
+if(ne==="E")return t("hipoEqExist");
+if(ne==="N/E")return "N/E";
+return "—";
+}
+function equipNeClass(ne){return ne==="E"?"ne-E":(ne==="N"||ne==="N/E"?"ne-N":"");}
+function equipNewMustTotal(){
+return EQUIP_ITEMS.reduce((s,it)=>s+(equipIsNew(it)&&equipMust(it.id)?it.cost:0),0);
+}
+function renderEquipPage(){
+const wrap=document.getElementById("equipTableWrap");
+const totalEl=document.getElementById("equipTotalAmt");
+if(!wrap)return;
+const groups=[];
+EQUIP_ITEMS.forEach(it=>{
+if(EQUIP_FILTER==="new"&&!equipIsNew(it))return;
+if(EQUIP_FILTER==="existing"&&equipIsNew(it))return;
+const last=groups[groups.length-1];
+if(!last||last.group!==it.group)groups.push({group:it.group,items:[it]});
+else last.items.push(it);
+});
+let html=`<table class="equip-table"><thead><tr>
+<th>${t("hipoEqColTitle")}</th><th>${t("hipoEqColLoc")}</th><th>${t("hipoEqColModel")}</th>
+<th>${t("hipoEqColNE")}</th><th class="cost">${t("hipoEqColCost")}</th>
+<th class="chk">${t("hipoEqColMust")}</th></tr></thead><tbody>`;
+groups.forEach(g=>{
+html+=`<tr class="grp"><td colspan="6">${g.group}</td></tr>`;
+g.items.forEach(it=>{
+const checked=equipMust(it.id)?" checked":"";
+html+=`<tr data-id="${it.id}">
+<td>${it.title}</td><td>${it.location||"—"}</td><td>${it.model||"—"}</td>
+<td class="${equipNeClass(it.ne)}">${equipNeLabel(it.ne)}</td>
+<td class="cost">${fm(it.cost)}</td>
+<td class="chk"><input type="checkbox" data-equip="${it.id}"${checked}></td>
+</tr>`;
+});
+});
+html+="</tbody></table>";
+wrap.innerHTML=html;
+if(totalEl)totalEl.textContent=fm(equipNewMustTotal());
+document.querySelectorAll(".equip-filters button").forEach(btn=>{
+btn.classList.toggle("active",btn.dataset.filter===EQUIP_FILTER);
+});
+wrap.querySelectorAll("input[data-equip]").forEach(box=>{
+box.addEventListener("change",()=>{
+EQUIP_MUST[box.dataset.equip]=box.checked;
+if(document.getElementById("equipTotalAmt"))
+document.getElementById("equipTotalAmt").textContent=fm(equipNewMustTotal());
+});
+});
+}
+function bindEquipPage(){
+document.querySelectorAll(".equip-filters button").forEach(btn=>{
+btn.onclick=()=>{EQUIP_FILTER=btn.dataset.filter;renderEquipPage();};
+});
+renderEquipPage();
+}
+
+let lang="zh", idx=0, chartsBuilt = {};
+
+const I18N={
+zh:{
+footer:"凯莱英 UK · Sandwich PDF 资本项目",
+nav:"← → 翻页", tag:"内部汇报 · 整体汇报",
+p1t:"凯莱英 UK · Sandwich PDF", p1s:"资本项目汇报", p1m:"B902 东侧扩建 + 厂房内 HPLC/冻干改造 + C1 模块 OEB5 升级 + OEB5 高活实验室 · 2026年8月",
+p2t:"项目概览", p2s:"四条独立工作流 · 可行性 / 概念 / 内部估算量级",
+p2th1:"子项目", p2th2:"范围", p2th3:"投资（估算量级）", p2th4:"关键节点",
+p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干燥", p2r1o:"£78.1M", p2r1d:"2030-05 竣工（保持）",
+p2r2n:"HPLC + 冻干", p2r2s:"既有 PDF footprint 改造", p2r2o:"£5.33M", p2r2d:"2027-12 HPLC / 2028-03 冻干",
+p2r3n:"C1 模块 OEB5 升级", p2r3s:"现有 C1 模块 OEB5 日常运行能力", p2r3o:"£2.48M", p2r3d:"2027-10 安装确认",
+p2r4n:"OEB5 高活实验室", p2r4s:"既有 G-128 套间改造；GIFA 215 m²；4+1 台隔离器", p2r4o:"£4.56M", p2r4d:"计划 2027-11 交付",
+p2link:"交付关联：厂房内改造（制备 HPLC + 冻干）与 C1 模块升级须同步完成，方能为制备 HPLC 操作提供 OEB5 能力；制备 HPLC 单元驱动整体交付时间线。",
+p2sum:"厂房内三条线合计（改造 £5.33M + C1 £2.48M + 高活实验室 £4.56M）约 £12.37M，不含 902 东侧扩建。各线口径不同：扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。",
+extTag:"扩建", hplcTag:"改造", c1Tag:"C1 OEB5", hipoTag:"高活实验室",
+extSec:"一、B902 东侧扩建", extSecs:"Scitech · RIBA Stage 1 · 300291-RE-0001",
+ext2t:"扩建 · 执行摘要", ext2s:"2026-05-22 · Issue A1",
+extK1:"FS 完成", extK1d:"RIBA 1",
+extK2:"£78.1M", extK2d:"项目 OOM",
+extK3:"2030-05", extK3d:"总控完成（集团口径保持）",
+extB1:"范围：东侧约 600 m²，四层+设备夹层，10 台反应釜、2500 L 加氢釜、3 套过滤干燥机及公用工程。",
+extB2:"方案：Option 1 — 拆除/迁址原加氢厂房；与 902 低层楼面贯通。",
+extB3:"进展：FS 完成；按集团口径保持 2030-05 竣工，沿用设计方总控计划；RIBA 2 概念设计启动延后需在阶段内消化。",
+ext4t:"扩建 · 范围基线", ext4s:"Option 1",
+ext4b1:"GIFA 约 3,099 m²；防洪抬升约 1.5 m", ext4b2:"第二疏散梯；加氢区泄压板", ext4b3:"BREEAM 预评估 Very Good 基线",
+ext5t:"扩建 · 投资总览", ext5s:"300291-CM-0001",
+ext5oom:"OOM 总价",
+ext6t:"扩建 · 投资结构", ext6s:"OOM 构成与直接工程费分项",
+ext6kOom:"OOM 总价", ext6kBase:"直接工程费（含 25%）", ext6kRisk:"其他费及可行性风险",
+extCost:{"oom": "项目 OOM 总价", "secBase": "直接工程费", "secOther": "其他项目费", "secGen": "一般风险与预备费", "subtotal": "小计", "baseRisk": "预备费（25%）", "otherCont": "预备费（25%）", "confidence": "全项目预备费（25%）", "riskReg": "风险登记册（概率加权总和）", "secTotal": "本项合计", "fac": "场地清理拆除", "sub": "地下结构", "sup": "地上结构", "int": "内部装修", "fit": "装置与设备", "bld": "建筑机电", "proc": "工艺设备", "prefab": "装配式建筑", "exist": "既有建筑改造", "ext": "室外工程", "pre": "临建 (8%)", "ohp": "承包商管理费与利润 (5%)", "design": "设计团队费 (8%)", "survey": "勘测与调查", "breeam": "BREEAM", "plan": "规划与法定费用", "client": "业主直接费", "bullets": {"fac": ["拆除临建", "液氮罐移除", "加氢厂房拆除"], "sub": ["桩基基础", "设备地坪", "冷机基础", "台阶坡道"], "sup": ["框架楼板屋面", "防爆屋面墙", "楼梯钢构", "门窗"], "int": ["墙面饰面", "吊顶", "地面"], "fit": ["消毒清洁设施"], "bld": ["总包接口", "暖通空调", "电气", "EMS", "工艺控制"], "proc": ["搪玻璃釜", "过滤干燥机", "哈氏合金", "管道阀门", "真空等"], "prefab": ["本期不计"], "exist": ["烟囱加高", "钢构加固", "百叶整合"], "ext": ["场地建设、管网等"], "pre": ["现场管理临建"], "ohp": ["承包商 OH&P"], "design": ["设计团队费 8%"], "survey": ["勘测调查"], "breeam": ["BREEAM 评估"], "plan": ["规划法定费"], "client": ["可研阶段不计"]}},extChart:{"stackBase": "直接工程费", "stackOther": "其他项目费", "stackGen": "一般风险与预备费", "donutTitle": "直接工程费分项"},
+extChL:"项目 OOM 三板块", extChR:"直接工程费 — 分项",
+ext8t:"扩建 · 整体周期", ext8s:"300291-PM-PR-0002",
+extGSub:"总控时间轴（条块长度按日历比例）· 沿用设计方总控计划，按集团口径保持 2030-05 竣工",
+extGFs:"可行性 RIBA 1", extGR2:"概念 RIBA 2", extGR3:"方案 RIBA 3", extGPl:"规划",
+extGR4:"详细 RIBA 4", extGEq:"长周期设备", extGMed:"中等周期设备", extGPre:"施工准备",
+extGR5:"施工 RIBA 5", extGCo:"调试", extGEn:"验证/竣工",
+extLegD:"已完成", extLegP:"设计", extLegB:"施工", extLegM:"节点", extToday:"约今",
+ext9t:"扩建 · 决策事项", ext9d1:"是否批准进入 RIBA 2（概念设计）？",
+ext9d2:"是否推进模块化建造方案比选？",
+hplcSec:"二、厂房内 HPLC + 冻干", hplcSecs:"RBPC · Project 9802 · P01",
+hplc2t:"改造 · 执行摘要", hplc2s:"9802-RBP-ZZ-ZZ-RP-X-100000",
+hplcK1:"技术可行", hplcK1d:"FS P01",
+hplcK2:"£5.33M", hplcK2d:"项目总投资估算",
+hplcK3:"2027-12", hplcK3d:"HPLC 目标（+3 个月）",
+hplcK4:"2028-03", hplcK4d:"冻干目标（+3 个月）",
+hplcB1:"范围：制备 HPLC（DAC300/CP300）+ 冻干机（隔离器、除湿、纯蒸汽发生器等）及配套改造。",
+hplcB2:"投资：Total CAPEX Estimate £5.33M（直接+间接+30% 项目预备费）；非最终 Capex。",
+hplcB3:"周期：冻干机长周期驱动；优先冻干后 HPLC。",
+hplcB4:"关联：须与 C1 模块 OEB5 升级同步交付，方可实现制备 HPLC 的 OEB5 运行能力。",
+hplc3t:"改造 · 范围",
+hplcT1:"HPLC", hplcT1a:"DAC300/CP300 泵撬；移动头罐；2000 L 废液罐",
+hplcT1b:"Hanbon 供货", hplcT1c:"PG.05 区域安装",
+hplcT2:"冻干机", hplcT2a:"冻干腔、隔离器、双 CIP、除湿、PSG",
+hplcT2b:"东富龙（Tofflon）供货", hplcT2c:"气闸/改造约 20 周",
+hplc5t:"改造 · 投资总览", hplc5s:"9802-RBP-ZZ-ZZ-CP-X-100001",
+hplc5oom:"项目总投资估算",
+hplc6t:"改造 · 投资结构", hplc6s:"直接 / 间接 / 一般风险与预备费",
+hplc6kOom:"项目总投资", hplc6kDirect:"直接费用合计", hplc6kIndirect:"间接费用合计", hplc6kGen:"一般风险与预备费",
+hplc6kMain:"1. 主工艺设备", hplc6kInfra:"2. 基础设施改造",
+hplcCost:{"capex": "项目总投资估算", "secDirect": "直接费用合计", "secIndirect": "间接费用合计", "secGen": "一般风险与预备费", "secTotal": "本项合计", "sec1": "1. 主工艺设备", "lyo": "1.1 冻干机", "hplc": "1.2 HPLC 撬装", "tanks": "1.3 储罐/容器", "pumps": "1.4 泵组", "mainPrice": "1.5 价格风险（30%）", "sec2": "2. 基础设施改造", "civil": "2.1 土建结构", "mech": "2.2 机械与管道", "elec": "2.3 电气仪表", "hvac": "2.4 暖通空调", "infraPrice": "2.5 价格风险（30%）", "feed": "3. FEED 研究", "design": "4. 详细设计", "cdm": "5. CDM 费用", "comm": "6. 调试", "indirectPrice": "7. 价格风险（30%）", "projectCont": "全项目预备费（30%）"},hplcChart:{"stackDirect": "直接费用合计", "stackIndirect": "间接费用合计", "stackGen": "一般风险与预备费", "donutTitle": "直接费用 — 设备与改造分项"},
+hplcChL:"项目总投资构成", hplcChR:"直接费用 — 分项",
+hplc7t:"改造 · 周期", hplc7s:"FS §4.4 图 1 · 以 2026-09 启动重新基线（原 6 月口径 +3 个月）",
+hplc7k1:"冻干制造", hplc7k1d:"8–10 月",
+hplc7k2:"HPLC 供货", hplc7k2d:"~18 周",
+hplc7k3:"FEED", hplc7k3d:"12–14 周",
+hplc7k4:"详细设计", hplc7k4d:"18–20 周",
+hplcGSub:"High Level Programme · 以 2026-09 启动重新基线（+3 个月）",
+gFs:"FS/基准", gEng:"Engineer就位", gFeed:"FEED（示意）", gDd:"详细设计（示意）",
+gLySpec:"冻干规格/资金", gLyMfg:"冻干制造", gLyFat:"冻干 FAT", gLyShip:"冻干运输安装", gLyVal:"冻干验证→PQ",
+gHplcSpec:"HPLC 规格/资金", gHplcMfg:"HPLC 制造", gHplcFat:"HPLC FAT", gHplcShip:"HPLC 运输安装",
+gTanks:"移动头罐", gWaste:"废液罐", gRetrofit:"改造",
+legDone:"完成", legStaff:"工程师就位", legPlan:"采购/制造", legBuild:"施工/验证",
+legCrit:"关键路径", legAssume:"§4.3 示意", today:"约今",
+hplc9t:"改造 · 决策", hplc9d1:"是否批准进入 FEED？",
+hplc9d2:"是否批准长周期设备早期采购资金？",
+c1Sec:"三、C1 模块 OEB5 升级", c1Secs:"Sandwich PDF · 内部估算",
+c12t:"C1 · 执行摘要", c12s:"现有 C1 模块 OEB5 日常运行能力",
+c1K1:"OEB5 日常运行", c1K1d:"升级目标",
+c1K2:"£2.48M", c1K2d:"项目总投资估算",
+c1K3:"2027-10", c1K3d:"安装与确认目标（+3 个月）",
+c1B1:"范围：二层物料分装与首层最终包装固定隔离器；HVAC 升级；进出气闸联锁及雾化淋浴；覆盖各单元操作与废物流的定制柔性隔离器。",
+c1B2:"估算：已取得供应商预算报价 —— ILC Dover 反应釜投料柔性隔离器整包 £115,800（含 R19–R22 投料方案概念设计）；Howorth 单腔分装隔离器 £250,000/台。两者均为 Ex Works 口径，不含包装、运输、安装与调试。",
+c1B3:"交付关联：须与厂房内改造（制备 HPLC + 冻干）同步完成，方能为制备 HPLC 操作提供 OEB5 能力。",
+c1B4:"周期：假设与改造项目一并批准；制备 HPLC 单元驱动 C1 模块升级交付时间线。",
+c13t:"C1 · 范围",
+c1S1:"固定隔离器", c1S1a:"三层（second floor）：物料分装", c1S1b:"一层（ground floor）：最终包装",
+c1S2:"HVAC 与气闸", c1S2a:"HVAC 升级，支持日常 OEB5 运行", c1S2b:"进出气闸联锁升级，含雾化淋浴",
+c1S3:"柔性隔离", c1S3a:"多台定制柔性隔离器", c1S3b:"覆盖模块内各单元操作及废物流",
+c1S4:"估价依据（供应商报价）",
+c1S4a:"柔性隔离器：ILC Dover JS26-11384-0（2026-07-22）整包 £115,800，EXW，不含运输安装；交期约 20 周（图纸批准后）",
+c1S4b:"固定隔离器：Howorth Q26543（2026-08-11）单腔分装隔离器 £250,000/台；选项 190 RTP £18,000、样机 £17,000",
+c15t:"C1 · 投资总览", c15s:"内部估算 · 主设备 + 30% 项目预备费",
+c15oom:"项目总投资估算",
+c16t:"C1 · 投资结构", c16s:"主设备小计 / 全项目预备费",
+c16kOom:"项目总投资", c16kEquip:"主设备小计", c16kCont:"全项目预备费",
+c1Cost:{"capex": "项目总投资估算", "secEquip": "主设备（设备与设计费）", "sec1": "1. 固定隔离器", "iso2f": "1.1 三层（second floor）物料分装固定隔离器", "isoGF": "1.2 一层（ground floor）最终包装固定隔离器", "sec2": "2. HVAC 与气闸", "hvac": "2.1 HVAC 系统改造/升级", "airlock": "2.2 气闸联锁及雾化淋浴", "sec3": "3. 柔性隔离", "flex": "3.1 各单元操作定制柔性隔离器", "secGen": "一般风险与预备费", "projectCont": "全项目预备费（30%）"},c1Chart:{"stackEquip": "主设备小计", "stackCont": "全项目预备费", "donutTitle": "主设备 — 分项"},
+c1ChL:"项目总投资构成", c1ChR:"主设备 — 分项",
+c17t:"C1 · 周期", c17s:"假设与改造项目一并批准 · 以 2026-09 启动重新基线（原 6 月口径 +3 个月）",
+c17k1:"范围定稿", c17k1d:"8 周",
+c17k2:"详细设计", c17k2d:"12 周",
+c17k3:"下单/制造", c17k3d:"20 周",
+c17k4:"安装确认", c17k4d:"8 周",
+c1GSub:"C1 OEB5 升级时间轴 · 以 2026-09 启动重新基线（+3 个月）",
+c1Scope:"范围定稿", c1Dd:"详细设计", c1Build:"下单及设备制造", c1IQ:"安装与确认",
+c1LegP:"设计/准备", c1LegWarn:"下单+制造", c1LegB:"施工/确认", c1Today:"约今",
+c19t:"C1 · 决策", c19d1:"是否批准 C1 OEB5 升级与改造项目一并推进？",
+c19d2:"是否授权启动 ILC Dover 柔性隔离器及固定隔离器供货方案深化？",
+hipoSec:"四、OEB5 高活实验室（G-128 套间改造）", hipoSecs:"Concept 阶段 · 成本计划 260806 / 概念进度 260727 / 风险登记册",
+hipo2t:"高活实验室 · 执行摘要", hipo2s:"DPH_G-128 Suite Alterations Concept Cost Plan 260806",
+hipoK1:"概念阶段", hipoK1d:"成本计划 / 概念进度 / 风险登记册",
+hipoK2:"£4.56M", hipoK2d:"项目总投资估算",
+hipoK3:"2027-11", hipoK3d:"计划交付（概念进度 +6 周）",
+hipoK4:"215 m²", hipoK4d:"GIFA（实验室约 182 + 办公区约 33）",
+hipoB1:"范围：既有 G-128 套间改造为实验室与办公区，GIFA 215 m²；隔离器在成本计划中计列 4 台 × £150,000 + 1 台 × £100,000。",
+hipoB2:"投资：项目投资（含通胀）£4,562,044；不含增值税；估算精度区间 £3.74M – £4.99M。",
+hipoB3:"构成：建筑工程费 £1.95M + 专业服务费 £0.14M + 业主（凯莱英）供货设备 £1.98M + 风险预备费 £0.40M + 通胀 £0.10M。",
+hipoB4:"周期：概念进度（草案）自资金批准与推进决定起 262 个工作日，计划交付 2027 年 11 月；隔离器 2027-07-14 到场。",
+hipoB5:"隔离器费用：为基于与供应商沟通的估算，最终取决于项目范围最终确认的密闭等级。",
+hipoB6:"业主（凯莱英）供货并安装设备待采购 £1.96M。",
+hipo3t:"高活实验室 · 范围", hipo3s:"依据 G-128 概念成本计划分项",
+hipoS1:"范围与面积", hipoS1a:"既有 G-128 套间（G128 及 G128A–D）改造；GIFA 215 m²",
+hipoS1b:"实验室区约 182 m²（机电费率基准）+ 办公区约 33 m²（地毯量）",
+hipoS1c:"拆除 G128 与 G128D 之间砌块墙；混凝土墙新开 2 处传递窗洞、2 处门洞",
+hipoS2:"隔离器与实验设备", hipoS2a:"成本计划：4 台 × £150,000 + 1 台 × £100,000（合计 £700,000）",
+hipoS2b:"费用性质：基于与供应商沟通的估算，最终取决于项目范围最终确认的密闭等级",
+hipoS2c:"通风柜：假设现有可继续使用，仅列 £20,000 维修保养费用；是否新购为进度中待定项",
+hipoS2d:"SF6 检漏测试 £20,000；家具含更衣柜、跨越凳、移动实验台、BIBO 桶",
+hipoS3:"土建与装饰改造", hipoS3a:"拆除：家具与实验设备清空、地面与吊顶拆除、燃气/风管/电气/烟感/Crowcon 撤除",
+hipoS3b:"新建：墙面衬板 475 m²、新隔断 40 m²；5 樘单开 + 1 樘子母卫生门、2 樘木门、4 樘旧门翻新",
+hipoS3c:"装饰：实验室卷材乙烯地面 173 m²、金属吊顶 173 m²、办公区地毯 33 m²",
+hipoS4:"机电、安全与业主供货", hipoS4a:"暖通 £217,920：AHU 恢复使用、全套风管与送回风、袋进袋出 HEPA 排风过滤、BMS 升级、系统平衡",
+hipoS4b:"电气 £107,380、消防喷淋 £30,030、门禁/布线/CCTV/火警 £51,345、实验室气体管道 £63,700、雾化淋浴 £35,000",
+hipoS4c:"业主（凯莱英）供货并安装设备待采购 £1.96M",
+hipoS4d:"待采购分项：ARD/QC £912,600、隔离器内仪器 £455,345、CRD £589,100",
+hipoScopeNote:"风险与前提：正在就厂房改造事宜征求 DPML 同意 —— 改造完成后实验室将无法按当前运行状态交还 DPML，该沟通进展由 Clare 跟进。目前 DPML（Paul Bax，2026-08-21）原则上同意 PDF 与 DPH（含 G.128）拟议改造，最终以设计审查为准；可启动两项 Licence for Alteration，范围与图纸随设计深化补充。",
+hipoEqt:"业主（凯莱英）供货并安装设备", hipoEqs:"Equipment (supplied and installed by the Client)",
+hipoEqAll:"全部", hipoEqNew:"New", hipoEqExist:"Existing",
+hipoEqColTitle:"设备", hipoEqColLoc:"Location", hipoEqColModel:"Model", hipoEqColNE:"New / Existing",
+hipoEqColCost:"Cost", hipoEqColMust:"Must have",
+hipoEqTotal:"Total cost（New 且 Must have）",
+hipo5t:"高活实验室 · 投资总览", hipo5s:"G-128 Concept Cost Plan · 报告日期 2026-08-06 · GIFA 215 m²",
+hipo6t:"高活实验室 · 投资结构", hipo6s:"项目投资构成与建筑工程费分项",
+hipo6kTotal:"项目投资（含通胀）", hipo6kBuild:"建筑工程费合计", hipo6kEquip:"业主（凯莱英）供货设备",
+hipo6kRisk:"风险预备费", hipo6kRange:"估算精度区间",
+hipoCost:{"capex": "项目投资（含通胀）", "secBuild": "建筑工程费合计 Total Building Works Estimate", "sec0": "1 改造工程 Facilitating Works", "fw1": "1.1 拆除、改造与拆砌（隔断等）", "fw2": "1.2 机电拆除（燃气、风管、电气、烟感、Crowcon 等）", "sec2": "2 上部结构 Superstructure", "ss1": "2.7 内墙与隔断（墙面衬板、新建隔断、氢气管道包封）", "ss2": "2.8 内门（5 单开 + 1 子母卫生门、2 木门、4 樘旧门翻新）", "sec3": "3 装饰 Finishes", "fin1": "3.1 墙面装饰（实验室 475 m²、办公区 70 m²）", "fin2": "3.2 地面（实验室卷材乙烯 173 m²、踢脚 136 m、办公区地毯 33 m²）", "fin3": "3.3 吊顶（实验室金属吊顶 173 m²、周边收口 136 m）", "sec4": "4 家具与设备 Fittings, Furnishings and Equipment", "ffeIso4": "隔离器 4 台 × £150,000", "ffeIso1": "隔离器 1 台 × £100,000", "ffeFume": "通风柜（假设现有可用，仅列维修保养）", "ffeSf6": "SF6 检漏测试", "ffeFurn": "家具（更衣柜、跨越凳、移动实验台、BIBO 桶）", "ffeWrite": "办公区家具", "sec5": "5 机电安装 Services", "sv3": "5.3 排水（水槽与淋浴接管）", "sv4": "5.4 给水（冷热水、水槽复装、雾化淋浴 £35,000）", "sv6": "5.6 暖通空调（AHU 恢复使用、全套风管、袋进袋出 HEPA 排风、BMS 升级、系统平衡）", "sv8": "5.8 电气（小动力 182 m²、照明 182 m²，含设备接电）", "sv11": "5.11 消防（实验室喷淋 182 m²）", "sv12": "5.12 通信、安防与控制（门禁 3 处、结构化布线、CCTV、火灾报警）", "sv13": "5.13 特殊安装（实验室气体管道 182 m²）", "sv14": "5.14 配合机电的土建工作（开洞、防火封堵、检修口，按 5%）", "subBuild": "改造与建筑工程小计 Facilitating and Building Works", "sec9": "6 临建与承包商设计 Preliminaries", "pre1": "6.1 临时工程（保留设备与公共区域防护、临时照明）", "pre2": "6.2 现场福利与临建（施工期 21 周）", "pre3": "6.3 设计与施工管理（勘查、RIBA 2/3 与 RIBA 4 承包商设计、RIBA 5 现场资源 22 周）", "sec10": "7 管理费与利润 Overheads and Profit（5.00%）", "secProf": "8 专业服务费 Professional Services", "prof": "项目管理（合同前 33 周 / 合同后 22 周 / 缺陷期）、设计支持、商务支持与合同管理", "secEquip": "9 业主（凯莱英）供货并安装设备 Equipment (supplied and installed by the Client)", "equip": "待采购 £1.96M（《Equipment List Costs for scoping 5 Aug》）", "secRisk": "10 风险预备费 Risk Allowance Estimate", "risk": "10.1 设计发展风险（依风险登记册）", "secInf": "11 通胀 Inflation（2.15%）", "inflation": "自基准日至施工期的通胀调整"},hipoChart:{"stackBuilding": "建筑工程费", "stackProf": "专业服务费", "stackEquip": "业主（凯莱英）供货设备", "stackRisk": "风险预备费", "stackInf": "通胀", "donutTitle": "建筑工程费 — 分项", "stackAxis": "项目投资"},
+hipoChL:"项目投资构成", hipoChR:"建筑工程费 — 分项",
+hipo7t:"高活实验室 · 周期", hipo7s:"Asymchem Concept Programme_260727（DRAFT CONCEPT PROGRAMME）",
+hipo7k1:"262 天", hipo7k1d:"总工期（工作日）",
+hipo7k2:"2026-10-13", hipo7k2d:"资金批准与推进决定",
+hipo7k3:"2027-07-14", hipo7k3d:"隔离器到场",
+hipo7k4:"2027-11-12", hipo7k4d:"计划交付（含进度风险预留）",
+hipoGSub:"概念进度（草案）· 交付目标 2027 年 11 月",
+hipoProgNote:"进度说明：各项活动于 2027 年 10 月下旬完成，余量计入末段进度风险预留，交付目标 2027 年 11 月。后续设计推进中部分工作有并行压缩的空间，但取决于最终确认的风险处理方式与可接受的风险水平。",
+hFund:"资金批准节点", hConsult:"顾问任命 + BoD", hContractor:"主承包商招标任命", hAward:"合同授予与动员",
+hSurvey:"勘查与项目控制", hLabDesign:"实验室设计", hCdm:"CDM", hIso:"隔离器采购制造",
+hFume:"通风柜采购（待定）", hFurn:"实验室家具采购", hTrade:"分包工程招标",
+hConstr:"施工", hComm:"调试与移交", hRisk:"进度风险预留→交付",
+hipoLegP:"设计/合约", hipoLegW:"采购/制造/预留", hipoLegB:"施工/调试", hipoToday:"约今",
+hipo9t:"高活实验室 · 决策", hipo9s:"",
+hipo9d1:"是否批准资金与推进决定节点？概念进度以此为起点，262 个工作日加 6 周启动与决策时间，计划交付 2027 年 11 月。",
+hipo9d2:"是否安排 AHU 状况核查与既有通风柜可用性确认？二者为风险登记册中金额最高的两项。",
+pEnd:"谢谢", pEnds:"",
+},
+en:{
+footer:"Asymchem UK · Sandwich PDF Portfolio",
+nav:"← → navigate", tag:"Internal · Portfolio briefing",
+p1t:"Asymchem UK · Sandwich PDF", p1s:"Capital Projects Briefing", p1m:"B902 extension + HPLC/lyoph retrofit + C1 OEB5 upgrade + OEB5 HIPO lab · August 2026",
+p2t:"Project overview", p2s:"Four workstreams · feasibility / concept / internal estimate",
+p2th1:"Workstream", p2th2:"Scope", p2th3:"Investment (estimate level)", p2th4:"Milestone",
+p2r1n:"B902 east extension", p2r1s:"New 4-floor + mezzanine", p2r1o:"£78.1M", p2r1d:"Complete May 2030 (held)",
+p2r2n:"HPLC + lyophilizer", p2r2s:"Retrofit in existing PDF", p2r2o:"£5.33M", p2r2d:"HPLC Dec 2027 / lyoph Mar 2028",
+p2r3n:"C1 module OEB5 upgrade", p2r3s:"Routine OEB5 ops in existing C1 module", p2r3o:"£2.48M", p2r3d:"IQ complete Oct 2027",
+p2r4n:"OEB5 HIPO lab", p2r4s:"Existing G-128 suite alterations; 215 m² GIFA; 4+1 isolators", p2r4o:"£4.56M", p2r4d:"Planned delivery Nov 2027",
+p2link:"Delivery link: in-situ retrofit (prep HPLC + lyophilizer) and C1 upgrade must be delivered together to provide OEB5 capability for prep HPLC; prep HPLC drives the overall timeline.",
+p2sum:"The three in-building lines total ~£12.37M (retrofit £5.33M + C1 £2.48M + HIPO lab £4.56M), excluding the B902 east extension. Estimate bases differ: extension and retrofit are feasibility level, C1 is an internal estimate, the HIPO lab is a concept cost plan.",
+extTag:"Extension", hplcTag:"Retrofit", c1Tag:"C1 OEB5", hipoTag:"HIPO lab",
+extSec:"I. B902 East Extension", extSecs:"Scitech · RIBA 1 · 300291-RE-0001",
+ext2t:"Extension · Summary", ext2s:"22 May 2026 · A1",
+extK1:"FS done", extK1d:"RIBA 1",
+extK2:"£78.1M", extK2d:"Project OOM",
+extK3:"May 2030", extK3d:"Programme end (held per group)",
+extB1:"~600 m² east extension, 4 floors + mezzanine, reactors, H₂ suite, 3 filter dryers, utilities.",
+extB2:"Option 1 — remove/relocate H₂ building; tie to B902 lower floors.",
+extB3:"FS complete; May 2030 completion held per group direction on the consultant master programme — the later RIBA 2 start must be absorbed within the stages.",
+ext4t:"Extension · Scope", ext4s:"Option 1",
+ext4b1:"~3,099 m² GIFA; ~1.5 m flood lift", ext4b2:"Second escape stair; blast panels", ext4b3:"BREEAM pre-assessment baseline",
+ext5t:"Extension · Investment", ext5s:"300291-CM-0001",
+ext5oom:"Total OOM",
+ext6t:"Extension · Structure", ext6s:"OOM build-up",
+ext6kOom:"Total OOM", ext6kBase:"Direct works (incl. 25%)", ext6kRisk:"Other costs & feasibility risk",
+extCost:{"oom": "Total project OOM", "secBase": "Direct works", "secOther": "Other project costs", "secGen": "General risk & contingency", "subtotal": "Subtotal", "baseRisk": "Contingency (25%)", "otherCont": "Contingency (25%)", "confidence": "Whole Project contingency (25%)", "riskReg": "Risk register (probability-weighted total)", "secTotal": "Section total", "fac": "Site clearance & demolition", "sub": "Below-ground structure", "sup": "Above-ground structure", "int": "Internal finishes", "fit": "Fittings & equipment", "bld": "Building services", "proc": "Process equipment", "prefab": "Prefabricated buildings", "exist": "Work to existing buildings", "ext": "External works", "pre": "Preliminaries (8%)", "ohp": "Contractor OH&P (5%)", "design": "Design team fees (8%)", "survey": "Surveys & investigations", "breeam": "BREEAM", "plan": "Planning & statutory fees", "client": "Client direct costs", "bullets": {"fac": ["Demolition / enabling", "LN tank removal", "H₂ plant removal"], "sub": ["Piles & foundations", "Equipment slabs", "Chiller pads", "Steps / ramps"], "sup": ["Frame & envelope", "Blast roof/wall", "Stairs & steel", "Doors"], "int": ["Wall finishes", "Ceilings", "Floors"], "fit": ["Disinfection / cleaning facilities"], "bld": ["BWIC", "HVAC", "Electrical", "EMS", "Process control"], "proc": ["GL reactors", "Filter dryers", "Hastelloy", "Piping / valves", "Vacuum etc."], "prefab": ["Nil at this stage"], "exist": ["Flue extensions", "Steel support", "Louvres"], "ext": ["Site works, utilities, etc."], "pre": ["Site management & welfare"], "ohp": ["Contractor OH&P"], "design": ["Design team fees (8%)"], "survey": ["Surveys"], "breeam": ["BREEAM"], "plan": ["Planning & statutory"], "client": ["Excluded at feasibility"]}},extChart:{"stackBase": "Direct works", "stackOther": "Other project costs", "stackGen": "General risk & contingency", "donutTitle": "Direct works breakdown"},
+extChL:"Project OOM — three blocks", extChR:"Direct works — line items",
+ext8t:"Extension · Programme", ext8s:"300291-PM-PR-0002",
+extGSub:"Master programme · consultant programme retained; May 2030 completion held per group direction",
+extGFs:"FS RIBA 1", extGR2:"Concept RIBA 2", extGR3:"Scheme RIBA 3", extGPl:"Planning",
+extGR4:"Detail RIBA 4", extGEq:"Long-lead equip.", extGMed:"Medium-lead equip.", extGPre:"Pre-construction",
+extGR5:"Construction RIBA 5", extGCo:"Commissioning", extGEn:"Validation/complete",
+extLegD:"Done", extLegP:"Design", extLegB:"Build", extLegM:"Milestone", extToday:"~Today",
+ext9t:"Extension · Decisions", ext9d1:"Approve RIBA 2 (Concept Design)?",
+ext9d2:"Proceed with modular construction option study?",
+hplcSec:"II. HPLC + Lyophilizer", hplcSecs:"RBPC · 9802 · P01",
+hplc2t:"Retrofit · Summary", hplc2s:"9802-RBP-ZZ-ZZ-RP-X-100000",
+hplcK1:"Feasible", hplcK1d:"FS P01",
+hplcK2:"£5.33M", hplcK2d:"Total CAPEX Estimate",
+hplcK3:"Dec 2027", hplcK3d:"HPLC target (+3 months)",
+hplcK4:"Mar 2028", hplcK4d:"Lyoph target (+3 months)",
+hplcB1:"Prep HPLC + lyophilizer (isolator, dehumidifier, PSG, etc.) and enabling works.",
+hplcB2:"Total CAPEX Estimate £5.33M (direct + indirect + 30% project contingency); not final Capex.",
+hplcB3:"Lyophilizer lead time drives; lyoph before HPLC.",
+hplcB4:"Link: must be delivered together with C1 OEB5 upgrade for prep HPLC OEB5 capability.",
+hplc3t:"Retrofit · Scope",
+hplcT1:"HPLC", hplcT1a:"DAC300/CP300; mobile tanks; 2,000 L waste hold",
+hplcT1b:"Hanbon supply", hplcT1c:"Install PG.05",
+hplcT2:"Lyophilizer", hplcT2a:"Dryer, isolator, twin CIP, dehumidifier, PSG",
+hplcT2b:"Tofflon supply", hplcT2c:"Airlock ~20 weeks",
+hplc5t:"Retrofit · Investment", hplc5s:"9802-CP-X-100001",
+hplc5oom:"Total OOM",
+hplc6t:"Retrofit · Structure", hplc6s:"Direct / indirect / general risk & contingency",
+hplc6kOom:"Total CAPEX", hplc6kDirect:"Total Direct Cost", hplc6kIndirect:"Total Indirect Cost", hplc6kGen:"General risk & contingency",
+hplc6kMain:"1. Main Equipment", hplc6kInfra:"2. Infrastructure Modification",
+hplcCost:{"capex": "Total CAPEX Estimate", "secDirect": "Total Direct Cost", "secIndirect": "Total Indirect Cost", "secGen": "General risk & contingency", "secTotal": "Section total", "sec1": "1. Main Equipment", "lyo": "1.1 Lyo", "hplc": "1.2 HPLC skid", "tanks": "1.3 Tanks/Vessels", "pumps": "1.4 Pumps", "mainPrice": "1.5 Price Risk (30%)", "sec2": "2. Infrastructure Modification", "civil": "2.1 Civil & Structure", "mech": "2.2 Mechanical & Piping", "elec": "2.3 Electrical & Instrumentation", "hvac": "2.4 HVAC", "infraPrice": "2.5 Price Risk (30%)", "feed": "3. FEED Study", "design": "4. Detailed Design", "cdm": "5. CDM Fee", "comm": "6. Commission", "indirectPrice": "7. Price Risk (30%)", "projectCont": "Whole Project contingency (30%)"},hplcChart:{"stackDirect": "Total Direct Cost", "stackIndirect": "Total Indirect Cost", "stackGen": "General risk & contingency", "donutTitle": "Direct cost — equipment & infra"},
+hplcChL:"Total CAPEX composition", hplcChR:"Total Direct Cost — breakdown",
+hplc7t:"Retrofit · Programme", hplc7s:"FS §4.4 Fig. 1 · re-baselined to a Sep 2026 start (+3 months)",
+hplc7k1:"Lyoph build", hplc7k1d:"8–10 mo",
+hplc7k2:"HPLC supply", hplc7k2d:"~18 wk",
+hplc7k3:"FEED", hplc7k3d:"12–14 wk",
+hplc7k4:"Detail design", hplc7k4d:"18–20 wk",
+hplcGSub:"High Level Programme · re-baselined to a Sep 2026 start (+3 months)",
+gFs:"FS/baseline", gEng:"Engineer mobilised", gFeed:"FEED (illustrative)", gDd:"Detail design (illustrative)",
+gLySpec:"Lyoph spec/funding", gLyMfg:"Lyoph build", gLyFat:"Lyoph FAT", gLyShip:"Lyoph ship/install", gLyVal:"Lyoph val.→PQ",
+gHplcSpec:"HPLC spec/funding", gHplcMfg:"HPLC build", gHplcFat:"HPLC FAT", gHplcShip:"HPLC ship/install",
+gTanks:"Mobile tanks", gWaste:"Waste tank", gRetrofit:"Retrofit",
+legDone:"Complete", legStaff:"Engineer", legPlan:"Procure/build", legBuild:"Site/val.",
+legCrit:"Critical", legAssume:"§4.3 illustrative", today:"~Today",
+hplc9t:"Retrofit · Decisions", hplc9d1:"Approve progression to FEED?",
+hplc9d2:"Approve early funding for long-lead packages?",
+c1Sec:"III. C1 Module OEB5 Upgrade", c1Secs:"Sandwich PDF · internal estimate",
+c12t:"C1 · Summary", c12s:"Routine OEB5 operational capability",
+c1K1:"OEB5 routine ops", c1K1d:"Upgrade objective",
+c1K2:"£2.48M", c1K2d:"Total CAPEX estimate",
+c1K3:"Oct 2027", c1K3d:"Install & qualification target (+3 months)",
+c1B1:"Scope: fixed isolators (2nd floor dispensing, GF pack-off); HVAC upgrades; entry/exit airlock interlocks incl. mist showers; bespoke flexible isolators for unit ops and waste streams.",
+c1B2:"Estimate: supplier budget costs now received — ILC Dover reactor charging flexible isolator package £115,800 (incl. concept development for the R19–R22 charging scheme); Howorth single chamber dispensing isolator £250,000 per unit. Both Ex Works, excluding packing, delivery, installation and commissioning.",
+c1B3:"Delivery link: must be delivered with retrofit (prep HPLC + lyoph) for OEB5 prep HPLC capability.",
+c1B4:"Programme: assumes joint approval with retrofit; prep HPLC unit drives C1 module upgrade delivery timeline.",
+c13t:"C1 · Scope",
+c1S1:"Fixed isolators", c1S1a:"2nd floor: material dispensing", c1S1b:"Ground floor: final pack-off",
+c1S2:"HVAC & airlocks", c1S2a:"HVAC upgrades for routine OEB5 operation", c1S2b:"Entry/exit airlock interlocks incl. mist showers",
+c1S3:"Flexible isolation", c1S3a:"Multiple bespoke flexible isolator systems", c1S3b:"All unit operations and waste streams within module",
+c1S4:"Pricing basis (supplier quotations)",
+c1S4a:"Flexible isolators: ILC Dover JS26-11384-0 (22 Jul 2026), £115,800 package, EXW, excl. delivery and installation; ~20 weeks from drawing approval",
+c1S4b:"Fixed isolators: Howorth Q26543 (11 Aug 2026), single chamber dispensing isolator £250,000 per unit; options 190 RTP £18,000, mock-up £17,000",
+c15t:"C1 · Investment", c15s:"Internal estimate · equipment + 30% project contingency",
+c15oom:"Total CAPEX Estimate",
+c16t:"C1 · Structure", c16s:"Equipment subtotal / project contingency",
+c16kOom:"Total CAPEX", c16kEquip:"Equipment subtotal", c16kCont:"Project contingency",
+c1Cost:{"capex": "Total CAPEX Estimate", "secEquip": "Main equipment (equipment & design costs)", "sec1": "1. Fixed isolators", "iso2f": "1.1 2nd floor material dispensing fixed isolator", "isoGF": "1.2 Ground floor final pack-off fixed isolator", "sec2": "2. HVAC & airlocks", "hvac": "2.1 HVAC system modifications / upgrades", "airlock": "2.2 Airlock interlocking & mist shower installation", "sec3": "3. Flexible isolation", "flex": "3.1 Bespoke flexible isolators — unit operations", "secGen": "General risk & contingency", "projectCont": "Whole Project contingency (30%)"},c1Chart:{"stackEquip": "Equipment subtotal", "stackCont": "Project contingency", "donutTitle": "Main equipment — breakdown"},
+c1ChL:"Total CAPEX composition", c1ChR:"Main equipment — breakdown",
+c17t:"C1 · Programme", c17s:"Assumes joint approval with retrofit · re-baselined to a Sep 2026 start (+3 months)",
+c17k1:"Finalise scope", c17k1d:"8 wk · Oct–Dec 2026",
+c17k2:"Detailed design", c17k2d:"12 wk · Dec 2026–Mar 2027",
+c17k3:"Orders / build", c17k3d:"20 wk · Mar–Aug 2027",
+c17k4:"Install & IQ", c17k4d:"8 wk · Aug–Oct 2027",
+c1GSub:"C1 OEB5 upgrade timeline · re-baselined to a Sep 2026 start (+3 months)",
+c1Scope:"Finalise scope", c1Dd:"Detailed design", c1Build:"Orders & equipment build", c1IQ:"Installation & qualification",
+c1LegP:"Design / prep", c1LegWarn:"Orders + build", c1LegB:"Install / IQ", c1Today:"~Today",
+c19t:"C1 · Decisions", c19d1:"Approve C1 OEB5 upgrade in parallel with retrofit?",
+c19d2:"Authorise ILC Dover flexible isolator work and fixed-isolator option development?",
+hipoSec:"IV. OEB5 HIPO Lab (G-128 Suite Alterations)", hipoSecs:"Concept stage · cost plan 260806 / concept programme 260727 / risk register",
+hipo2t:"HIPO lab · Summary", hipo2s:"DPH_G-128 Suite Alterations Concept Cost Plan 260806",
+hipoK1:"Concept stage", hipoK1d:"Cost plan / programme / risk register",
+hipoK2:"£4.56M", hipoK2d:"Total project investment estimate",
+hipoK3:"Nov 2027", hipoK3d:"Planned delivery (concept programme +6 weeks)",
+hipoK4:"215 m²", hipoK4d:"GIFA (lab ~182 + write-up ~33)",
+hipoB1:"Scope: alterations to the existing G-128 suite forming lab and write-up areas, 215 m² GIFA; isolators carried in the cost plan at 4 nr × £150,000 + 1 nr × £100,000.",
+hipoB2:"Investment: project investment (incl. inflation) £4,562,044; VAT excluded; estimate accuracy range £3.74M – £4.99M.",
+hipoB3:"Build-up: building works £1.95M + professional services £0.14M + client (Asymchem) equipment £1.98M + risk allowance £0.40M + inflation £0.10M.",
+hipoB4:"Programme: draft concept programme runs 262 working days from the funding approval and decision to proceed, giving planned delivery in November 2027; isolators delivered to site 14 Jul 2027.",
+hipoB5:"Isolator costs: estimates based on supplier discussions; they will depend on the level of containment agreed in the project scope.",
+hipoB6:"Client (Asymchem) supplied and installed equipment — to purchase £1.96M.",
+hipo3t:"HIPO lab · Scope", hipo3s:"Per the G-128 concept cost plan line items",
+hipoS1:"Scope & areas", hipoS1a:"Alterations to the existing G-128 suite (G128 and G128A–D); 215 m² GIFA",
+hipoS1b:"Lab area ~182 m² (services rate basis) + write-up area ~33 m² (carpet quantity)",
+hipoS1c:"Blockwork wall between G128 and G128D taken down; 2 pass-through hatches and 2 doorways formed through reinforced concrete wall",
+hipoS2:"Isolators & lab equipment", hipoS2a:"Cost plan: 4 nr × £150,000 + 1 nr × £100,000 (£700,000 total)",
+hipoS2b:"Basis: estimates from supplier discussions, dependent on the containment level agreed in the project scope",
+hipoS2c:"Fume cupboards: existing assumed serviceable, only a £20,000 servicing/repair allowance; new units remain a TBC item on the programme",
+hipoS2d:"SF6 testing £20,000; furniture covers lockers, step-over bench, mobile benches, BIBO bins",
+hipoS3:"Building & finishes", hipoS3a:"Strip out: furniture and lab equipment clearance, floor and ceiling removal, gas / ductwork / electrical / detectors / Crowcon removal",
+hipoS3b:"New works: wall lining 475 m², new partitions 40 m²; 5 single-leaf + 1 leaf-and-half hygienic doorsets, 2 timber doors, 4 doors refurbished",
+hipoS3c:"Finishes: sheet vinyl floor 173 m², metal suspended ceiling 173 m², carpet to write-up area 33 m²",
+hipoS4:"Services, safety & client equipment", hipoS4a:"HVAC £217,920: AHU back into use, full ductwork with supply diffusers and extract grilles, bag-in/bag-out HEPA on extract, BMS upgrade, balancing",
+hipoS4b:"Electrical £107,380; sprinklers £30,030; access control / cabling / CCTV / fire alarm £51,345; laboratory gas pipework £63,700; mist shower £35,000",
+hipoS4c:"Client (Asymchem) supplied and installed equipment — to purchase £1.96M",
+hipoS4d:"To purchase by group: ARD/QC £912,600; isolator instruments £455,345; CRD £589,100",
+hipoScopeNote:"Risk and prerequisite: agreement is being sought from DPML for the facility modifications — once complete, the lab could not be returned to DPML in its current operational state; Clare is following up on the status of that conversation. DPML (Paul Bax, 21 Aug 2026) has now given in-principle approval of the proposed changes for both PDF and DPH (including G.128), subject to a final design review. Licences for Alteration can be initiated for both projects; scope and plans to follow as the designs develop.",
+hipoEqt:"Client (Asymchem) supplied and installed equipment", hipoEqs:"Equipment (supplied and installed by the Client)",
+hipoEqAll:"All", hipoEqNew:"New", hipoEqExist:"Existing",
+hipoEqColTitle:"Equipment", hipoEqColLoc:"Location", hipoEqColModel:"Model", hipoEqColNE:"New / Existing",
+hipoEqColCost:"Cost", hipoEqColMust:"Must have",
+hipoEqTotal:"Total cost (New and Must have)",
+hipo5t:"HIPO lab · Investment", hipo5s:"G-128 Concept Cost Plan · report date 06 Aug 2026 · 215 m² GIFA",
+hipo6t:"HIPO lab · Structure", hipo6s:"Project investment build-up and building works breakdown",
+hipo6kTotal:"Project investment (incl. inflation)", hipo6kBuild:"Total Building Works", hipo6kEquip:"Client (Asymchem) equipment",
+hipo6kRisk:"Risk allowance", hipo6kRange:"Estimate accuracy range",
+hipoCost:{"capex": "COST LIMIT (including inflation)", "secBuild": "Total Building Works Estimate", "sec0": "1 Facilitating Works", "fw1": "1.1 Strip out, alterations and demolition (partitions and the like)", "fw2": "1.2 Strip out (services) — gas, ductwork, electrical, detectors, Crowcon", "sec2": "2 Superstructure", "ss1": "2.7 Internal walls and partitions (wall lining, new partitions, H₂ pipework boxing)", "ss2": "2.8 Internal doors (5 single-leaf + 1 leaf-and-half hygienic, 2 timber, 4 refurbished)", "sec3": "3 Finishes", "fin1": "3.1 Wall finishes (lab 475 m², write-up 70 m²)", "fin2": "3.2 Floor finishes (sheet vinyl 173 m², coved skirting 136 m, carpet 33 m²)", "fin3": "3.3 Ceiling finishes (metal suspended ceiling 173 m², perimeter detail 136 m)", "sec4": "4 Fittings, Furnishings and Equipment", "ffeIso4": "Isolators; 4 nr × £150,000", "ffeIso1": "Isolators; 1 nr × £100,000", "ffeFume": "Fume hoods — existing assumed serviceable; servicing/repair allowance", "ffeSf6": "SF6 testing allowance", "ffeFurn": "Furniture allowance (lockers, step-over bench, mobile benches, BIBO bins)", "ffeWrite": "Furniture for write-up space", "sec5": "5 Services", "sv3": "5.3 Disposal installations (sink & shower drainage connections)", "sv4": "5.4 Water installations (H&CWS, sink reinstatement, mist shower £35,000)", "sv6": "5.6 HVAC (AHU back into use, full ductwork, bag-in/bag-out HEPA, BMS upgrade, balancing)", "sv8": "5.8 Electrical installations (small power 182 m², lighting 182 m², equipment connections)", "sv11": "5.11 Fire and lightning protection (sprinklers 182 m²)", "sv12": "5.12 Communication, security and control (access control 3 nr, cabling, CCTV, fire alarm)", "sv13": "5.13 Special installations (laboratory gas pipework 182 m²)", "sv14": "5.14 Builder's work in connection with services (holes, fire stopping, hatches — 5%)", "subBuild": "Facilitating and Building Works", "sec9": "6 Preliminaries (incl. Contractor's design)", "pre1": "6.1 Temporary works (protection to retained equipment / common areas, lighting)", "pre2": "6.2 Site welfare and accommodation (21 weeks)", "pre3": "6.3 Design and construction management (surveys, RIBA 2/3 and RIBA 4 contractor's design, RIBA 5 resourcing 22 wks)", "sec10": "7 Overheads and Profit (5.00%)", "secProf": "8 Professional Services", "prof": "Project management (pre-contract 33 wks / post-contract 22 wks / defects), design support, commercial support & contract administration", "secEquip": "9 Equipment (supplied and installed by the Client)", "equip": "To purchase £1.96M (Equipment List Costs for scoping 5 Aug)", "secRisk": "10 Risk Allowance Estimate", "risk": "10.1 Design development risk (refer to risk register)", "secInf": "11 Inflation (2.15%)", "inflation": "Inflation from base date through construction"},hipoChart:{"stackBuilding": "Building works", "stackProf": "Professional services", "stackEquip": "Client (Asymchem) equipment", "stackRisk": "Risk allowance", "stackInf": "Inflation", "donutTitle": "Building works — breakdown", "stackAxis": "Project investment"},
+hipoChL:"Project investment build-up", hipoChR:"Building works — breakdown",
+hipo7t:"HIPO lab · Programme", hipo7s:"Asymchem Concept Programme_260727 (DRAFT CONCEPT PROGRAMME)",
+hipo7k1:"262 days", hipo7k1d:"Total duration (working days)",
+hipo7k2:"13 Oct 2026", hipo7k2d:"Funding approval & decision to proceed",
+hipo7k3:"14 Jul 2027", hipo7k3d:"Isolators delivered to site",
+hipo7k4:"12 Nov 2027", hipo7k4d:"Planned delivery (incl. programme risk allowance)",
+hipoGSub:"Draft concept programme · delivery target November 2027",
+hipoProgNote:"Programme note: activities complete in late October 2027 with the remaining float held in the closing programme-risk allowance, giving a delivery target of November 2027. There may be opportunities to run some activities in parallel as the programme develops, but this will depend on the risk approach agreed and the level of acceptable risk.",
+hFund:"Funding approval", hConsult:"Consultants + BoD", hContractor:"Principal contractor tender", hAward:"Contract award & mobilise",
+hSurvey:"Surveys & project control", hLabDesign:"Lab design", hCdm:"CDM", hIso:"Isolator procurement & build",
+hFume:"Fume cupboards (TBC)", hFurn:"Laboratory furniture", hTrade:"Trade contractor procurement",
+hConstr:"Construction", hComm:"Commissioning & handover", hRisk:"Programme risk → delivery",
+hipoLegP:"Design / contract", hipoLegW:"Procurement / build / float", hipoLegB:"Construction / commissioning", hipoToday:"~Today",
+hipo9t:"HIPO lab · Decisions", hipo9s:"",
+hipo9d1:"Approve the funding approval and decision-to-proceed milestone? The concept programme runs 262 working days from it plus 6 weeks for start-up and the funding decision, giving planned delivery in November 2027.",
+hipo9d2:"Commission the AHU condition survey and confirm whether the existing fume cupboards can be re-used? These are the two largest items in the risk register.",
+pEnd:"Thank you", pEnds:"",
+}
+};
+
+function t(k){return I18N[lang][k]||k;}
+function fm(n){return "£"+Math.round(n).toLocaleString("en-GB");}
+
+function ganttDateLabel(g){
+if(g[6]&&String(g[6]).includes("–"))return g[6];
+const dispStart=g[6]||g[1],dispEnd=g[7]||g[2];
+const d0=dispStart.slice(0,7).replace("-","/"),d1=dispEnd.slice(0,7).replace("-","/");
+return d0+" – "+d1;
+}
+function ganttHTML(data,T0,T1,keys,axis,today,sub,leg){
+const RANGE=T1-T0;
+function pct(d){return Math.max(0,Math.min(100,((new Date(d)-T0)/RANGE)*100));}
+let rows="";
+data.forEach((g,i)=>{
+const key=keys[i]||g[0];
+const left=pct(g[1]),right=pct(g[2]),w=Math.max(1.2,right-left);
+const dateLabel=ganttDateLabel(g);
+rows+=`<div class="gantt-row"><div class="gantt-label">${t(key)}</div><div class="gantt-track">
+${i===0?`<div class="today-line" style="left:${pct(today)}%"><span class="today-tag">${t(leg.today||"today")}</span></div>`:""}
+<div class="gantt-bar ${g[3]}" style="left:${left}%;width:${w}%" data-en="${g[4].replace(/"/g,"&quot;")}" data-zh="${g[5].replace(/"/g,"&quot;")}" data-dates="${dateLabel}"></div>
+</div><div class="gantt-dates">${dateLabel}</div></div>`;
+});
+return `<div class="gantt-wrap"><div class="chart-title">${t(sub)}</div>
+<div class="gantt-axis">${axis.map(y=>`<span>${y}</span>`).join("")}</div>
+<div class="gantt-body">${rows}</div>
+<div class="gantt-legend">
+${leg.d?`<span><i style="background:var(--teal)"></i>${t(leg.d)}</span>`:""}
+${leg.p?`<span><i style="background:#1a4a6e"></i>${t(leg.p)}</span>`:""}
+${leg.b?`<span><i style="background:#2e6da4"></i>${t(leg.b)}</span>`:""}
+${leg.w?`<span><i style="background:var(--accent)"></i>${t(leg.w)}</span>`:""}
+${leg.c?`<span><i style="background:var(--accent)"></i>${t(leg.c)}</span>`:""}
+${leg.s?`<span><i style="background:#5b6eae"></i>${t(leg.s)}</span>`:""}
+${leg.a?`<span><i style="background:#6d5b95"></i>${t(leg.a)}</span>`:""}
+</div></div>`;
+}
+
+const EXT_KEYS=["extGFs","extGR2","extGR3","extGPl","extGR4","extGEq","extGMed","extGPre","extGR5","extGCo","extGEn"];
+const HPLC_KEYS=["gFs","gEng","gFeed","gDd","gLySpec","gLyMfg","gLyFat","gLyShip","gLyVal","gHplcSpec","gHplcMfg","gHplcFat","gHplcShip","gTanks","gWaste","gRetrofit"];
+const C1_KEYS=["c1Scope","c1Dd","c1Build","c1IQ"];
+const HIPO_KEYS=["hFund","hConsult","hContractor","hAward","hSurvey","hLabDesign","hCdm","hIso","hFume","hFurn","hTrade","hConstr","hComm","hRisk"];
+
+function deckHTML(){
+return `
+<section class="slide active title-slide"><p><span class="tag">${t("tag")}</span></p>
+<h1>${t("p1t")}</h1><h2>${t("p1s")}</h2><p style="color:var(--muted);margin-top:.8rem;font-size:.88rem">${t("p1m")}</p></section>
+
+<section class="slide"><h1>${t("p2t")}</h1><h2>${t("p2s")}</h2>
+<div class="card" style="flex:1;overflow:auto"><table class="compare-table"><thead><tr>
+<th>${t("p2th1")}</th><th>${t("p2th2")}</th><th>${t("p2th3")}</th><th>${t("p2th4")}</th>
+</tr></thead><tbody>
+<tr><td><strong>${t("p2r1n")}</strong></td><td>${t("p2r1s")}</td><td>${t("p2r1o")}</td><td>${t("p2r1d")}</td></tr>
+<tr><td><strong>${t("p2r2n")}</strong></td><td>${t("p2r2s")}</td><td>${t("p2r2o")}</td><td>${t("p2r2d")}</td></tr>
+<tr><td><strong>${t("p2r3n")}</strong></td><td>${t("p2r3s")}</td><td>${t("p2r3o")}</td><td>${t("p2r3d")}</td></tr>
+<tr><td><strong>${t("p2r4n")}</strong></td><td>${t("p2r4s")}</td><td>${t("p2r4o")}</td><td>${t("p2r4d")}</td></tr>
+</tbody></table>
+<div class="callout">${t("p2link")}</div>
+<div class="note">${t("p2sum")}</div></div></section>
+
+<section class="slide section-slide"><p><span class="tag ext">${t("extTag")}</span></p>
+<h1>${t("extSec")}</h1><p>${t("extSecs")}</p></section>
+
+<section class="slide"><h1>${t("ext2t")}</h1><h2>${t("ext2s")}</h2>
+<div class="kpi-row cols3">
+<div class="kpi ext"><div class="val">${t("extK1")}</div><div class="lbl">${t("extK1d")}</div></div>
+<div class="kpi ext"><div class="val">${t("extK2")}</div><div class="lbl">${t("extK2d")}</div></div>
+<div class="kpi ext"><div class="val">${t("extK3")}</div><div class="lbl">${t("extK3d")}</div></div></div>
+<ul><li>${t("extB1")}</li><li>${t("extB2")}</li><li>${t("extB3")}</li></ul></section>
+
+<section class="slide"><h1>${t("ext5t")}</h1><h2>${t("ext5s")}</h2>
+<div class="cost-scroll">${extCostHTML()}</div></section>
+
+<section class="slide" data-charts="ext"><h1>${t("ext6t")}</h1><h2>${t("ext6s")}</h2>
+<div class="invest-kpi-row">
+<div class="invest-kpi highlight"><div class="ik-val">${fm(EXT_OOM)}</div><div class="ik-lbl">${t("ext6kOom")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(59489961)}</div><div class="ik-lbl">${t("ext6kBase")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(18618128)}</div><div class="ik-lbl">${t("ext6kRisk")}</div></div></div>
+<div class="grid-2">
+<div class="card"><div class="chart-title">${t("extChL")}</div><div class="chart-wrap tall"><canvas id="cExt1"></canvas></div></div>
+<div class="card"><div class="chart-title">${t("extChR")}</div><div class="chart-wrap tall"><canvas id="cExt2"></canvas></div></div></div></section>
+
+<section class="slide">${ganttHTML(GANTT_EXT,new Date("2026-07-01"),new Date("2030-05-07"),EXT_KEYS,["2026","2027","2028","2029","2030"],"2026-08-21","extGSub",{d:"extLegD",p:"extLegP",b:"extLegB",c:"extLegM",today:"extToday"})}</section>
+
+<section class="slide"><h1>${t("ext9t")}</h1>
+<ul class="decision-list">
+<li class="ext">${t("ext9d1")}</li><li class="ext">${t("ext9d2")}</li></ul></section>
+
+<section class="slide section-slide"><p><span class="tag hplc">${t("hplcTag")}</span></p>
+<h1>${t("hplcSec")}</h1><p>${t("hplcSecs")}</p></section>
+
+<section class="slide"><h1>${t("hplc2t")}</h1><h2>${t("hplc2s")}</h2>
+<div class="kpi-row">
+<div class="kpi hplc"><div class="val">${t("hplcK1")}</div><div class="lbl">${t("hplcK1d")}</div></div>
+<div class="kpi hplc"><div class="val">${t("hplcK2")}</div><div class="lbl">${t("hplcK2d")}</div></div>
+<div class="kpi hplc"><div class="val">${t("hplcK3")}</div><div class="lbl">${t("hplcK3d")}</div></div>
+<div class="kpi hplc"><div class="val">${t("hplcK4")}</div><div class="lbl">${t("hplcK4d")}</div></div></div>
+<ul><li>${t("hplcB1")}</li><li>${t("hplcB2")}</li><li>${t("hplcB3")}</li><li>${t("hplcB4")}</li></ul></section>
+
+<section class="slide"><h1>${t("hplc3t")}</h1>
+<div class="scope-grid">
+<div class="card"><h3>${t("hplcT1")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("hplcT1a")}</li><li>${t("hplcT1b")}</li><li>${t("hplcT1c")}</li></ul></div>
+<div class="card"><h3>${t("hplcT2")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("hplcT2a")}</li><li>${t("hplcT2b")}</li><li>${t("hplcT2c")}</li></ul></div></div></section>
+
+<section class="slide"><h1>${t("hplc5t")}</h1><h2>${t("hplc5s")}</h2>
+<div class="cost-scroll">${hplcCostHTML()}</div></section>
+
+<section class="slide" data-charts="hplc"><h1>${t("hplc6t")}</h1><h2>${t("hplc6s")}</h2>
+<div class="invest-kpi-row cols4">
+<div class="invest-kpi highlight"><div class="ik-val">${fm(5329100)}</div><div class="ik-lbl">${t("hplc6kOom")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(3026800)}</div><div class="ik-lbl">${t("hplc6kDirect")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(1072500)}</div><div class="ik-lbl">${t("hplc6kIndirect")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(1229800)}</div><div class="ik-lbl">${t("hplc6kGen")}</div></div></div>
+<div class="invest-kpi-row cols2 direct-sub">
+<div class="invest-kpi invest-kpi-mid"><div class="ik-val">${fm(2047500)}</div><div class="ik-lbl">${t("hplc6kMain")}</div></div>
+<div class="invest-kpi invest-kpi-mid"><div class="ik-val">${fm(979300)}</div><div class="ik-lbl">${t("hplc6kInfra")}</div></div></div>
+<div class="grid-2">
+<div class="card"><div class="chart-title">${t("hplcChL")}</div><div class="chart-wrap tall"><canvas id="cHplc1"></canvas></div></div>
+<div class="card"><div class="chart-title">${t("hplcChR")}</div><div class="chart-wrap tall"><canvas id="cHplc2"></canvas></div></div></div></section>
+
+<section class="slide"><h1>${t("hplc7t")}</h1><h2>${t("hplc7s")}</h2>
+<div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:.45rem">
+<div class="kpi"><div class="val">${t("hplc7k1")}</div><div class="lbl">${t("hplc7k1d")}</div></div>
+<div class="kpi"><div class="val">${t("hplc7k2")}</div><div class="lbl">${t("hplc7k2d")}</div></div>
+<div class="kpi"><div class="val">${t("hplc7k3")}</div><div class="lbl">${t("hplc7k3d")}</div></div>
+<div class="kpi"><div class="val">${t("hplc7k4")}</div><div class="lbl">${t("hplc7k4d")}</div></div></div>
+${ganttHTML(GANTT_HPLC,new Date("2026-05-01"),new Date("2028-03-31"),HPLC_KEYS,["2026 H1","2026 H2","2027 H1","2027 H2","2028 H1"],"2026-08-21","hplcGSub",{d:"legDone",p:"legPlan",b:"legBuild",c:"legCrit",s:"legStaff",a:"legAssume",today:"today"})}</section>
+
+<section class="slide"><h1>${t("hplc9t")}</h1>
+<ul class="decision-list">
+<li class="hplc">${t("hplc9d1")}</li><li class="hplc">${t("hplc9d2")}</li></ul></section>
+
+<section class="slide section-slide"><p><span class="tag c1">${t("c1Tag")}</span></p>
+<h1>${t("c1Sec")}</h1><p>${t("c1Secs")}</p></section>
+
+<section class="slide"><h1>${t("c12t")}</h1><h2>${t("c12s")}</h2>
+<div class="kpi-row cols3">
+<div class="kpi c1"><div class="val">${t("c1K1")}</div><div class="lbl">${t("c1K1d")}</div></div>
+<div class="kpi c1"><div class="val">${t("c1K2")}</div><div class="lbl">${t("c1K2d")}</div></div>
+<div class="kpi c1"><div class="val">${t("c1K3")}</div><div class="lbl">${t("c1K3d")}</div></div></div>
+<ul><li>${t("c1B1")}</li><li>${t("c1B2")}</li><li>${t("c1B3")}</li><li>${t("c1B4")}</li></ul></section>
+
+<section class="slide"><h1>${t("c13t")}</h1>
+<div class="scope-grid">
+<div class="card"><h3>${t("c1S1")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S1a")}</li><li>${t("c1S1b")}</li></ul></div>
+<div class="card"><h3>${t("c1S2")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S2a")}</li><li>${t("c1S2b")}</li></ul></div>
+<div class="card"><h3>${t("c1S3")}</h3><ul style="font-size:.8rem;margin-top:.35rem"><li>${t("c1S3a")}</li><li>${t("c1S3b")}</li></ul></div>
+<div class="card"><h3>${t("c1S4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("c1S4a")}</li><li>${t("c1S4b")}</li></ul></div></div></section>
+
+<section class="slide"><h1>${t("c15t")}</h1><h2>${t("c15s")}</h2>
+<div class="cost-scroll">${c1CostHTML()}</div></section>
+
+<section class="slide" data-charts="c1"><h1>${t("c16t")}</h1><h2>${t("c16s")}</h2>
+<div class="invest-kpi-row cols3">
+<div class="invest-kpi highlight"><div class="ik-val">${fm(2476500)}</div><div class="ik-lbl">${t("c16kOom")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(1905000)}</div><div class="ik-lbl">${t("c16kEquip")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(571500)}</div><div class="ik-lbl">${t("c16kCont")}</div></div></div>
+<div class="grid-2">
+<div class="card"><div class="chart-title">${t("c1ChL")}</div><div class="chart-wrap tall"><canvas id="cC11"></canvas></div></div>
+<div class="card"><div class="chart-title">${t("c1ChR")}</div><div class="chart-wrap tall"><canvas id="cC12"></canvas></div></div></div></section>
+
+<section class="slide"><h1>${t("c17t")}</h1><h2>${t("c17s")}</h2>
+<div class="kpi-row cols3" style="margin-bottom:.45rem">
+<div class="kpi"><div class="val">${t("c17k1")}</div><div class="lbl">${t("c17k1d")}</div></div>
+<div class="kpi"><div class="val">${t("c17k2")}</div><div class="lbl">${t("c17k2d")}</div></div>
+<div class="kpi"><div class="val">${t("c17k3")}</div><div class="lbl">${t("c17k3d")}</div></div></div>
+<div class="kpi-row cols3" style="margin-bottom:.5rem">
+<div class="kpi"><div class="val">${t("c17k4")}</div><div class="lbl">${t("c17k4d")}</div></div></div>
+${ganttHTML(GANTT_C1,new Date("2026-08-01"),new Date("2027-10-31"),C1_KEYS,["2026 H2","2027 H1","2027 H2"],"2026-08-21","c1GSub",{p:"c1LegP",w:"c1LegWarn",b:"c1LegB",today:"c1Today"})}</section>
+
+<section class="slide"><h1>${t("c19t")}</h1>
+<ul class="decision-list">
+<li class="c1">${t("c19d1")}</li><li class="c1">${t("c19d2")}</li></ul></section>
+
+<section class="slide section-slide"><p><span class="tag hipo">${t("hipoTag")}</span></p>
+<h1>${t("hipoSec")}</h1><p>${t("hipoSecs")}</p></section>
+
+<section class="slide"><h1>${t("hipo2t")}</h1><h2>${t("hipo2s")}</h2>
+<div class="kpi-row">
+<div class="kpi hipo"><div class="val">${t("hipoK1")}</div><div class="lbl">${t("hipoK1d")}</div></div>
+<div class="kpi hipo"><div class="val">${t("hipoK2")}</div><div class="lbl">${t("hipoK2d")}</div></div>
+<div class="kpi hipo"><div class="val">${t("hipoK3")}</div><div class="lbl">${t("hipoK3d")}</div></div>
+<div class="kpi hipo"><div class="val">${t("hipoK4")}</div><div class="lbl">${t("hipoK4d")}</div></div></div>
+<ul><li>${t("hipoB1")}</li><li>${t("hipoB2")}</li><li>${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li><li>${t("hipoB6")}</li></ul></section>
+
+<section class="slide"><h1>${t("hipo3t")}</h1><h2>${t("hipo3s")}</h2>
+<div class="scope-grid">
+<div class="card"><h3>${t("hipoS1")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS1a")}</li><li>${t("hipoS1b")}</li><li>${t("hipoS1c")}</li></ul></div>
+<div class="card"><h3>${t("hipoS2")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS2a")}</li><li>${t("hipoS2b")}</li><li>${t("hipoS2c")}</li><li>${t("hipoS2d")}</li></ul></div>
+<div class="card"><h3>${t("hipoS3")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS3a")}</li><li>${t("hipoS3b")}</li><li>${t("hipoS3c")}</li></ul></div>
+<div class="card"><h3>${t("hipoS4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS4a")}</li><li>${t("hipoS4b")}</li><li>${t("hipoS4c")}</li><li>${t("hipoS4d")}</li></ul></div></div>
+<div class="callout">${t("hipoScopeNote")}</div></section>
+
+<section class="slide"><h1>${t("hipo5t")}</h1><h2>${t("hipo5s")}</h2>
+<div class="cost-scroll">${hipoCostHTML()}</div></section>
+
+<section class="slide"><h1>${t("hipoEqt")}</h1><h2>${t("hipoEqs")}</h2>
+<div class="equip-toolbar">
+<div class="equip-filters">
+<button type="button" data-filter="all">${t("hipoEqAll")}</button>
+<button type="button" data-filter="new">${t("hipoEqNew")}</button>
+<button type="button" data-filter="existing">${t("hipoEqExist")}</button>
+</div>
+<div class="cost-total-bar equip-total"><span>${t("hipoEqTotal")}</span><span id="equipTotalAmt"></span></div>
+</div>
+<div class="equip-table-wrap" id="equipTableWrap"></div></section>
+
+<section class="slide" data-charts="hipo"><h1>${t("hipo6t")}</h1><h2>${t("hipo6s")}</h2>
+<div class="invest-kpi-row cols5">
+<div class="invest-kpi highlight"><div class="ik-val">${fm(4562044)}</div><div class="ik-lbl">${t("hipo6kTotal")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(1951140)}</div><div class="ik-lbl">${t("hipo6kBuild")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(1975045)}</div><div class="ik-lbl">${t("hipo6kEquip")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(397875)}</div><div class="ik-lbl">${t("hipo6kRisk")}</div></div>
+<div class="invest-kpi"><div class="ik-val">${fm(3740000)} – ${fm(4990000)}</div><div class="ik-lbl">${t("hipo6kRange")}</div></div></div>
+<div class="grid-2">
+<div class="card"><div class="chart-title">${t("hipoChL")}</div><div class="chart-wrap"><canvas id="cHipo1"></canvas></div></div>
+<div class="card"><div class="chart-title">${t("hipoChR")}</div><div class="chart-wrap"><canvas id="cHipo2"></canvas></div></div></div></section>
+
+<section class="slide"><h1>${t("hipo7t")}</h1><h2>${t("hipo7s")}</h2>
+<div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:.45rem">
+<div class="kpi hipo"><div class="val">${t("hipo7k1")}</div><div class="lbl">${t("hipo7k1d")}</div></div>
+<div class="kpi hipo"><div class="val">${t("hipo7k2")}</div><div class="lbl">${t("hipo7k2d")}</div></div>
+<div class="kpi hipo"><div class="val">${t("hipo7k3")}</div><div class="lbl">${t("hipo7k3d")}</div></div>
+<div class="kpi hipo"><div class="val">${t("hipo7k4")}</div><div class="lbl">${t("hipo7k4d")}</div></div></div>
+${ganttHTML(GANTT_HIPO,new Date("2026-09-01"),new Date("2027-12-15"),HIPO_KEYS,["2026 H2","2027 H1","2027 H2"],"2026-08-21","hipoGSub",{p:"hipoLegP",w:"hipoLegW",b:"hipoLegB",today:"hipoToday"})}
+<div class="note">${t("hipoProgNote")}</div></section>
+
+<section class="slide"><h1>${t("hipo9t")}</h1>
+<ul class="decision-list">
+<li class="hipo">${t("hipo9d1")}</li><li class="hipo">${t("hipo9d2")}</li></ul></section>
+
+<section class="slide title-slide"><h1>${t("pEnd")}</h1></section>`;
+}
+
+function bindGanttTips(){
+document.querySelectorAll(".gantt-bar").forEach(el=>{
+el.addEventListener("mouseenter",e=>{
+const tip=document.getElementById("tip");
+tip.querySelector(".td").textContent=el.dataset.dates;
+tip.querySelector(".tb").textContent=lang==="zh"?el.dataset.zh:el.dataset.en;
+tip.classList.add("show");moveTip(e);});
+el.addEventListener("mousemove",moveTip);
+el.addEventListener("mouseleave",()=>document.getElementById("tip").classList.remove("show"));
+});
+}
+function moveTip(e){const tip=document.getElementById("tip");
+let x=e.clientX+12,y=e.clientY+12;
+if(x+360>innerWidth)x=e.clientX-340;
+if(y+80>innerHeight)y=e.clientY-70;
+tip.style.left=x+"px";tip.style.top=y+"px";}
+
+function buildCharts(which){
+const zh=lang==="zh";
+if(which==="ext"&&!chartsBuilt.ext){buildExtInvestmentCharts();chartsBuilt.ext=true;}
+if(which==="hplc"&&!chartsBuilt.hplc){buildHplcInvestmentCharts();chartsBuilt.hplc=true;}
+if(which==="c1"&&!chartsBuilt.c1){buildC1InvestmentCharts();chartsBuilt.c1=true;}
+if(which==="hipo"&&!chartsBuilt.hipo){buildHipoInvestmentCharts();chartsBuilt.hipo=true;}
+}
+
+function applyLang(){
+document.documentElement.lang=lang==="zh"?"zh-CN":"en";
+const saved=idx;
+chartsBuilt={};
+document.getElementById("deck").innerHTML=deckHTML();
+document.getElementById("footerText").textContent=t("footer");
+document.getElementById("navHint").textContent=t("nav");
+document.getElementById("btnZh").classList.toggle("active",lang==="zh");
+document.getElementById("btnEn").classList.toggle("active",lang==="en");
+bindGanttTips();
+bindEquipPage();
+show(saved);
+}
+function slides(){return document.querySelectorAll(".slide");}
+function show(n){
+const s=slides();idx=(n+s.length)%s.length;
+s.forEach((el,i)=>el.classList.toggle("active",i===idx));
+document.getElementById("counter").textContent=(idx+1)+" / "+s.length;
+const ch=s[idx].dataset.charts;
+if(ch)buildCharts(ch);
+}
+document.getElementById("btnZh").onclick=()=>{if(lang!=="zh"){lang="zh";applyLang();}};
+document.getElementById("btnEn").onclick=()=>{if(lang!=="en"){lang="en";applyLang();}};
+document.addEventListener("keydown",e=>{
+const tag=(e.target&&e.target.tagName||"").toLowerCase();
+if(tag==="input"||tag==="textarea"||tag==="button")return;
+if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){e.preventDefault();show(idx+1);}
+if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();show(idx-1);}
+});
+applyLang();
+</script>
+</body>
+</html>
