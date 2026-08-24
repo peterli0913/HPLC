@@ -373,7 +373,7 @@ HIPO_COST_I18N_ZH = {
     "secProf": "8 专业服务费 Professional Services",
     "prof": "项目管理（合同前 33 周 / 合同后 22 周 / 缺陷期）、设计支持、商务支持与合同管理",
     "secEquip": "9 业主（凯莱英）供货并安装设备 Equipment (supplied and installed by the Client)",
-    "equip": "待采购 £1.96M（《Equipment List Costs for scoping 5 Aug》）",
+    "equip": "待采购（《Equipment List Costs for scoping 5 Aug》）",
     "secRisk": "10 风险预备费 Risk Allowance Estimate",
     "risk": "10.1 设计发展风险（依风险登记册）",
     "secInf": "11 通胀 Inflation（2.15%）",
@@ -418,7 +418,7 @@ HIPO_COST_I18N_EN = {
     "secProf": "8 Professional Services",
     "prof": "Project management (pre-contract 33 wks / post-contract 22 wks / defects), design support, commercial support & contract administration",
     "secEquip": "9 Equipment (supplied and installed by the Client)",
-    "equip": "To purchase £1.96M (Equipment List Costs for scoping 5 Aug)",
+    "equip": "To purchase (Equipment List Costs for scoping 5 Aug)",
     "secRisk": "10 Risk Allowance Estimate",
     "risk": "10.1 Design development risk (refer to risk register)",
     "secInf": "11 Inflation (2.15%)",
@@ -505,11 +505,12 @@ def hipo_cost_data_json() -> str:
 
 HIPO_COST_RENDER_JS = r"""
 function hipoCostLabels(){return I18N[lang].hipoCost;}
-function hipoLeaf(id,amt,depth,amtId){
+function hipoLeaf(id,amt,depth,amtId,lblId){
 const L=hipoCostLabels();
 const pad=depth===3?" cost-leaf-l3":"";
 const idAttr=amtId?` id="${amtId}"`:"";
-return `<div class="cost-leaf cost-leaf-sub${pad}"><span>${L[id]}</span><span${idAttr}>${fm(Number(amt)||0)}</span></div>`;
+const lblAttr=lblId?` id="${lblId}"`:"";
+return `<div class="cost-leaf cost-leaf-sub${pad}"><span${lblAttr}>${L[id]}</span><span${idAttr}>${fm(Number(amt)||0)}</span></div>`;
 }
 function hipoSectionHd(title,total,amtId){
 const idAttr=amtId?` id="${amtId}"`:"";
@@ -545,7 +546,7 @@ const buildBlock=`<details class="cost-section" open><summary class="cost-sectio
 const profBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secProf,D.profServices)}</summary>
 <div class="cost-section-body">${hipoLeaf("prof",ln.prof,3)}</div></details>`;
 const equipBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secEquip,D.clientEquip,"hipoLiveEquipSec")}</summary>
-<div class="cost-section-body">${hipoLeaf("equip",ln.equip,3,"hipoLiveEquipLeaf")}</div></details>`;
+<div class="cost-section-body">${hipoLeaf("equip",ln.equip,3,"hipoLiveEquipLeaf","hipoLiveEquipLabel")}</div></details>`;
 const riskBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secRisk,D.riskAllowance)}</summary>
 <div class="cost-section-body">${hipoLeaf("risk",ln.risk,3)}</div></details>`;
 const infBlock=`<details class="cost-section" open><summary class="cost-section-hd">${hipoSectionHd(L.secInf,D.inflation)}</summary>
@@ -593,6 +594,9 @@ function equipNeClass(ne){return ne==="E"?"ne-E":"ne-N";}
 function equipNewMustTotal(){
 return EQUIP_ITEMS.reduce((s,it)=>s+(equipIsNew(it)&&equipMust(it.id)?it.cost:0),0);
 }
+function equipGroupNewMust(group){
+return EQUIP_ITEMS.reduce((s,it)=>s+(it.group===group&&equipIsNew(it)&&equipMust(it.id)?it.cost:0),0);
+}
 function fmM(n){return "£"+(n/1e6).toFixed(2)+"M";}
 function hipoLiveProject(){return HIPO_OTHER+equipNewMustTotal();}
 function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
@@ -600,6 +604,9 @@ function syncHipoLiveTotals(){
 const equip=equipNewMustTotal();
 const project=HIPO_OTHER+equip;
 const inB=5.33+2.48+project/1e6;
+const ard=equipGroupNewMust("ARD/QC");
+const iso=equipGroupNewMust("Isolators");
+const crd=equipGroupNewMust("CRD");
 setTxt("equipTotalAmt",fm(equip));
 setTxt("hipoLiveEquipSec",fm(equip));
 setTxt("hipoLiveEquipLeaf",fm(equip));
@@ -607,12 +614,37 @@ setTxt("hipoLiveProjectBar",fm(project));
 setTxt("hipoLiveKpiEquip",fm(equip));
 setTxt("hipoLiveKpiProject",fm(project));
 setTxt("hipoLiveP2Invest",fmM(project));
+setTxt("hipoLiveK2",fmM(project));
 const p2=document.getElementById("hipoLiveP2sum");
 if(p2){
 p2.textContent=lang==="zh"
 ?`厂房内三条线合计（改造 £5.33M + C1 £2.48M + 高活实验室 ${fmM(project)}）约 ${"£"+inB.toFixed(2)+"M"}，不含 902 东侧扩建。各线口径不同：扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。`
 :`The three in-building lines total ~${"£"+inB.toFixed(2)+"M"} (retrofit £5.33M + C1 £2.48M + HIPO lab ${fmM(project)}), excluding the B902 east extension. Estimate bases differ: extension and retrofit are feasibility level, C1 is an internal estimate, the HIPO lab is a concept cost plan.`;
 }
+const b2=document.getElementById("hipoLiveB2");
+if(b2)b2.textContent=lang==="zh"
+?`投资：项目投资（含通胀）${fm(project)}；不含增值税；估算精度区间 £3.74M – £4.99M。`
+:`Investment: project investment (incl. inflation) ${fm(project)}; VAT excluded; estimate accuracy range £3.74M – £4.99M.`;
+const b3=document.getElementById("hipoLiveB3");
+if(b3)b3.textContent=lang==="zh"
+?`构成：建筑工程费 £1.95M + 专业服务费 £0.14M + 业主（凯莱英）供货设备 ${fmM(equip)} + 风险预备费 £0.40M + 通胀 £0.10M。`
+:`Build-up: building works £1.95M + professional services £0.14M + client (Asymchem) equipment ${fmM(equip)} + risk allowance £0.40M + inflation £0.10M.`;
+const b6=document.getElementById("hipoLiveB6");
+if(b6)b6.textContent=lang==="zh"
+?`业主（凯莱英）供货并安装设备待采购 ${fm(equip)}。`
+:`Client (Asymchem) supplied and installed equipment — to purchase ${fm(equip)}.`;
+const s4c=document.getElementById("hipoLiveS4c");
+if(s4c)s4c.textContent=lang==="zh"
+?`业主（凯莱英）供货并安装设备待采购 ${fm(equip)}`
+:`Client (Asymchem) supplied and installed equipment — to purchase ${fm(equip)}`;
+const s4d=document.getElementById("hipoLiveS4d");
+if(s4d)s4d.textContent=lang==="zh"
+?`待采购分项：ARD/QC ${fm(ard)}、隔离器内仪器 ${fm(iso)}、CRD ${fm(crd)}`
+:`To purchase by group: ARD/QC ${fm(ard)}; isolator instruments ${fm(iso)}; CRD ${fm(crd)}`;
+const eqLbl=document.getElementById("hipoLiveEquipLabel");
+if(eqLbl)eqLbl.textContent=lang==="zh"
+?`待采购 ${fm(equip)}（《Equipment List Costs for scoping 5 Aug》）`
+:`To purchase ${fm(equip)} (Equipment List Costs for scoping 5 Aug)`;
 if(_hipoBarChart){
 _hipoBarChart.data.datasets[2].data[0]=equip;
 _hipoBarChart.options.scales.x.max=project*1.02;

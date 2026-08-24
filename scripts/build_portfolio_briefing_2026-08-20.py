@@ -845,17 +845,17 @@ ${ganttHTML(GANTT_C1,new Date("2026-08-01"),new Date("2027-10-31"),C1_KEYS,["202
 <section class="slide"><h1>${t("hipo2t")}</h1><h2>${t("hipo2s")}</h2>
 <div class="kpi-row">
 <div class="kpi hipo"><div class="val">${t("hipoK1")}</div><div class="lbl">${t("hipoK1d")}</div></div>
-<div class="kpi hipo"><div class="val">${t("hipoK2")}</div><div class="lbl">${t("hipoK2d")}</div></div>
+<div class="kpi hipo"><div class="val" id="hipoLiveK2">${t("hipoK2")}</div><div class="lbl">${t("hipoK2d")}</div></div>
 <div class="kpi hipo"><div class="val">${t("hipoK3")}</div><div class="lbl">${t("hipoK3d")}</div></div>
 <div class="kpi hipo"><div class="val">${t("hipoK4")}</div><div class="lbl">${t("hipoK4d")}</div></div></div>
-<ul><li>${t("hipoB1")}</li><li>${t("hipoB2")}</li><li>${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li><li>${t("hipoB6")}</li></ul></section>
+<ul><li>${t("hipoB1")}</li><li id="hipoLiveB2">${t("hipoB2")}</li><li id="hipoLiveB3">${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li><li id="hipoLiveB6">${t("hipoB6")}</li></ul></section>
 
 <section class="slide"><h1>${t("hipo3t")}</h1><h2>${t("hipo3s")}</h2>
 <div class="scope-grid">
 <div class="card"><h3>${t("hipoS1")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS1a")}</li><li>${t("hipoS1b")}</li><li>${t("hipoS1c")}</li></ul></div>
 <div class="card"><h3>${t("hipoS2")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS2a")}</li><li>${t("hipoS2b")}</li><li>${t("hipoS2c")}</li><li>${t("hipoS2d")}</li></ul></div>
 <div class="card"><h3>${t("hipoS3")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS3a")}</li><li>${t("hipoS3b")}</li><li>${t("hipoS3c")}</li></ul></div>
-<div class="card"><h3>${t("hipoS4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS4a")}</li><li>${t("hipoS4b")}</li><li>${t("hipoS4c")}</li><li>${t("hipoS4d")}</li></ul></div></div>
+<div class="card"><h3>${t("hipoS4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS4a")}</li><li>${t("hipoS4b")}</li><li id="hipoLiveS4c">${t("hipoS4c")}</li><li id="hipoLiveS4d">${t("hipoS4d")}</li></ul></div></div>
 <div class="callout">${t("hipoScopeNote")}</div></section>
 
 <section class="slide"><h1>${t("hipo5t")}</h1><h2>${t("hipo5s")}</h2>
