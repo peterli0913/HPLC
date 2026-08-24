@@ -387,6 +387,7 @@ hplcB1:"范围：制备 HPLC（DAC300/CP300）+ 冻干机（隔离器、除湿�
 hplcB2:"投资：Total CAPEX Estimate £5.33M（直接+间接+30% 项目预备费）；非最终 Capex。",
 hplcB3:"周期：冻干机长周期驱动；优先冻干后 HPLC。",
 hplcB4:"关联：须与 C1 模块 OEB5 升级同步交付，方可实现制备 HPLC 的 OEB5 运行能力。",
+hplcB5:"DPML（Paul Bax，2026-08-21）：原则上同意将离心机与盘式干燥机更换为 5 m³ 冻干机及配套设备，最终以设计审查为准；可启动 Licence for Alteration。",
 hplc3t:"改造 · 范围",
 hplcT1:"HPLC", hplcT1a:"DAC300/CP300 泵撬；移动头罐；2000 L 废液罐",
 hplcT1b:"Hanbon 供货", hplcT1c:"PG.05 区域安装",
@@ -456,6 +457,7 @@ hipoB2:"投资：项目投资（含通胀）£4,562,044；不含增值税；估�
 hipoB3:"构成：建筑工程费 £1.95M + 专业服务费 £0.14M + 业主（凯莱英）供货设备 £1.98M + 风险预备费 £0.40M + 通胀 £0.10M。",
 hipoB4:"周期：概念进度（草案）自资金批准与推进决定起 262 个工作日；按 Clare 意见另增 6 周用于启动准备与资金决策，计划交付 2027 年 11 月；隔离器 2027-07-14 到场。",
 hipoB5:"隔离器费用：为基于与供应商沟通的估算，最终取决于项目范围最终确认的密闭等级。",
+hipoB6:"业主设备：《5 Aug》清单合计 £2,428,245，待采购 £1,957,045（成本计划本项计列 £1,975,045）。Guoxi 指出该金额偏高，要求逐项复核、最大化既有实验室迁移、区分 must-have / nice-to-have，并评估二手/拍卖采购。",
 hipo3t:"高活实验室 · 范围", hipo3s:"依据 G-128 概念成本计划分项",
 hipoS1:"范围与面积", hipoS1a:"既有 G-128 套间（G128 及 G128A–D）改造；GIFA 215 m²",
 hipoS1b:"实验室区约 182 m²（机电费率基准）+ 办公区约 33 m²（地毯量）",
@@ -469,8 +471,9 @@ hipoS3b:"新建：墙面衬板 475 m²、新隔断 40 m²；5 樘单开 + 1 樘�
 hipoS3c:"装饰：实验室卷材乙烯地面 173 m²、金属吊顶 173 m²、办公区地毯 33 m²",
 hipoS4:"机电、安全与业主供货", hipoS4a:"暖通 £217,920：AHU 恢复使用、全套风管与送回风、袋进袋出 HEPA 排风过滤、BMS 升级、系统平衡",
 hipoS4b:"电气 £107,380、消防喷淋 £30,030、门禁/布线/CCTV/火警 £51,345、实验室气体管道 £63,700、雾化淋浴 £35,000",
-hipoS4c:"业主（凯莱英）供货并安装设备 £1,975,045",
-hipoScopeNote:"风险与前提：正在就厂房改造事宜征求 DPML 同意 —— 改造完成后实验室将无法按当前运行状态交还 DPML，该沟通进展由 Clare 跟进。",
+hipoS4c:"业主（凯莱英）供货并安装设备：成本计划 £1,975,045；《5 Aug》清单合计 £2,428,245，待采购 £1,957,045",
+hipoS4d:"待采购分项：ARD/QC £912,600、隔离器内仪器 £455,345、CRD £589,100；清单既有项 £471,200 不计入待采购",
+hipoScopeNote:"DPML（Paul Bax，2026-08-21）：原则上同意 PDF 与 DPH（含 G.128）拟议改造，最终以设计审查为准；可启动两项 Licence for Alteration，范围与图纸随设计深化补充。",
 hipo5t:"高活实验室 · 投资总览", hipo5s:"G-128 Concept Cost Plan · 报告日期 2026-08-06 · GIFA 215 m²",
 hipo6t:"高活实验室 · 投资结构", hipo6s:"项目投资构成与建筑工程费分项",
 hipo6kTotal:"项目投资（含通胀）", hipo6kBuild:"建筑工程费合计", hipo6kEquip:"业主（凯莱英）供货设备",
@@ -492,6 +495,7 @@ hipoLegP:"设计/合约", hipoLegW:"采购/制造/预留", hipoLegB:"施工/调�
 hipo9t:"高活实验室 · 决策", hipo9s:"",
 hipo9d1:"是否批准资金与推进决定节点？概念进度以此为起点，262 个工作日加 6 周启动与决策时间，计划交付 2027 年 11 月。",
 hipo9d2:"是否安排 AHU 状况核查与既有通风柜可用性确认？二者为风险登记册中金额最高的两项。",
+hipo9d3:"是否按 Guoxi 意见复核《Equipment List Costs for scoping 5 Aug》：最大化既有实验室迁移、区分 must-have / nice-to-have，并评估二手/拍卖采购，以压降启动采购额？",
 pEnd:"谢谢", pEnds:"",
 },
 en:{
@@ -542,6 +546,7 @@ hplcB1:"Prep HPLC + lyophilizer (isolator, dehumidifier, PSG, etc.) and enabling
 hplcB2:"Total CAPEX Estimate £5.33M (direct + indirect + 30% project contingency); not final Capex.",
 hplcB3:"Lyophilizer lead time drives; lyoph before HPLC.",
 hplcB4:"Link: must be delivered together with C1 OEB5 upgrade for prep HPLC OEB5 capability.",
+hplcB5:"DPML (Paul Bax, 21 Aug 2026): in-principle approval to replace the centrifuge and pan dryer with a 5 m³ lyophiliser and associated equipment, subject to a final design review; Licence for Alteration can be initiated.",
 hplc3t:"Retrofit · Scope",
 hplcT1:"HPLC", hplcT1a:"DAC300/CP300; mobile tanks; 2,000 L waste hold",
 hplcT1b:"Hanbon supply", hplcT1c:"Install PG.05",
@@ -611,6 +616,7 @@ hipoB2:"Investment: project investment (incl. inflation) £4,562,044; VAT exclud
 hipoB3:"Build-up: building works £1.95M + professional services £0.14M + client (Asymchem) equipment £1.98M + risk allowance £0.40M + inflation £0.10M.",
 hipoB4:"Programme: draft concept programme runs 262 working days from the funding approval and decision to proceed; a further 6 weeks is added per Clare's comment to allow for start-up and the funding decision, giving planned delivery in November 2027; isolators delivered to site 14 Jul 2027.",
 hipoB5:"Isolator costs: estimates based on supplier discussions; they will depend on the level of containment agreed in the project scope.",
+hipoB6:"Client equipment: the 5 Aug list totals £2,428,245, of which £1,957,045 is To Purchase (this cost-plan line carries £1,975,045). Guoxi notes the £1.975M line is high for budget approval and asks for a line-by-line review, maximising relocation from existing labs, classifying remaining items as must-have vs nice-to-have for start-up, and considering used / auction purchases.",
 hipo3t:"HIPO lab · Scope", hipo3s:"Per the G-128 concept cost plan line items",
 hipoS1:"Scope & areas", hipoS1a:"Alterations to the existing G-128 suite (G128 and G128A–D); 215 m² GIFA",
 hipoS1b:"Lab area ~182 m² (services rate basis) + write-up area ~33 m² (carpet quantity)",
@@ -624,8 +630,9 @@ hipoS3b:"New works: wall lining 475 m², new partitions 40 m²; 5 single-leaf + 
 hipoS3c:"Finishes: sheet vinyl floor 173 m², metal suspended ceiling 173 m², carpet to write-up area 33 m²",
 hipoS4:"Services, safety & client equipment", hipoS4a:"HVAC £217,920: AHU back into use, full ductwork with supply diffusers and extract grilles, bag-in/bag-out HEPA on extract, BMS upgrade, balancing",
 hipoS4b:"Electrical £107,380; sprinklers £30,030; access control / cabling / CCTV / fire alarm £51,345; laboratory gas pipework £63,700; mist shower £35,000",
-hipoS4c:"Client (Asymchem) supplied and installed equipment £1,975,045",
-hipoScopeNote:"Risk and prerequisite: agreement is being sought from DPML for the facility modifications — once complete, the lab could not be returned to DPML in its current operational state; Clare is following up on the status of that conversation.",
+hipoS4c:"Client (Asymchem) supplied and installed equipment: cost plan £1,975,045; 5 Aug list total £2,428,245, of which £1,957,045 To Purchase",
+hipoS4d:"To Purchase by group: ARD/QC £912,600; isolator instruments £455,345; CRD £589,100. Existing items on the list £471,200 are not in To Purchase.",
+hipoScopeNote:"DPML (Paul Bax, 21 Aug 2026): in-principle approval of the proposed changes for both PDF and DPH (including G.128), subject to a final design review. Licences for Alteration can be initiated for both projects; scope and plans to follow as the designs develop.",
 hipo5t:"HIPO lab · Investment", hipo5s:"G-128 Concept Cost Plan · report date 06 Aug 2026 · 215 m² GIFA",
 hipo6t:"HIPO lab · Structure", hipo6s:"Project investment build-up and building works breakdown",
 hipo6kTotal:"Project investment (incl. inflation)", hipo6kBuild:"Total Building Works", hipo6kEquip:"Client (Asymchem) equipment",
@@ -647,6 +654,7 @@ hipoLegP:"Design / contract", hipoLegW:"Procurement / build / float", hipoLegB:"
 hipo9t:"HIPO lab · Decisions", hipo9s:"",
 hipo9d1:"Approve the funding approval and decision-to-proceed milestone? The concept programme runs 262 working days from it plus 6 weeks for start-up and the funding decision, giving planned delivery in November 2027.",
 hipo9d2:"Commission the AHU condition survey and confirm whether the existing fume cupboards can be re-used? These are the two largest items in the risk register.",
+hipo9d3:"Review the 5 Aug equipment list per Guoxi's comment — maximise relocation from existing labs, classify remaining items as must-have vs nice-to-have for start-up, and consider used / auction purchases to reduce the initial buy?",
 pEnd:"Thank you", pEnds:"",
 }
 };
@@ -747,7 +755,7 @@ return `
 <div class="kpi hplc"><div class="val">${t("hplcK2")}</div><div class="lbl">${t("hplcK2d")}</div></div>
 <div class="kpi hplc"><div class="val">${t("hplcK3")}</div><div class="lbl">${t("hplcK3d")}</div></div>
 <div class="kpi hplc"><div class="val">${t("hplcK4")}</div><div class="lbl">${t("hplcK4d")}</div></div></div>
-<ul><li>${t("hplcB1")}</li><li>${t("hplcB2")}</li><li>${t("hplcB3")}</li><li>${t("hplcB4")}</li></ul></section>
+<ul><li>${t("hplcB1")}</li><li>${t("hplcB2")}</li><li>${t("hplcB3")}</li><li>${t("hplcB4")}</li><li>${t("hplcB5")}</li></ul></section>
 
 <section class="slide"><h1>${t("hplc3t")}</h1>
 <div class="scope-grid">
@@ -833,14 +841,14 @@ ${ganttHTML(GANTT_C1,new Date("2026-08-01"),new Date("2027-10-31"),C1_KEYS,["202
 <div class="kpi hipo"><div class="val">${t("hipoK2")}</div><div class="lbl">${t("hipoK2d")}</div></div>
 <div class="kpi hipo"><div class="val">${t("hipoK3")}</div><div class="lbl">${t("hipoK3d")}</div></div>
 <div class="kpi hipo"><div class="val">${t("hipoK4")}</div><div class="lbl">${t("hipoK4d")}</div></div></div>
-<ul><li>${t("hipoB1")}</li><li>${t("hipoB2")}</li><li>${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li></ul></section>
+<ul><li>${t("hipoB1")}</li><li>${t("hipoB2")}</li><li>${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li><li>${t("hipoB6")}</li></ul></section>
 
 <section class="slide"><h1>${t("hipo3t")}</h1><h2>${t("hipo3s")}</h2>
 <div class="scope-grid">
 <div class="card"><h3>${t("hipoS1")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS1a")}</li><li>${t("hipoS1b")}</li><li>${t("hipoS1c")}</li></ul></div>
 <div class="card"><h3>${t("hipoS2")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS2a")}</li><li>${t("hipoS2b")}</li><li>${t("hipoS2c")}</li><li>${t("hipoS2d")}</li></ul></div>
 <div class="card"><h3>${t("hipoS3")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS3a")}</li><li>${t("hipoS3b")}</li><li>${t("hipoS3c")}</li></ul></div>
-<div class="card"><h3>${t("hipoS4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS4a")}</li><li>${t("hipoS4b")}</li><li>${t("hipoS4c")}</li></ul></div></div>
+<div class="card"><h3>${t("hipoS4")}</h3><ul style="font-size:.78rem;margin-top:.35rem"><li>${t("hipoS4a")}</li><li>${t("hipoS4b")}</li><li>${t("hipoS4c")}</li><li>${t("hipoS4d")}</li></ul></div></div>
 <div class="callout">${t("hipoScopeNote")}</div></section>
 
 <section class="slide"><h1>${t("hipo5t")}</h1><h2>${t("hipo5s")}</h2>
@@ -868,7 +876,7 @@ ${ganttHTML(GANTT_HIPO,new Date("2026-09-01"),new Date("2027-12-15"),HIPO_KEYS,[
 
 <section class="slide"><h1>${t("hipo9t")}</h1>
 <ul class="decision-list">
-<li class="hipo">${t("hipo9d1")}</li><li class="hipo">${t("hipo9d2")}</li></ul></section>
+<li class="hipo">${t("hipo9d1")}</li><li class="hipo">${t("hipo9d2")}</li><li class="hipo">${t("hipo9d3")}</li></ul></section>
 
 <section class="slide title-slide"><h1>${t("pEnd")}</h1></section>`;
 }

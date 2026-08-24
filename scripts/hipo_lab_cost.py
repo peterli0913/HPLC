@@ -7,6 +7,9 @@ Sources (HIPO Feasibility Reports, no values derived outside these):
   * ILC Dover budget quotation JS26-11384-0, 22 Jul 2026 — reactor charging isolator
   * Howorth Q26543 budget isolator proposal, 11 Aug 2026 (email Darren Newsome → Clare Crook)
   * Reactor Charging Isolator Schematic - ASYMCHEM.docx (drawings only, no text)
+  * Equipment List Costs for scoping 5 Aug.xlsx (client equipment; J95/K95 totals)
+  * Fw External Proposed facility changes Asymchem Sandwich.msg
+    (Paul Bax / DPML, 21 Aug 2026 — in-principle approval for PDF and DPH)
 """
 
 from __future__ import annotations
@@ -70,6 +73,20 @@ TOTAL_BUILDING_WORKS = 1_951_140
 PROF_SERVICES = 141_800  # 11 professional services
 SUBTOTAL_1 = 2_092_940
 CLIENT_EQUIP = 1_975_045  # 12 equipment supplied and installed by the Client
+
+# Equipment List Costs for scoping 5 Aug.xlsx — Sheet1 J95 / K95 and group sums.
+# Cost-plan line remains CLIENT_EQUIP; do not substitute the list purchase total.
+EQUIP_LIST_TOTAL = 2_428_245  # column J "Total Cost"
+EQUIP_LIST_PURCHASE = 1_957_045  # column K "To Purchase Cos"
+EQUIP_LIST_ARD_PURCH = 912_600
+EQUIP_LIST_ISO_PURCH = 455_345
+EQUIP_LIST_CRD_PURCH = 589_100
+EQUIP_LIST_EXISTING = 471_200  # New or Existing = E; To Purchase = 0
+assert (
+    EQUIP_LIST_ARD_PURCH + EQUIP_LIST_ISO_PURCH + EQUIP_LIST_CRD_PURCH
+    == EQUIP_LIST_PURCHASE
+)
+assert EQUIP_LIST_PURCHASE + EQUIP_LIST_EXISTING == EQUIP_LIST_TOTAL
 SUBTOTAL_2 = 4_067_985
 RISK_ALLOWANCE = 397_875  # 13.1 design development risk (13.2 incl. above)
 COST_LIMIT_EXCL_INF = 4_465_860
@@ -299,7 +316,7 @@ HIPO_COST_I18N_ZH = {
     "secProf": "8 专业服务费 Professional Services",
     "prof": "项目管理（合同前 33 周 / 合同后 22 周 / 缺陷期）、设计支持、商务支持与合同管理",
     "secEquip": "9 业主（凯莱英）供货并安装设备 Equipment (supplied and installed by the Client)",
-    "equip": "依据设备清单《Equipment List Costs for scoping 5 Aug》",
+    "equip": "依据《Equipment List Costs for scoping 5 Aug》：清单合计 £2,428,245，待采购 £1,957,045；本项按成本计划计列 £1,975,045",
     "secRisk": "10 风险预备费 Risk Allowance Estimate",
     "risk": "10.1 设计发展风险（依风险登记册）",
     "secInf": "11 通胀 Inflation（2.15%）",
@@ -344,7 +361,7 @@ HIPO_COST_I18N_EN = {
     "secProf": "8 Professional Services",
     "prof": "Project management (pre-contract 33 wks / post-contract 22 wks / defects), design support, commercial support & contract administration",
     "secEquip": "9 Equipment (supplied and installed by the Client)",
-    "equip": "Per equipment list \"Equipment List Costs for scoping 5 Aug\"",
+    "equip": "Per \"Equipment List Costs for scoping 5 Aug\": list total £2,428,245, of which £1,957,045 To Purchase; this cost-plan line carries £1,975,045",
     "secRisk": "10 Risk Allowance Estimate",
     "risk": "10.1 Design development risk (refer to risk register)",
     "secInf": "11 Inflation (2.15%)",
