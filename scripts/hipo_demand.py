@@ -44,8 +44,8 @@ DEMAND_ROWS = [
         "project_en": "ADC linker AZ14374332 (ASYM-147285; Exatecan intermediate)",
         "qty": "37 kg",
         "value": "$18M",
-        "note_zh": "与上一行同一组丢失机会（表格批注合并）。",
-        "note_en": "Same lost-opportunity group as the row above (merged comment).",
+        "note_zh": "与上一行同一组丢失机会。",
+        "note_en": "Same lost-opportunity group as the row above.",
     },
     {
         "customer": "AZ",
@@ -114,7 +114,7 @@ DEMAND_ROWS = [
         "project_en": "Overseas HP capacity enquiry",
         "qty": "—",
         "value": "—",
-        "note_zh": "商务备注：三家亦在询问高活海外产能。无公斤数、无产值。",
-        "note_en": "BD note: also asking about overseas HP capacity. No volumes or values given.",
+        "note_zh": "三家亦在询问高活海外产能。",
+        "note_en": "Also asking about overseas HP capacity.",
     },
 ]

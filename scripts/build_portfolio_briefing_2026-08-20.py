@@ -321,15 +321,16 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .callout{border-left:4px solid var(--warn);background:linear-gradient(90deg,#fff8f6,#fff);border-radius:0 8px 8px 0;padding:.65rem .85rem;margin-top:.55rem;font-size:.82rem;line-height:1.5;color:var(--text)}
 .callout.hipo{border-left-color:var(--hipo);background:linear-gradient(90deg,#f3faf8,#fff)}
 .kpi.lost{border-left-color:var(--warn)}
-.pill{display:inline-block;font-size:.6rem;font-weight:700;padding:.1rem .38rem;border-radius:999px;white-space:nowrap}
+.pill{display:inline-block;font-size:.68rem;font-weight:700;padding:.14rem .45rem;border-radius:999px;white-space:nowrap}
 .pill-lost{background:#f8e6e3;color:var(--warn)}
 .pill-live2nd,.pill-liveSw{background:#e5f4f2;color:#1f7a6f}
 .pill-listed{background:#eef3f8;color:#1a4a6e}
 .pill-enquiry{background:#eef2f6;color:#5a6a7a}
-.demand-table{font-size:.68rem;width:100%;border-collapse:collapse}
-.demand-table th{font-size:.62rem;color:var(--navy);padding:.28rem .35rem;border-bottom:1px solid #dde3e8;white-space:nowrap}
-.demand-table td{padding:.28rem .35rem;border-bottom:1px solid #eef1f4;vertical-align:top;line-height:1.35}
-.demand-table .nowrap{white-space:nowrap;font-variant-numeric:tabular-nums}
+.demand-table{font-size:.8rem;width:100%;border-collapse:collapse}
+.demand-table th{font-size:.74rem;color:var(--navy);padding:.48rem .55rem;border-bottom:2px solid #d5dde6;background:#f3f6f8;position:sticky;top:0;z-index:1}
+.demand-table td{padding:.46rem .55rem;border-bottom:1px solid #e8edf2;vertical-align:top;line-height:1.45}
+.demand-table tbody tr:nth-child(even){background:#f8fafb}
+.demand-table .nowrap{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
 .demand-wrap{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid #e8ecf0;border-radius:10px}
 .demand-map{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.5rem}
 .demand-map .card{padding:.7rem .75rem}
@@ -374,7 +375,7 @@ p2r3n:"C1 模块 OEB5 升级", p2r3s:"现有 C1 模块 OEB5 日常运行能力",
 p2r4n:"OEB5 高活实验室", p2r4s:"既有 G-128 套间改造；GIFA 215 m²；4+1 台隔离器", p2r4o:"£4.56M", p2r4d:"计划 2027-11 交付",
 p2link:"交付关联：厂房内改造（制备 HPLC + 冻干）与 C1 模块升级须同步完成，方能为制备 HPLC 操作提供 OEB5 能力；制备 HPLC 单元驱动整体交付时间线。",
 p2sum:"厂房内三条线合计（改造 £5.33M + C1 £2.48M + 高活实验室 £4.56M）约 £12.37M，不含 902 东侧扩建。各线口径不同：扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。",
-p2demand:"产能依据：欧洲商务已整理面向 Sandwich 的高活需求与机会（2027–2030）。已列名 AZ、Genmab、BioNTech、NCC，另有 Roche、信达、宜联询盘海外高活产能。数字为商务口径，不是已签约订单。",
+p2demand:"产能依据：欧洲商务已整理面向 Sandwich 的高活需求与机会（2027–2030）。已列名 AZ、Genmab、BioNTech、NCC，另有 Roche、信达、宜联询盘海外高活产能。",
 dTag:"高活需求",
 d1t:"高活需求：客户在问产能",
 d1s:"欧洲商务整理 · Sandwich 高活项目需求与机会（2027–2030）",
@@ -382,17 +383,15 @@ dK1:"4 家列名客户", dK1d:"AZ · Genmab · BioNTech · NCC",
 dK2:"3 家询盘", dK2d:"Roche · 信达 · 宜联（无量）",
 dK3:"2 条已丢失", dK3d:"AZ Exatecan + linker GMP",
 dK4:"明确问扩建", dK4d:"AZ、Genmab 已表示关注 SW 计划",
-dB1:"欧洲商务已列出面向 Sandwich 的高活需求与机会。下列数字是商务清单口径，不是已签约订单，也未加总——项目类型不同，部分为中间体反推或带问号。",
+dB1:"欧洲商务已列出面向 Sandwich 的高活需求与机会。",
 dB2:"已列名客户为 AZ、Genmab、BioNTech、NCC；另有 Roche、信达、宜联询问高活海外产能。",
 dB3:"AZ、Genmab 明确希望了解 SW 高活扩建计划。部分项目的诉求是欧美第二供，用于对冲供应风险。",
 dB4:"BioNTech 希望把现由中国支持的早期项目延伸到 Sandwich，并列明能力要求：与 TJ4 相当的高活密闭（1 ng/m³）、实验室至公斤级、适用的高活色谱、高活冻干、与常规分析分开的高活分析。",
-dLost:"2025 年 9 月，AZ Exatecan 及以其为中间体的 payload-linker GMP，因海外高活产能时间表未能对接客户节点，GMP 阶段已选择欧洲供应商 Procos。需求是真实的，窗口会关闭。",
 dM1t:"密闭与高活分析", dM1b:"BioNTech 要求与 TJ4 相当的密闭（1 ng/m³），以及与常规分析分开的高活分析。对应 G-128 高活实验室。",
 dM2t:"高活色谱与冻干", dM2b:"同一客户列明 fit-for-purpose 高活色谱与高活冻干。对应厂房内 HPLC + 冻干改造。",
 dM3t:"第二供窗口", dM3b:"Genmab 计划 2026 年底报 BLA，天津已进入商业批次，正在评估欧美第二供。AZ 多个 API 亦以第二供为前提。",
-dSrc:"来源：EU BD《High Potency Project demands or opportunities for Sandwich site》。未编造清单以外的客户、公斤数或产值。",
 d2t:"高活需求 · 客户与项目",
-d2s:"同一商务清单 · 状态按批注归纳，不改为预测",
+d2s:"",
 dTh1:"客户", dTh2:"项目", dTh3:"状态", dTh4:"2027–2030 量", dTh5:"商务产值口径", dTh6:"要点",
 dSt_lost:"已丢失", dSt_live2nd:"在谈 · 第二供", dSt_liveSw:"在谈 · 转至 SW", dSt_listed:"已列需求", dSt_enquiry:"询盘",
 extTag:"扩建", hplcTag:"改造", c1Tag:"C1 OEB5", hipoTag:"高活实验室",
@@ -558,7 +557,7 @@ p2r3n:"C1 module OEB5 upgrade", p2r3s:"Routine OEB5 ops in existing C1 module", 
 p2r4n:"OEB5 HIPO lab", p2r4s:"Existing G-128 suite alterations; 215 m² GIFA; 4+1 isolators", p2r4o:"£4.56M", p2r4d:"Planned delivery Nov 2027",
 p2link:"Delivery link: in-situ retrofit (prep HPLC + lyophilizer) and C1 upgrade must be delivered together to provide OEB5 capability for prep HPLC; prep HPLC drives the overall timeline.",
 p2sum:"The three in-building lines total ~£12.37M (retrofit £5.33M + C1 £2.48M + HIPO lab £4.56M), excluding the B902 east extension. Estimate bases differ: extension and retrofit are feasibility level, C1 is an internal estimate, the HIPO lab is a concept cost plan.",
-p2demand:"Demand basis: EU BD has listed high-potency demand and opportunities aimed at Sandwich (2027–2030). Named customers: AZ, Genmab, BioNTech, NCC; Roche, Innovent and Duality have also asked about overseas HP capacity. Figures are BD estimates, not signed orders.",
+p2demand:"Demand basis: EU BD has listed high-potency demand and opportunities aimed at Sandwich (2027–2030). Named customers: AZ, Genmab, BioNTech, NCC; Roche, Innovent and Duality have also asked about overseas HP capacity.",
 dTag:"HP demand",
 d1t:"HP demand: customers are asking for capacity",
 d1s:"EU BD compilation · Sandwich high-potency demand and opportunities (2027–2030)",
@@ -566,17 +565,15 @@ dK1:"4 named customers", dK1d:"AZ · Genmab · BioNTech · NCC",
 dK2:"3 enquiries", dK2d:"Roche · Innovent · Duality (no volumes)",
 dK3:"2 lines already lost", dK3d:"AZ Exatecan + linker GMP",
 dK4:"Asked about the plan", dK4d:"AZ and Genmab have asked to see the SW HP expansion plan",
-dB1:"EU BD has listed high-potency demand and opportunities aimed at Sandwich. Figures below are from that list — not signed orders — and are not totalled: project types differ, and some kg/values are back-calculated or marked with a question mark.",
+dB1:"EU BD has listed high-potency demand and opportunities aimed at Sandwich.",
 dB2:"Named customers are AZ, Genmab, BioNTech and NCC. Roche, Innovent and Duality have also asked about overseas HP capacity.",
 dB3:"AZ and Genmab have asked to see the Sandwich HP expansion plan. Several lines are framed as a Europe/US second source to de-risk supply.",
 dB4:"BioNTech wants to extend an early-phase China supply relationship to Sandwich, and has listed the capabilities required: TJ4-equivalent HP containment (1 ng/m³), lab-to-kg scale, fit-for-purpose HP chromatography, HP lyophilisation, and HP analytics separated from normal analytics.",
-dLost:"In September 2025, AZ Exatecan and the payload-linker that uses it as intermediate went to a European supplier (Procos) for GMP, because the overseas HP capacity timeline could not meet the customer’s node. The demand was real; the window closed.",
 dM1t:"Containment & HP analytics", dM1b:"BioNTech asked for TJ4-equivalent containment (1 ng/m³) and HP analytics kept separate from normal analytics. That maps to the G-128 HIPO lab.",
 dM2t:"HP chromatography & lyoph", dM2b:"The same customer listed fit-for-purpose HP chromatography and HP lyophilisation. That maps to the in-situ HPLC + lyophilizer retrofit.",
 dM3t:"Second-source window", dM3b:"Genmab plans a BLA at end-2026; TJ is already in commercial batches and the client is evaluating a Europe/US second source. Several AZ APIs are also framed as second-source.",
-dSrc:"Source: EU BD “High Potency Project demands or opportunities for Sandwich site”. No customers, kilograms or values have been added beyond that workbook.",
 d2t:"HP demand · customers and programmes",
-d2s:"Same BD list · status taken from the comments; not recast as a forecast",
+d2s:"",
 dTh1:"Customer", dTh2:"Programme", dTh3:"Status", dTh4:"2027–2030 qty", dTh5:"BD value", dTh6:"Point",
 dSt_lost:"Lost", dSt_live2nd:"Live · 2nd source", dSt_liveSw:"Live · to SW", dSt_listed:"Listed", dSt_enquiry:"Enquiry",
 extTag:"Extension", hplcTag:"Retrofit", c1Tag:"C1 OEB5", hipoTag:"HIPO lab",
@@ -820,13 +817,10 @@ return `
 <div class="card"><h3>${t("dM1t")}</h3><p>${t("dM1b")}</p></div>
 <div class="card"><h3>${t("dM2t")}</h3><p>${t("dM2b")}</p></div>
 <div class="card"><h3>${t("dM3t")}</h3><p>${t("dM3b")}</p></div>
-</div>
-<div class="callout">${t("dLost")}</div>
-<div class="note">${t("dSrc")}</div></section>
+</div></section>
 
-<section class="slide"><h1>${t("d2t")}</h1><h2>${t("d2s")}</h2>
-${demandTableHTML()}
-<div class="note">${t("dSrc")}</div></section>
+<section class="slide"><h1>${t("d2t")}</h1>
+${demandTableHTML()}</section>
 
 <section class="slide section-slide"><p><span class="tag ext">${t("extTag")}</span></p>
 <h1>${t("extSec")}</h1><p>${t("extSecs")}</p></section>
