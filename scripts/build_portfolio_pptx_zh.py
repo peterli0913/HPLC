@@ -102,6 +102,7 @@ from hplc_capex_v2 import (  # noqa: E402
 
 ROOT = Path("/workspace")
 OUT = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07.pptx"
+OUT_V2 = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07-v2.pptx"
 
 # Live HTML default after must-have sync
 HIPO_OTHER = HIPO_TOTAL - CLIENT_EQUIP  # 2,586,999
@@ -467,10 +468,10 @@ def s_cover(prs, n, total):
     add_tb(s, 0.55, 2.40, 12.2, 0.40, "资本项目汇报", 20, False, MUTED)
     add_rect(s, 0.55, 2.92, 1.6, 0.06, GOLD)
     cards = [
-        ("B902 东侧扩建", "£78.1M", "2030-05 竣工", EXT_C),
-        ("HPLC + 冻干", "£5.33M", "2027-12 / 2028-03", HPLC_C),
+        ("HPLC + 冻干", "£5.33M", "2027-12 / 2028-06", HPLC_C),
         ("C1 模块 OEB5", "£2.48M", "2027-10 安装确认", C1_C),
         ("OEB5 高活实验室", gbp_m(HIPO_PROJECT), "计划 2027-11 交付", HIPO_C),
+        ("B902 东侧扩建", "£78.1M", "2030-05 竣工", EXT_C),
     ]
     gap, w, h = 0.18, 2.95, 3.05
     for i, (name, val, when, col) in enumerate(cards):
@@ -489,10 +490,10 @@ def s_overview(prs, n, total):
     title_block(s, "项目概览", "四条独立工作流 · 可行性 / 概念 / 内部估算量级")
     rows = [
         ["子项目", "范围", "投资（估算量级）", "关键节点"],
-        ["B902 东侧扩建", "新建四层+夹层，反应/加氢/过滤干燥", "£78.1M", "2030-05 竣工（保持）"],
-        ["HPLC + 冻干", "既有 PDF footprint 改造", "£5.33M", "2027-12 HPLC / 2028-03 冻干"],
+        ["HPLC + 冻干", "既有 PDF footprint 改造", "£5.33M", "2027-12 HPLC / 2028-06 冻干"],
         ["C1 模块 OEB5 升级", "现有 C1 模块 OEB5 日常运行能力", "£2.48M", "2027-10 安装确认"],
         ["OEB5 高活实验室", "既有 G-128 套间改造；GIFA 215 m²；4+1 台隔离器", gbp_m(HIPO_PROJECT), "计划 2027-11 交付"],
+        ["B902 东侧扩建", "新建四层+夹层，反应/加氢/过滤干燥", "£78.1M", "2030-05 竣工"],
     ]
     add_table(s, rows, ML, 1.15, CW, 3.35, col_w=[2.6, 4.7, 2.5, 2.633], font=14, aligns=["left", "left", "center", "left"])
     inb = 5.33 + 2.48 + HIPO_PROJECT / 1e6
@@ -1039,8 +1040,8 @@ def s_thanks(prs, n, total):
     add_tb(s, 1.0, 2.05, 11.3, 1.10, "谢谢", 54, True, WHITE, PP_ALIGN.CENTER)
     add_rect(s, 5.9, 3.25, 1.5, 0.07, GOLD)
     add_tb(s, 1.0, 3.55, 11.3, 0.45, "Asymchem UK  ·  Sandwich  ·  2026年9月7日", 18, False, RGBColor(0xB8, 0xC5, 0xD6), PP_ALIGN.CENTER)
-    add_tb(s, 1.0, 4.10, 11.3, 0.40, "UK PDF 资本项目  ·  四条工作流", 16, False, RGBColor(0x8A, 0x9B, 0xAE), PP_ALIGN.CENTER)
-    chips = ["B902 扩建  £78.1M", "HPLC + 冻干  £5.33M", "C1 OEB5  £2.48M", f"高活实验室  {gbp_m(HIPO_PROJECT)}"]
+    add_tb(s, 1.0, 4.10, 11.3, 0.40, "UK PDF 资本项目", 16, False, RGBColor(0x8A, 0x9B, 0xAE), PP_ALIGN.CENTER)
+    chips = ["HPLC + 冻干  £5.33M", "C1 OEB5  £2.48M", f"高活实验室  {gbp_m(HIPO_PROJECT)}", "B902 扩建  £78.1M"]
     w = 2.70
     for i, t in enumerate(chips):
         x = 1.15 + i * (w + 0.18)
@@ -1066,54 +1067,20 @@ def build():
     add(s_overview)
     add(s_demand_why)
     add(s_demand_table)
-    add(
-        s_section,
-        "扩建",
-        "一、B902 东侧扩建",
-        "Scitech · RIBA Stage 1 · 300291-RE-0001",
-        [("FS 完成", "RIBA 1"), ("£78.1M", "项目 OOM"), ("2030-05", "总控完成（集团口径保持）")],
-        EXT_C,
-    )
-    add(
-        s_exec,
-        "扩建 · 执行摘要",
-        "2026-05-22 · Issue A1",
-        [("FS 完成", "RIBA 1"), ("£78.1M", "项目 OOM"), ("2030-05", "总控完成（集团口径保持）")],
-        [
-            "范围：东侧约 600 m²，四层+设备夹层，10 台反应釜、2500 L 加氢釜、3 套过滤干燥机及公用工程。",
-            "方案：Option 1 — 拆除/迁址原加氢厂房；与 902 低层楼面贯通。",
-            "进展：FS 完成；按集团口径保持 2030-05 竣工，沿用设计方总控计划；RIBA 2 概念设计启动延后需在阶段内消化。",
-        ],
-        EXT_C,
-    )
-    add(s_ext_cost)
-    add(s_ext_charts)
-    add(
-        s_gantt,
-        "扩建 · 整体周期",
-        "300291-PM-PR-0002  ·  总控时间轴（条块长度按日历比例）· 沿用设计方总控计划，按集团口径保持 2030-05 竣工",
-        [],
-        gantts["ext"],
-        EXT_C,
-    )
-    add(lambda prs, n, total: _decision(prs, n, total, "扩建 · 决策事项", [
-        "是否批准进入 RIBA 2（概念设计）？",
-        "是否推进模块化建造方案比选？",
-    ], EXT_C))
 
     add(
         s_section,
         "改造",
-        "二、厂房内 HPLC + 冻干",
+        "一、厂房内 HPLC + 冻干",
         "RBPC · Project 9802 · P01",
-        [("技术可行", "FS P01"), ("£5.33M", "项目总投资估算"), ("2027-12", "HPLC 目标（+3 个月）"), ("2028-03", "冻干目标（+3 个月）")],
+        [("技术可行", "FS P01"), ("£5.33M", "项目总投资估算"), ("2027-12", "HPLC 目标（+3 个月）"), ("2028-06", "冻干目标（+3 个月）")],
         HPLC_C,
     )
     add(
         s_exec,
         "改造 · 执行摘要",
         "9802-RBP-ZZ-ZZ-RP-X-100000",
-        [("技术可行", "FS P01"), ("£5.33M", "项目总投资估算"), ("2027-12", "HPLC 目标（+3 个月）"), ("2028-03", "冻干目标（+3 个月）")],
+        [("技术可行", "FS P01"), ("£5.33M", "项目总投资估算"), ("2027-12", "HPLC 目标（+3 个月）"), ("2028-06", "冻干目标（+3 个月）")],
         [
             "范围：制备 HPLC（DAC300/CP300）+ 冻干机（隔离器、除湿、纯蒸汽发生器等）及配套改造。",
             "投资：Total CAPEX Estimate £5.33M（直接+间接+30% 项目预备费）；非最终 Capex。",
@@ -1128,7 +1095,7 @@ def build():
         "改造 · 范围",
         "",
         [
-            ("HPLC", ["DAC300/CP300 泵撬；移动头罐；2000 L 废液罐", "Hanbon 供货", "PG.05 区域安装"]),
+            ("HPLC", ["DAC300/CP300 泵撬；移动头罐；2000 L 废液罐", "国内汉邦供货", "PG.05 区域安装"]),
             ("冻干机", ["冻干腔、隔离器、双 CIP、除湿、PSG", "东富龙（Tofflon）供货", "气闸/改造约 20 周"]),
         ],
         HPLC_C,
@@ -1151,7 +1118,7 @@ def build():
     add(
         s_section,
         "C1 OEB5",
-        "三、C1 模块 OEB5 升级",
+        "二、C1 模块 OEB5 升级",
         "Sandwich PDF · 内部估算",
         [("OEB5 日常运行", "升级目标"), ("£2.48M", "项目总投资估算"), ("2027-10", "安装与确认目标（+3 个月）")],
         C1_C,
@@ -1205,7 +1172,7 @@ def build():
     add(
         s_section,
         "高活实验室",
-        "四、OEB5 高活实验室（G-128 套间改造）",
+        "三、OEB5 高活实验室（G-128 套间改造）",
         "Concept 阶段 · 成本计划 260806 / 概念进度 260727 / 风险登记册",
         [("概念阶段", "成本计划 / 概念进度 / 风险登记册"), (gbp_m(HIPO_PROJECT), "项目总投资估算"), ("2027-11", "计划交付（概念进度 +6 周）"), ("215 m²", "GIFA（实验室约 182 + 办公区约 33）")],
         HIPO_C,
@@ -1324,14 +1291,27 @@ def build():
             HIPO_C,
         )
     )
+    add(
+        s_exec,
+        "扩建 · 可研结论",
+        "四、B902 东侧扩建  ·  Scitech RIBA 1  ·  300291-RE-0001  ·  2026-05-22 Issue A1",
+        [("FS 完成", "RIBA 1"), ("£78.1M", "项目 OOM"), ("2030-05", "总控完成")],
+        [
+            "范围：东侧约 600 m²，四层+设备夹层，10 台反应釜、2500 L 加氢釜、3 套过滤干燥机及公用工程。",
+            "方案：Option 1 — 拆除/迁址原加氢厂房；与 902 低层楼面贯通。",
+            "进展：FS 完成；计划 2030-05 竣工，沿用设计方总控计划；RIBA 2 概念设计启动延后需在阶段内消化。",
+        ],
+        EXT_C,
+    )
+    add(s_ext_cost)
     add(s_thanks)
 
     total[0] = len(pages)
     for i, (fn, a, k) in enumerate(pages, 1):
         fn(prs, i, total, *a, **k)
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    prs.save(str(OUT))
-    print("wrote", OUT, "slides", len(prs.slides), "bytes", OUT.stat().st_size)
+    OUT_V2.parent.mkdir(parents=True, exist_ok=True)
+    prs.save(str(OUT_V2))
+    print("wrote", OUT_V2, "slides", len(prs.slides), "bytes", OUT_V2.stat().st_size)
 
 
 if __name__ == "__main__":

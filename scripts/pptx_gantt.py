@@ -187,6 +187,9 @@ def _ticks(*pairs: tuple[str, str]) -> list[tuple[datetime, str]]:
 
 
 GANTT_HPLC_SHIFTED = shift_gantt(GANTT_CALENDAR)
+for _row in GANTT_HPLC_SHIFTED:
+    if _row[0] == "gLyVal":
+        _row[2] = "2028-06-08"
 GANTT_C1_SHIFTED = shift_gantt(GANTT_C1)
 GANTT_HIPO_SHIFTED = shift_gantt_days(GANTT_HIPO, HIPO_SHIFT_DAYS)
 GANTT_HIPO_SHIFTED[-1][2] = HIPO_DELIVERY
@@ -214,7 +217,7 @@ GANTT_SPECS = {
     "hplc": {
         "bars": bars_from(GANTT_HPLC_SHIFTED, HPLC_LABELS),
         "t0": _d("2026-05-01"),
-        "t1": _d("2028-03-31"),
+        "t1": _d("2028-06-30"),
         "ticks": _ticks(
             ("2026-05-01", "2026 H1"),
             ("2026-07-01", "2026 H2"),
