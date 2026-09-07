@@ -1,21 +1,15 @@
 #!/usr/bin/env python3
 """Build an editable Chinese 16:9 PPT from the 0907 portfolio briefing.
 
-Text and table figures are native PowerPoint objects. Gantt charts are
-cropped screenshots of the HTML .gantt-wrap, scaled to fill the slide body.
+Text, tables, charts and Gantt bars are native PowerPoint objects.
 Numbers follow the live HTML default (HIPO must-have / to-purchase view).
 """
 from __future__ import annotations
 
-import http.server
-import os
-import socketserver
 import sys
-import threading
 from pathlib import Path
 
 from lxml import etree
-from PIL import Image
 from pptx import Presentation
 from pptx.chart.data import CategoryChartData
 from pptx.dml.color import RGBColor
@@ -23,7 +17,7 @@ from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.oxml.ns import qn
-from pptx.util import Emu, Inches, Pt
+from pptx.util import Inches, Pt
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -80,6 +74,7 @@ from hipo_lab_cost import (  # noqa: E402
     SUPERSTRUCTURE,
     TOTAL_BUILDING_WORKS,
 )
+from pptx_gantt import GANTT_SPECS, draw_gantt  # noqa: E402
 from hplc_capex_v2 import (  # noqa: E402
     CDM,
     CIVIL,
@@ -107,8 +102,6 @@ from hplc_capex_v2 import (  # noqa: E402
 
 ROOT = Path("/workspace")
 OUT = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07.pptx"
-HTML_REL = "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07.html"
-GANTT_DIR = Path("/tmp/portfolio-gantt")
 
 # Live HTML default after must-have sync
 HIPO_OTHER = HIPO_TOTAL - CLIENT_EQUIP  # 2,586,999
@@ -446,75 +439,6 @@ def add_doughnut(slide, l, t, w, h, items):
     return chart
 
 
-def crop_gantt(src: Path, dest: Path) -> Path:
-    im = Image.open(src).convert("RGB")
-    px = im.load()
-    w, h = im.size
-    bottom = 0
-    for y in range(h - 1, 0, -3):
-        if any(px[x, y][0] < 250 or px[x, y][1] < 250 or px[x, y][2] < 250 for x in range(20, w - 20, 40)):
-            bottom = min(h, y + 16)
-            break
-    im.crop((0, 0, w, max(bottom, int(h * 0.35)))).save(dest, "PNG")
-    return dest
-
-
-def capture_gantts() -> dict[str, Path]:
-    GANTT_DIR.mkdir(parents=True, exist_ok=True)
-    raw = {}
-    os.chdir(ROOT)
-
-    class Handler(http.server.SimpleHTTPRequestHandler):
-        def log_message(self, *_a):
-            pass
-
-    class Reuse(socketserver.TCPServer):
-        allow_reuse_address = True
-
-    httpd = Reuse(("127.0.0.1", 0), Handler)
-    threading.Thread(target=httpd.serve_forever, daemon=True).start()
-    url = f"http://127.0.0.1:{httpd.server_address[1]}/{HTML_REL}"
-    pages = {"ext": 8, "hplc": 15, "c1": 22, "hipo": 30}
-    try:
-        from playwright.sync_api import sync_playwright
-
-        with sync_playwright() as p:
-            browser = p.chromium.launch(
-                channel="chrome",
-                headless=True,
-                args=["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage", "--hide-scrollbars"],
-            )
-            ctx = browser.new_context(viewport={"width": 1920, "height": 1080}, device_scale_factor=2)
-            page = ctx.new_page()
-            page.goto(url, wait_until="networkidle", timeout=60000)
-            page.evaluate(
-                """() => {
-                  const s=document.createElement('style');
-                  s.textContent='body,.slide{font-family:\"WenQuanYi Micro Hei\",sans-serif!important}.lang-switch,#navHint{display:none!important}.slide{animation:none!important}';
-                  document.head.appendChild(s);
-                }"""
-            )
-            page.wait_for_function("() => typeof show === 'function'")
-            for name, idx in pages.items():
-                page.evaluate("(n)=>show(n)", idx)
-                page.wait_for_timeout(350)
-                dest = GANTT_DIR / f"{name}_raw.png"
-                page.locator(".slide.active .gantt-wrap").screenshot(path=str(dest), type="png")
-                raw[name] = dest
-            ctx.close()
-            browser.close()
-    finally:
-        httpd.shutdown()
-    out = {}
-    for name, src in raw.items():
-        out[name] = crop_gantt(src, GANTT_DIR / f"{name}.png")
-    return out
-
-
-def place_gantt(slide, path: Path, l, t, w, h):
-    slide.shapes.add_picture(str(path), Inches(l), Inches(t), Inches(w), Inches(h))
-
-
 def _decision(prs, n, total, title, items, accent):
     s = new_slide(prs, n, total)
     y = title_block(s, title, "", accent)
@@ -789,19 +713,18 @@ def s_ext_charts(prs, n, total):
     return s
 
 
-def s_gantt(prs, n, total, title, sub, kpis, gantt: Path, accent, note=""):
+def s_gantt(prs, n, total, title, sub, kpis, spec: dict, accent, note=""):
     s = new_slide(prs, n, total)
     y = title_block(s, title, sub, accent)
     if kpis:
-        y = kpi_row(s, kpis, y, 0.92, accent) + 0.10
+        y = kpi_row(s, kpis, y, 0.88, accent) + 0.08
     else:
-        y += 0.06
-    note_h = 0.62 if note else 0
-    gh = 7.05 - y - note_h
-    add_round(s, ML, y, CW, gh - 0.02, WHITE, 0.05)
-    place_gantt(s, gantt, ML + 0.10, y + 0.08, CW - 0.20, gh - 0.18)
+        y += 0.04
+    note_h = 0.56 if note else 0
+    gh = 7.10 - y - note_h
+    draw_gantt(s, ML, y, CW, gh - 0.02, spec)
     if note:
-        add_tb(s, ML, 7.05 - note_h, CW, note_h - 0.04, note, 12, False, MUTED)
+        add_tb(s, ML, 7.10 - note_h, CW, note_h - 0.02, note, 12, False, MUTED)
     return s
 
 
@@ -1078,10 +1001,18 @@ def s_equip(prs, n0, total, items, title_extra, gantt_unused=None):
                 "是",
             ]
         )
-    table = s.shapes.add_table(len(data), 6, Inches(ML), Inches(1.68), Inches(CW), Inches(5.30)).table
+    n_rows = len(data)
+    max_h = 5.36
+    row_h = min(0.38, max_h / n_rows)
+    table_h = row_h * n_rows
+    font = 12 if n_rows > 16 else 13
+    tbl_shape = s.shapes.add_table(n_rows, 6, Inches(ML), Inches(1.68), Inches(CW), Inches(table_h))
+    table = tbl_shape.table
     widths = [3.15, 2.15, 2.55, 1.35, 1.55, 1.683]
     for i, w in enumerate(widths):
         table.columns[i].width = Inches(w)
+    for row in table.rows:
+        row.height = Inches(row_h)
     aligns = ["left", "left", "left", "center", "right", "center"]
     for r, row in enumerate(data):
         if r == 0:
@@ -1095,7 +1026,7 @@ def s_equip(prs, n0, total, items, title_extra, gantt_unused=None):
                 col = MUTED if ne == "既有" else HIPO_C
             else:
                 col = TEXT
-            fill_cell(table.cell(r, c), val, 13, c in (3, 4, 5), col, bg, aligns[c])
+            fill_cell(table.cell(r, c), val, font, c in (3, 4, 5), col, bg, aligns[c])
     return s
 
 
@@ -1121,7 +1052,7 @@ def s_thanks(prs, n, total):
 
 
 def build():
-    gantts = capture_gantts()
+    gantts = GANTT_SPECS
     prs = Presentation()
     prs.slide_width = Inches(SW)
     prs.slide_height = Inches(SH)
@@ -1357,7 +1288,12 @@ def build():
     )
     add(
         lambda prs, n, total: s_equip(
-            prs, n, total, [it for it in EQUIP_ITEMS if it["group"] == "CRD"], "CRD"
+            prs, n, total, [it for it in EQUIP_ITEMS if it["group"] == "CRD"][:12], "CRD（1/2）"
+        )
+    )
+    add(
+        lambda prs, n, total: s_equip(
+            prs, n, total, [it for it in EQUIP_ITEMS if it["group"] == "CRD"][12:], "CRD（2/2）"
         )
     )
     add(s_hipo_charts)
