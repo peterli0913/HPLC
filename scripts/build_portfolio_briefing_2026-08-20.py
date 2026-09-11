@@ -2,7 +2,8 @@
 """Portfolio briefing 2026-08-20.
 
 Four workstreams: B902 extension + HPLC/lyophilizer retrofit + C1 OEB5 upgrade
-+ OEB5 HIPO lab (G-128 alterations).
++ OEB5 HIPO lab (G-128 alterations). The 7 Sep 2026 pack adds EU BD high-potency
+demand slides after the overview (source workbook only; no invented totals).
 
 Changes vs the 2026-06-12 pack:
   * the first three programmes are re-baselined from a June 2026 start to a
@@ -60,6 +61,7 @@ from hplc_capex_v2 import (
     RISK_ON_BASE,
     hplc_cost_data_json,
 )
+from hipo_demand import DEMAND_ROWS
 from hipo_lab_cost import (
     ACCURACY_LOWER,
     ACCURACY_UPPER,
@@ -83,7 +85,7 @@ from hipo_lab_cost import (
 )
 
 ROOT = Path(__file__).resolve().parent
-OUT = Path("/workspace/汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-08-24.html")
+OUT = Path("/workspace/汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07.html")
 
 
 def _load_module(name: str, path: Path):
@@ -242,7 +244,7 @@ HTML = r'''<!DOCTYPE html>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Asymchem UK — PDF Portfolio Briefing</title>
-<!-- build: portfolio-2026-08-24 rev 2026-08-24-hipo-equip -->
+<!-- build: portfolio-2026-09-07 rev 2026-09-07-hp-demand -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root{--navy:#0f2b46;--teal:#009688;--accent:#c9a227;--ext:#1a4a6e;--hplc:#5b6eae;--c1:#8b6914;--hipo:#1f7a6f;--bg:#f4f6f8;--card:#fff;--text:#2c3e50;--muted:#5a6a7a;--warn:#b43a2a}
@@ -317,6 +319,23 @@ table{width:100%;border-collapse:collapse;font-size:.78rem} th,td{padding:.34rem
 .decision-list li{border:1px solid #e8ecf0;border-left:4px solid var(--teal);padding:.7rem .9rem;margin-bottom:.45rem;border-radius:0 8px 8px 0;font-size:.86rem;background:var(--card)}
 .decision-list li.ext{border-left-color:var(--ext)} .decision-list li.hplc{border-left-color:var(--hplc)} .decision-list li.c1{border-left-color:var(--c1)} .decision-list li.hipo{border-left-color:var(--hipo)}
 .callout{border-left:4px solid var(--warn);background:linear-gradient(90deg,#fff8f6,#fff);border-radius:0 8px 8px 0;padding:.65rem .85rem;margin-top:.55rem;font-size:.82rem;line-height:1.5;color:var(--text)}
+.callout.hipo{border-left-color:var(--hipo);background:linear-gradient(90deg,#f3faf8,#fff)}
+.kpi.lost{border-left-color:var(--warn)}
+.pill{display:inline-block;font-size:.68rem;font-weight:700;padding:.14rem .45rem;border-radius:999px;white-space:nowrap}
+.pill-lost{background:#f8e6e3;color:var(--warn)}
+.pill-live2nd,.pill-liveSw{background:#e5f4f2;color:#1f7a6f}
+.pill-listed{background:#eef3f8;color:#1a4a6e}
+.pill-enquiry{background:#eef2f6;color:#5a6a7a}
+.demand-table{font-size:.8rem;width:100%;border-collapse:collapse}
+.demand-table th{font-size:.74rem;color:var(--navy);padding:.48rem .55rem;border-bottom:2px solid #d5dde6;background:#f3f6f8;position:sticky;top:0;z-index:1}
+.demand-table td{padding:.46rem .55rem;border-bottom:1px solid #e8edf2;vertical-align:top;line-height:1.45}
+.demand-table tbody tr:nth-child(even){background:#f8fafb}
+.demand-table .nowrap{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
+.demand-wrap{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid #e8ecf0;border-radius:10px}
+.demand-map{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.5rem}
+.demand-map .card{padding:.7rem .75rem}
+.demand-map h3{font-size:.74rem;color:var(--navy);margin-bottom:.2rem}
+.demand-map p{font-size:.68rem;color:var(--muted);line-height:1.4;margin:0}
 </style>
 </head>
 <body>
@@ -339,6 +358,7 @@ const HIPO_COST_DATA = ''' + hipo_cost_data_json() + r''';
 const GANTT_HIPO = ''' + json.dumps(GANTT_HIPO_SHIFTED) + r''';
 const EQUIP_ITEMS = ''' + json.dumps(HIPO_EQUIP_ITEMS, ensure_ascii=False) + r''';
 const HIPO_OTHER = ''' + str(HIPO_TOTAL - HIPO_CLIENT_EQUIP) + r''';
+const DEMAND_ROWS = ''' + json.dumps(DEMAND_ROWS, ensure_ascii=False) + r''';
 ''' + EXT_COST_RENDER_JS + HPLC_COST_RENDER_JS + C1_COST_RENDER_JS + HIPO_COST_RENDER_JS + HIPO_EQUIP_JS + r'''
 let lang="zh", idx=0, chartsBuilt = {};
 
@@ -346,7 +366,7 @@ const I18N={
 zh:{
 footer:"凯莱英 UK · Sandwich PDF 资本项目",
 nav:"← → 翻页", tag:"内部汇报 · 整体汇报",
-p1t:"凯莱英 UK · Sandwich PDF", p1s:"资本项目汇报", p1m:"B902 东侧扩建 + 厂房内 HPLC/冻干改造 + C1 模块 OEB5 升级 + OEB5 高活实验室 · 2026年8月24日",
+p1t:"凯莱英 UK · Sandwich PDF", p1s:"资本项目汇报", p1m:"B902 东侧扩建 + 厂房内 HPLC/冻干改造 + C1 模块 OEB5 升级 + OEB5 高活实验室 · 2026年9月7日",
 p2t:"项目概览", p2s:"四条独立工作流 · 可行性 / 概念 / 内部估算量级",
 p2th1:"子项目", p2th2:"范围", p2th3:"投资（估算量级）", p2th4:"关键节点",
 p2r1n:"B902 东侧扩建", p2r1s:"新建四层+夹层，反应/加氢/过滤干燥", p2r1o:"£78.1M", p2r1d:"2030-05 竣工（保持）",
@@ -355,6 +375,25 @@ p2r3n:"C1 模块 OEB5 升级", p2r3s:"现有 C1 模块 OEB5 日常运行能力",
 p2r4n:"OEB5 高活实验室", p2r4s:"既有 G-128 套间改造；GIFA 215 m²；4+1 台隔离器", p2r4o:"£4.56M", p2r4d:"计划 2027-11 交付",
 p2link:"交付关联：厂房内改造（制备 HPLC + 冻干）与 C1 模块升级须同步完成，方能为制备 HPLC 操作提供 OEB5 能力；制备 HPLC 单元驱动整体交付时间线。",
 p2sum:"厂房内三条线合计（改造 £5.33M + C1 £2.48M + 高活实验室 £4.56M）约 £12.37M，不含 902 东侧扩建。各线口径不同：扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。",
+p2demand:"产能依据：欧洲商务已整理面向 Sandwich 的高活需求与机会（2027–2030）。已列名 AZ、Genmab、BioNTech、NCC，另有 Roche、信达、宜联询盘海外高活产能。",
+dTag:"高活需求",
+d1t:"高活需求：客户在问产能",
+d1s:"欧洲商务整理 · Sandwich 高活项目需求与机会（2027–2030）",
+dK1:"4 家列名客户", dK1d:"AZ · Genmab · BioNTech · NCC",
+dK2:"3 家询盘", dK2d:"Roche · 信达 · 宜联（无量）",
+dK3:"2 条已丢失", dK3d:"AZ Exatecan + linker GMP",
+dK4:"明确问扩建", dK4d:"AZ、Genmab 已表示关注 SW 计划",
+dB1:"欧洲商务已列出面向 Sandwich 的高活需求与机会。",
+dB2:"已列名客户为 AZ、Genmab、BioNTech、NCC；另有 Roche、信达、宜联询问高活海外产能。",
+dB3:"AZ、Genmab 明确希望了解 SW 高活扩建计划。部分项目的诉求是欧美第二供，用于对冲供应风险。",
+dB4:"BioNTech 希望把现由中国支持的早期项目延伸到 Sandwich，并列明能力要求：与 TJ4 相当的高活密闭（1 ng/m³）、实验室至公斤级、适用的高活色谱、高活冻干、与常规分析分开的高活分析。",
+dM1t:"密闭与高活分析", dM1b:"BioNTech 要求与 TJ4 相当的密闭（1 ng/m³），以及与常规分析分开的高活分析。对应 G-128 高活实验室。",
+dM2t:"高活色谱与冻干", dM2b:"同一客户列明 fit-for-purpose 高活色谱与高活冻干。对应厂房内 HPLC + 冻干改造。",
+dM3t:"第二供窗口", dM3b:"Genmab 计划 2026 年底报 BLA，天津已进入商业批次，正在评估欧美第二供。AZ 多个 API 亦以第二供为前提。",
+d2t:"高活需求 · 客户与项目",
+d2s:"",
+dTh1:"客户", dTh2:"项目", dTh3:"状态", dTh4:"2027–2030 量", dTh5:"商务产值口径", dTh6:"要点",
+dSt_lost:"已丢失", dSt_live2nd:"在谈 · 第二供", dSt_liveSw:"在谈 · 转至 SW", dSt_listed:"已列需求", dSt_enquiry:"询盘",
 extTag:"扩建", hplcTag:"改造", c1Tag:"C1 OEB5", hipoTag:"高活实验室",
 extSec:"一、B902 东侧扩建", extSecs:"Scitech · RIBA Stage 1 · 300291-RE-0001",
 ext2t:"扩建 · 执行摘要", ext2s:"2026-05-22 · Issue A1",
@@ -390,6 +429,7 @@ hplcB1:"范围：制备 HPLC（DAC300/CP300）+ 冻干机（隔离器、除湿�
 hplcB2:"投资：Total CAPEX Estimate £5.33M（直接+间接+30% 项目预备费）；非最终 Capex。",
 hplcB3:"周期：冻干机长周期驱动；优先冻干后 HPLC。",
 hplcB4:"关联：须与 C1 模块 OEB5 升级同步交付，方可实现制备 HPLC 的 OEB5 运行能力。",
+hplcB5:"需求对应：欧洲商务清单中，BioNTech 将高活色谱与高活冻干列为转至 Sandwich 长期供货的能力要求。",
 hplc3t:"改造 · 范围",
 hplcT1:"HPLC", hplcT1a:"DAC300/CP300 泵撬；移动头罐；2000 L 废液罐",
 hplcT1b:"Hanbon 供货", hplcT1c:"PG.05 区域安装",
@@ -460,6 +500,7 @@ hipoB3:"构成：建筑工程费 £1.95M + 专业服务费 £0.14M + 业主（�
 hipoB4:"周期：概念进度（草案）自资金批准与推进决定起 262 个工作日，计划交付 2027 年 11 月；隔离器 2027-07-14 到场。",
 hipoB5:"隔离器费用：为基于与供应商沟通的估算，最终取决于项目范围最终确认的密闭等级。",
 hipoB6:"业主（凯莱英）供货并安装设备待采购 £1.96M。",
+hipoB7:"需求对应：欧洲商务已列 AZ、Genmab、BioNTech、NCC 等对 SW 高活能力的需求或询盘；BioNTech 明确要求与 TJ4 相当的密闭及独立高活分析。",
 hipo3t:"高活实验室 · 范围", hipo3s:"依据 G-128 概念成本计划分项",
 hipoS1:"范围与面积", hipoS1a:"既有 G-128 套间（G128 及 G128A–D）改造；GIFA 215 m²",
 hipoS1b:"实验室区约 182 m²（机电费率基准）+ 办公区约 33 m²（地毯量）",
@@ -478,7 +519,7 @@ hipoS4d:"待采购分项：ARD/QC £912,600、隔离器内仪器 £455,345、CRD
 hipoScopeNote:"风险与前提：正在就厂房改造事宜征求 DPML 同意 —— 改造完成后实验室将无法按当前运行状态交还 DPML，该沟通进展由 Clare 跟进。目前 DPML（Paul Bax，2026-08-21）原则上同意 PDF 与 DPH（含 G.128）拟议改造，最终以设计审查为准；可启动两项 Licence for Alteration，范围与图纸随设计深化补充。",
 hipoEqt:"业主（凯莱英）供货并安装设备", hipoEqs:"Equipment (supplied and installed by the Client)",
 hipoEqAll:"全部", hipoEqNew:"新购", hipoEqExist:"既有", hipoEqNE:"新购/既有",
-hipoEqColTitle:"设备", hipoEqColLoc:"位置", hipoEqColModel:"型号", hipoEqColNE:"新购 / 既有",
+hipoEqColTitle:"设备", hipoEqColLoc:"位置", hipoEqColMfr:"Manufacturer", hipoEqColNE:"新购 / 既有",
 hipoEqColCost:"费用", hipoEqColMust:"必须",
 hipoEqTotal:"合计（新购且必须）",
 hipo5t:"高活实验室 · 投资总览", hipo5s:"G-128 Concept Cost Plan · 报告日期 2026-08-06 · GIFA 215 m²",
@@ -507,7 +548,7 @@ pEnd:"谢谢", pEnds:"",
 en:{
 footer:"Asymchem UK · Sandwich PDF Portfolio",
 nav:"← → navigate", tag:"Internal · Portfolio briefing",
-p1t:"Asymchem UK · Sandwich PDF", p1s:"Capital Projects Briefing", p1m:"B902 extension + HPLC/lyoph retrofit + C1 OEB5 upgrade + OEB5 HIPO lab · 24 August 2026",
+p1t:"Asymchem UK · Sandwich PDF", p1s:"Capital Projects Briefing", p1m:"B902 extension + HPLC/lyoph retrofit + C1 OEB5 upgrade + OEB5 HIPO lab · 7 September 2026",
 p2t:"Project overview", p2s:"Four workstreams · feasibility / concept / internal estimate",
 p2th1:"Workstream", p2th2:"Scope", p2th3:"Investment (estimate level)", p2th4:"Milestone",
 p2r1n:"B902 east extension", p2r1s:"New 4-floor + mezzanine", p2r1o:"£78.1M", p2r1d:"Complete May 2030 (held)",
@@ -516,6 +557,25 @@ p2r3n:"C1 module OEB5 upgrade", p2r3s:"Routine OEB5 ops in existing C1 module", 
 p2r4n:"OEB5 HIPO lab", p2r4s:"Existing G-128 suite alterations; 215 m² GIFA; 4+1 isolators", p2r4o:"£4.56M", p2r4d:"Planned delivery Nov 2027",
 p2link:"Delivery link: in-situ retrofit (prep HPLC + lyophilizer) and C1 upgrade must be delivered together to provide OEB5 capability for prep HPLC; prep HPLC drives the overall timeline.",
 p2sum:"The three in-building lines total ~£12.37M (retrofit £5.33M + C1 £2.48M + HIPO lab £4.56M), excluding the B902 east extension. Estimate bases differ: extension and retrofit are feasibility level, C1 is an internal estimate, the HIPO lab is a concept cost plan.",
+p2demand:"Demand basis: EU BD has listed high-potency demand and opportunities aimed at Sandwich (2027–2030). Named customers: AZ, Genmab, BioNTech, NCC; Roche, Innovent and Duality have also asked about overseas HP capacity.",
+dTag:"HP demand",
+d1t:"HP demand: customers are asking for capacity",
+d1s:"EU BD compilation · Sandwich high-potency demand and opportunities (2027–2030)",
+dK1:"4 named customers", dK1d:"AZ · Genmab · BioNTech · NCC",
+dK2:"3 enquiries", dK2d:"Roche · Innovent · Duality (no volumes)",
+dK3:"2 lines already lost", dK3d:"AZ Exatecan + linker GMP",
+dK4:"Asked about the plan", dK4d:"AZ and Genmab have asked to see the SW HP expansion plan",
+dB1:"EU BD has listed high-potency demand and opportunities aimed at Sandwich.",
+dB2:"Named customers are AZ, Genmab, BioNTech and NCC. Roche, Innovent and Duality have also asked about overseas HP capacity.",
+dB3:"AZ and Genmab have asked to see the Sandwich HP expansion plan. Several lines are framed as a Europe/US second source to de-risk supply.",
+dB4:"BioNTech wants to extend an early-phase China supply relationship to Sandwich, and has listed the capabilities required: TJ4-equivalent HP containment (1 ng/m³), lab-to-kg scale, fit-for-purpose HP chromatography, HP lyophilisation, and HP analytics separated from normal analytics.",
+dM1t:"Containment & HP analytics", dM1b:"BioNTech asked for TJ4-equivalent containment (1 ng/m³) and HP analytics kept separate from normal analytics. That maps to the G-128 HIPO lab.",
+dM2t:"HP chromatography & lyoph", dM2b:"The same customer listed fit-for-purpose HP chromatography and HP lyophilisation. That maps to the in-situ HPLC + lyophilizer retrofit.",
+dM3t:"Second-source window", dM3b:"Genmab plans a BLA at end-2026; TJ is already in commercial batches and the client is evaluating a Europe/US second source. Several AZ APIs are also framed as second-source.",
+d2t:"HP demand · customers and programmes",
+d2s:"",
+dTh1:"Customer", dTh2:"Programme", dTh3:"Status", dTh4:"2027–2030 qty", dTh5:"BD value", dTh6:"Point",
+dSt_lost:"Lost", dSt_live2nd:"Live · 2nd source", dSt_liveSw:"Live · to SW", dSt_listed:"Listed", dSt_enquiry:"Enquiry",
 extTag:"Extension", hplcTag:"Retrofit", c1Tag:"C1 OEB5", hipoTag:"HIPO lab",
 extSec:"I. B902 East Extension", extSecs:"Scitech · RIBA 1 · 300291-RE-0001",
 ext2t:"Extension · Summary", ext2s:"22 May 2026 · A1",
@@ -551,6 +611,7 @@ hplcB1:"Prep HPLC + lyophilizer (isolator, dehumidifier, PSG, etc.) and enabling
 hplcB2:"Total CAPEX Estimate £5.33M (direct + indirect + 30% project contingency); not final Capex.",
 hplcB3:"Lyophilizer lead time drives; lyoph before HPLC.",
 hplcB4:"Link: must be delivered together with C1 OEB5 upgrade for prep HPLC OEB5 capability.",
+hplcB5:"Demand link: on the EU BD list, BioNTech named HP chromatography and HP lyophilisation as capabilities required for a long-term Sandwich supply.",
 hplc3t:"Retrofit · Scope",
 hplcT1:"HPLC", hplcT1a:"DAC300/CP300; mobile tanks; 2,000 L waste hold",
 hplcT1b:"Hanbon supply", hplcT1c:"Install PG.05",
@@ -621,6 +682,7 @@ hipoB3:"Build-up: building works £1.95M + professional services £0.14M + clien
 hipoB4:"Programme: draft concept programme runs 262 working days from the funding approval and decision to proceed, giving planned delivery in November 2027; isolators delivered to site 14 Jul 2027.",
 hipoB5:"Isolator costs: estimates based on supplier discussions; they will depend on the level of containment agreed in the project scope.",
 hipoB6:"Client (Asymchem) supplied and installed equipment — to purchase £1.96M.",
+hipoB7:"Demand link: EU BD has listed AZ, Genmab, BioNTech and NCC demand or enquiries against SW HP capability; BioNTech explicitly asked for TJ4-equivalent containment and separated HP analytics.",
 hipo3t:"HIPO lab · Scope", hipo3s:"Per the G-128 concept cost plan line items",
 hipoS1:"Scope & areas", hipoS1a:"Alterations to the existing G-128 suite (G128 and G128A–D); 215 m² GIFA",
 hipoS1b:"Lab area ~182 m² (services rate basis) + write-up area ~33 m² (carpet quantity)",
@@ -639,7 +701,7 @@ hipoS4d:"To purchase by group: ARD/QC £912,600; isolator instruments £455,345;
 hipoScopeNote:"Risk and prerequisite: agreement is being sought from DPML for the facility modifications — once complete, the lab could not be returned to DPML in its current operational state; Clare is following up on the status of that conversation. DPML (Paul Bax, 21 Aug 2026) has now given in-principle approval of the proposed changes for both PDF and DPH (including G.128), subject to a final design review. Licences for Alteration can be initiated for both projects; scope and plans to follow as the designs develop.",
 hipoEqt:"Client (Asymchem) supplied and installed equipment", hipoEqs:"Equipment (supplied and installed by the Client)",
 hipoEqAll:"All", hipoEqNew:"New", hipoEqExist:"Existing", hipoEqNE:"N/E",
-hipoEqColTitle:"Equipment", hipoEqColLoc:"Location", hipoEqColModel:"Model", hipoEqColNE:"New / Existing",
+hipoEqColTitle:"Equipment", hipoEqColLoc:"Location", hipoEqColMfr:"Manufacturer", hipoEqColNE:"New / Existing",
 hipoEqColCost:"Cost", hipoEqColMust:"Must have",
 hipoEqTotal:"Total cost (New and Must have)",
 hipo5t:"HIPO lab · Investment", hipo5s:"G-128 Concept Cost Plan · report date 06 Aug 2026 · 215 m² GIFA",
@@ -703,6 +765,19 @@ ${leg.a?`<span><i style="background:#6d5b95"></i>${t(leg.a)}</span>`:""}
 </div></div>`;
 }
 
+function demandTableHTML(){
+const head=`<thead><tr><th>${t("dTh1")}</th><th>${t("dTh2")}</th><th>${t("dTh3")}</th><th>${t("dTh4")}</th><th>${t("dTh5")}</th><th>${t("dTh6")}</th></tr></thead>`;
+const body=DEMAND_ROWS.map(r=>`<tr>
+<td class="nowrap">${r.customer}</td>
+<td>${lang==="zh"?r.project_zh:r.project_en}</td>
+<td><span class="pill pill-${r.status}">${t("dSt_"+r.status)}</span></td>
+<td class="nowrap">${r.qty}</td>
+<td class="nowrap">${r.value}</td>
+<td>${lang==="zh"?r.note_zh:r.note_en}</td>
+</tr>`).join("");
+return `<div class="demand-wrap"><table class="demand-table">${head}<tbody>${body}</tbody></table></div>`;
+}
+
 const EXT_KEYS=["extGFs","extGR2","extGR3","extGPl","extGR4","extGEq","extGMed","extGPre","extGR5","extGCo","extGEn"];
 const HPLC_KEYS=["gFs","gEng","gFeed","gDd","gLySpec","gLyMfg","gLyFat","gLyShip","gLyVal","gHplcSpec","gHplcMfg","gHplcFat","gHplcShip","gTanks","gWaste","gRetrofit"];
 const C1_KEYS=["c1Scope","c1Dd","c1Build","c1IQ"];
@@ -723,7 +798,29 @@ return `
 <tr><td><strong>${t("p2r4n")}</strong></td><td>${t("p2r4s")}</td><td id="hipoLiveP2Invest">${t("p2r4o")}</td><td>${t("p2r4d")}</td></tr>
 </tbody></table>
 <div class="callout">${t("p2link")}</div>
+<div class="callout hipo">${t("p2demand")}</div>
 <div class="note" id="hipoLiveP2sum">${t("p2sum")}</div></div></section>
+
+<section class="slide"><h1>${t("d1t")}</h1><h2>${t("d1s")}</h2>
+<div class="kpi-row">
+<div class="kpi hipo"><div class="val">${t("dK1")}</div><div class="lbl">${t("dK1d")}</div></div>
+<div class="kpi"><div class="val">${t("dK2")}</div><div class="lbl">${t("dK2d")}</div></div>
+<div class="kpi lost"><div class="val">${t("dK3")}</div><div class="lbl">${t("dK3d")}</div></div>
+<div class="kpi hipo"><div class="val">${t("dK4")}</div><div class="lbl">${t("dK4d")}</div></div></div>
+<ul>
+<li>${t("dB1")}</li>
+<li>${t("dB2")}</li>
+<li>${t("dB3")}</li>
+<li>${t("dB4")}</li>
+</ul>
+<div class="demand-map">
+<div class="card"><h3>${t("dM1t")}</h3><p>${t("dM1b")}</p></div>
+<div class="card"><h3>${t("dM2t")}</h3><p>${t("dM2b")}</p></div>
+<div class="card"><h3>${t("dM3t")}</h3><p>${t("dM3b")}</p></div>
+</div></section>
+
+<section class="slide"><h1>${t("d2t")}</h1>
+${demandTableHTML()}</section>
 
 <section class="slide section-slide"><p><span class="tag ext">${t("extTag")}</span></p>
 <h1>${t("extSec")}</h1><p>${t("extSecs")}</p></section>
@@ -762,7 +859,7 @@ return `
 <div class="kpi hplc"><div class="val">${t("hplcK2")}</div><div class="lbl">${t("hplcK2d")}</div></div>
 <div class="kpi hplc"><div class="val">${t("hplcK3")}</div><div class="lbl">${t("hplcK3d")}</div></div>
 <div class="kpi hplc"><div class="val">${t("hplcK4")}</div><div class="lbl">${t("hplcK4d")}</div></div></div>
-<ul><li>${t("hplcB1")}</li><li>${t("hplcB2")}</li><li>${t("hplcB3")}</li><li>${t("hplcB4")}</li></ul></section>
+<ul><li>${t("hplcB1")}</li><li>${t("hplcB2")}</li><li>${t("hplcB3")}</li><li>${t("hplcB4")}</li><li>${t("hplcB5")}</li></ul></section>
 
 <section class="slide"><h1>${t("hplc3t")}</h1>
 <div class="scope-grid">
@@ -848,7 +945,7 @@ ${ganttHTML(GANTT_C1,new Date("2026-08-01"),new Date("2027-10-31"),C1_KEYS,["202
 <div class="kpi hipo"><div class="val" id="hipoLiveK2">${t("hipoK2")}</div><div class="lbl">${t("hipoK2d")}</div></div>
 <div class="kpi hipo"><div class="val">${t("hipoK3")}</div><div class="lbl">${t("hipoK3d")}</div></div>
 <div class="kpi hipo"><div class="val">${t("hipoK4")}</div><div class="lbl">${t("hipoK4d")}</div></div></div>
-<ul><li>${t("hipoB1")}</li><li id="hipoLiveB2">${t("hipoB2")}</li><li id="hipoLiveB3">${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li><li id="hipoLiveB6">${t("hipoB6")}</li></ul></section>
+<ul><li>${t("hipoB1")}</li><li id="hipoLiveB2">${t("hipoB2")}</li><li id="hipoLiveB3">${t("hipoB3")}</li><li>${t("hipoB4")}</li><li>${t("hipoB5")}</li><li id="hipoLiveB6">${t("hipoB6")}</li><li>${t("hipoB7")}</li></ul></section>
 
 <section class="slide"><h1>${t("hipo3t")}</h1><h2>${t("hipo3s")}</h2>
 <div class="scope-grid">
