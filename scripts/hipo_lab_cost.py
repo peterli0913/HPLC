@@ -144,6 +144,80 @@ EQUIP_ITEMS = [
 assert sum(i["cost"] for i in EQUIP_ITEMS if i["ne"] != "E") == EQUIP_LIST_PURCHASE
 assert sum(i["cost"] for i in EQUIP_ITEMS) == EQUIP_LIST_TOTAL
 
+# Equipment List Costs for scoping 0911.xlsx — phased owner-equipment list.
+# Spreadsheet footer: Total Cost £2,156,245; To Purchase £1,713,045;
+# "Phse 1 costs" column sums to £995,445 but copies Phase-2 rows
+# (Auto Titrator £30,000, Stem blocks £2,000) into that column.
+# Phase-1 / Phase-2 below follow the Phase column, and use the Phase-1
+# cost cell where quantity is split (HPLC, drying ovens, EasyMax, chiller).
+EQUIP_0911_TOTAL = 2_156_245
+EQUIP_0911_PURCHASE = 1_713_045
+EQUIP_0911_PHASE1 = 963_445
+EQUIP_0911_PHASE2 = 749_600
+EQUIP_0911_ARD_PURCH = 832_600
+EQUIP_0911_ISO_PURCH = 383_345
+EQUIP_0911_CRD_PURCH = 497_100
+EQUIP_0911_ARD_P1 = 662_600
+EQUIP_0911_ISO_P1 = 175_345
+EQUIP_0911_CRD_P1 = 125_500
+assert EQUIP_0911_ARD_PURCH + EQUIP_0911_ISO_PURCH + EQUIP_0911_CRD_PURCH == EQUIP_0911_PURCHASE
+assert EQUIP_0911_PHASE1 + EQUIP_0911_PHASE2 == EQUIP_0911_PURCHASE
+assert EQUIP_0911_ARD_P1 + EQUIP_0911_ISO_P1 + EQUIP_0911_CRD_P1 == EQUIP_0911_PHASE1
+
+# purch = To Purchase; phase1 = first-phase purchase; cost = Total Cost (valuation).
+# phase: 1 / 2 / None (unassigned → later). Existing items with purch=0 stay on the list.
+EQUIP_ITEMS_0911 = [
+    {"id": "eq3", "group": "ARD/QC", "title": "HPLC System", "titleZh": "HPLC 系统", "location": "Room 2", "mfr": "Aglient Technologies", "ne": "N", "phase": 1, "cost": 200000, "purch": 200000, "phase1": 100000},
+    {"id": "eq9", "group": "ARD/QC", "title": "HPLC/Mass Spectrometer System", "titleZh": "HPLC/质谱系统", "location": "Bench top", "mfr": "Agilent Technologies", "ne": "N", "phase": 1, "cost": 200000, "purch": 200000, "phase1": 200000},
+    {"id": "eq16", "group": "ARD/QC", "title": "GCMS", "titleZh": "GCMS", "location": "or GCMS", "mfr": "", "ne": "N", "phase": 1, "cost": 120000, "purch": 120000, "phase1": 120000},
+    {"id": "eq17", "group": "ARD/QC", "title": "nitrogen gas generator", "titleZh": "氮气发生器", "location": "or GCMS", "mfr": "", "ne": "N", "phase": 1, "cost": 8000, "purch": 8000, "phase1": 8000},
+    {"id": "eq18", "group": "ARD/QC", "title": "hydrogen gas generator", "titleZh": "氢气发生器", "location": "or GCMS", "mfr": "", "ne": "N", "phase": 1, "cost": 8000, "purch": 8000, "phase1": 8000},
+    {"id": "eq19", "group": "ARD/QC", "title": "Electronic Pipette", "titleZh": "电动移液器", "location": "Benchtop", "mfr": "Handystep", "ne": "N", "phase": 1, "cost": 1600, "purch": 1600, "phase1": 1600},
+    {"id": "eq20", "group": "ARD/QC", "title": "Milli-Q", "titleZh": "Milli-Q", "location": "Undersink", "mfr": "Millipore", "ne": "N", "phase": 1, "cost": 20000, "purch": 20000, "phase1": 20000},
+    {"id": "eq21", "group": "ARD/QC", "title": "Prep HPLC", "titleZh": "制备 HPLC", "location": "Large Fumehood", "mfr": "国内汉邦", "ne": "N", "phase": 2, "cost": 70000, "purch": 70000, "phase1": 0},
+    {"id": "eq23", "group": "ARD/QC", "title": "pH", "titleZh": "pH 计", "location": "Fumhood", "mfr": "Mettler Toledo", "ne": "N", "phase": 1, "cost": 20000, "purch": 20000, "phase1": 20000},
+    {"id": "eq25", "group": "ARD/QC", "title": "SFC", "titleZh": "SFC", "location": "Bench top", "mfr": "Waters", "ne": "E", "phase": 2, "cost": 150000, "purch": 0, "phase1": 0},
+    {"id": "eq27", "group": "ARD/QC", "title": "GC", "titleZh": "GC", "location": "Bench top", "mfr": "Aglient", "ne": "E", "phase": 2, "cost": 80000, "purch": 0, "phase1": 0},
+    {"id": "eq29", "group": "ARD/QC", "title": "Mass Spec", "titleZh": "质谱", "location": "Bench top", "mfr": "Aglient", "ne": "N", "phase": 1, "cost": 140000, "purch": 140000, "phase1": 140000},
+    {"id": "eq30", "group": "ARD/QC", "title": "KF Coulimetric", "titleZh": "库仑法 KF", "location": "Fumehood", "mfr": "Metrohm", "ne": "N", "phase": 1, "cost": 45000, "purch": 45000, "phase1": 45000},
+    {"id": "eq36", "group": "Isolators", "title": "Huber TC45 with immersion cooler", "titleZh": "Huber TC45 浸入式冷却器", "location": "Under isolator 2", "mfr": "Huber", "ne": "N", "phase": 1, "cost": 4345, "purch": 4345, "phase1": 4345},
+    {"id": "eq37", "group": "Isolators", "title": "Auto Titrator", "titleZh": "自动滴定仪", "location": "Isolator 1", "mfr": "Mettler Toledo", "ne": "N", "phase": 2, "cost": 30000, "purch": 30000, "phase1": 0},
+    {"id": "eq38", "group": "Isolators", "title": "Benchtop Powder X-ray Diffractor", "titleZh": "台式粉末 X 射线衍射仪", "location": "Bench top", "mfr": "D2", "ne": "E", "phase": 1, "cost": 200000, "purch": 0, "phase1": 0},
+    {"id": "eq39", "group": "Isolators", "title": "Particle Size", "titleZh": "粒度仪", "location": "Isolator 5", "mfr": "Malvern", "ne": "N", "phase": 2, "cost": 160000, "purch": 160000, "phase1": 0},
+    {"id": "eq41", "group": "Isolators", "title": "Analytical Balance", "titleZh": "分析天平", "location": "Isolator 1", "mfr": "Mettler Toledo", "ne": "N", "phase": 1, "cost": 20000, "purch": 20000, "phase1": 20000},
+    {"id": "eq42", "group": "Isolators", "title": "Microbalance", "titleZh": "微量天平", "location": "isolator 1", "mfr": "", "ne": "N", "phase": 1, "cost": 25000, "purch": 25000, "phase1": 25000},
+    {"id": "eq43", "group": "Isolators", "title": "Easymax Reactor System", "titleZh": "EasyMax 反应系统", "location": "isolator 3", "mfr": "Mettler Toledo", "ne": "N", "phase": 1, "cost": 80000, "purch": 80000, "phase1": 80000},
+    {"id": "eq45", "group": "Isolators", "title": "Chiller unit", "titleZh": "冷水机", "location": "under isolator 3", "mfr": "Julabo", "ne": "E", "phase": 1, "cost": 12000, "purch": 0, "phase1": 0},
+    {"id": "eq47", "group": "Isolators", "title": "Drying Oven", "titleZh": "干燥箱", "location": "Isolator 4", "mfr": "Salvis", "ne": "N/E", "phase": 1, "cost": 36000, "purch": 36000, "phase1": 18000},
+    {"id": "eq48", "group": "Isolators", "title": "FTIR", "titleZh": "FTIR", "location": "Isolator 2", "mfr": "Thermo", "ne": "E", "phase": 1, "cost": 28000, "purch": 28000, "phase1": 28000},
+    {"id": "eq53", "group": "CRD", "title": "Laboratory Fridge", "titleZh": "实验室冰箱", "location": "Room 4", "mfr": "Lec", "ne": "N", "phase": 1, "cost": 750, "purch": 750, "phase1": 750},
+    {"id": "eq54", "group": "CRD", "title": "Laboratory Freezer", "titleZh": "实验室冰柜", "location": "Room 4", "mfr": "Lec", "ne": "N", "phase": 1, "cost": 750, "purch": 750, "phase1": 750},
+    {"id": "eq55", "group": "CRD", "title": "Reactor Ready Twin reactor", "titleZh": "Reactor Ready 双反应釜", "location": "FH1", "mfr": "Reactor Ready vessels", "ne": "N", "phase": 2, "cost": 20000, "purch": 20000, "phase1": 0},
+    {"id": "eq56", "group": "CRD", "title": "Mettler Toledo SP-50 Dosing units", "titleZh": "梅特勒 SP-50 加料单元", "location": "FH1", "mfr": "Mettler Toledo SP-50 Dosing units", "ne": "N", "phase": 2, "cost": 1600, "purch": 1600, "phase1": 0},
+    {"id": "eq57", "group": "CRD", "title": "RX10 Controller", "titleZh": "RX10 控制器", "location": "FH1", "mfr": "RX10 Controller", "ne": "N", "phase": 2, "cost": 2400, "purch": 2400, "phase1": 0},
+    {"id": "eq58", "group": "CRD", "title": "Heidolph Motors", "titleZh": "Heidolph 电机", "location": "FH1", "mfr": "Heidolph Motors", "ne": "N", "phase": 2, "cost": 1600, "purch": 1600, "phase1": 0},
+    {"id": "eq59", "group": "CRD", "title": "Reactor Ready Stand", "titleZh": "Reactor Ready 支架", "location": "FH1", "mfr": "Reactor Ready Stand", "ne": "N", "phase": 2, "cost": 1000, "purch": 1000, "phase1": 0},
+    {"id": "eq60", "group": "CRD", "title": "Vacuum Pump", "titleZh": "真空泵", "location": "FH1", "mfr": "Vacuubrand", "ne": "N", "phase": 2, "cost": 5000, "purch": 5000, "phase1": 0},
+    {"id": "eq61", "group": "CRD", "title": "Recirculating Chiller", "titleZh": "循环冷水机", "location": "FH1", "mfr": "Huber", "ne": "N", "phase": 2, "cost": 23000, "purch": 23000, "phase1": 0},
+    {"id": "eq62", "group": "CRD", "title": "Analytical Balance", "titleZh": "分析天平", "location": "Either/or", "mfr": "Mettler Toledo", "ne": "N", "phase": 1, "cost": 20000, "purch": 20000, "phase1": 20000},
+    {"id": "eq63", "group": "CRD", "title": "Large Scale Balance", "titleZh": "大称量天平", "location": "Either/or", "mfr": "Sartorius", "ne": "N", "phase": 1, "cost": 1000, "purch": 1000, "phase1": 1000},
+    {"id": "eq65", "group": "CRD", "title": "Easymax Reactor System", "titleZh": "EasyMax 反应系统", "location": "FH2", "mfr": "Mettler Toledo", "ne": "N", "phase": 1, "cost": 160000, "purch": 160000, "phase1": 80000},
+    {"id": "eq67", "group": "CRD", "title": "Chiller unit", "titleZh": "冷水机", "location": "FH2", "mfr": "Julabo", "ne": "N", "phase": 1, "cost": 24000, "purch": 24000, "phase1": 12000},
+    {"id": "eq72", "group": "CRD", "title": "Stem blocks", "titleZh": "Stem 加热模块", "location": "FH3", "mfr": "Electrothermal", "ne": "N", "phase": 2, "cost": 2000, "purch": 2000, "phase1": 0},
+    {"id": "eq73", "group": "CRD", "title": "Stirrer hotplate", "titleZh": "搅拌加热板", "location": "FH3", "mfr": "IKA", "ne": "E", "phase": 2, "cost": 1200, "purch": 0, "phase1": 0},
+    {"id": "eq76", "group": "CRD", "title": "Biotage", "titleZh": "Biotage", "location": "FH4 - Flexible", "mfr": "Biotage", "ne": "N", "phase": 2, "cost": 12000, "purch": 12000, "phase1": 0},
+    {"id": "eq77", "group": "CRD", "title": "Rotary Evaporator", "titleZh": "旋转蒸发仪", "location": "FH4 - Flexible", "mfr": "Heidolph", "ne": "N", "phase": 1, "cost": 6000, "purch": 6000, "phase1": 6000},
+    {"id": "eq78", "group": "CRD", "title": "Vacuum Pump", "titleZh": "真空泵", "location": "FH4 - Flexible", "mfr": "Vacuubrand", "ne": "N", "phase": 1, "cost": 5000, "purch": 5000, "phase1": 5000},
+    {"id": "eq82", "group": "CRD", "title": "Overhead stirrer", "titleZh": "顶置搅拌器", "location": "FH4 - Flexible", "mfr": "", "ne": "N", "phase": 2, "cost": 1000, "purch": 1000, "phase1": 0},
+    {"id": "eq84", "group": "CRD", "title": "Software", "titleZh": "软件（待定）", "location": "Software", "mfr": "", "ne": "N", "phase": None, "cost": 200000, "purch": 200000, "phase1": 0},
+    {"id": "eq88", "group": "CRD", "title": "Dishwasher/glasswash", "titleZh": "器皿清洗机", "location": "Miscellaneous", "mfr": "Miele", "ne": "N", "phase": 2, "cost": 10000, "purch": 10000, "phase1": 0},
+]
+assert sum(i["purch"] for i in EQUIP_ITEMS_0911) == EQUIP_0911_PURCHASE
+assert sum(i["phase1"] for i in EQUIP_ITEMS_0911) == EQUIP_0911_PHASE1
+assert sum(i["purch"] for i in EQUIP_ITEMS_0911 if i["group"] == "ARD/QC") == EQUIP_0911_ARD_PURCH
+assert sum(i["purch"] for i in EQUIP_ITEMS_0911 if i["group"] == "Isolators") == EQUIP_0911_ISO_PURCH
+assert sum(i["purch"] for i in EQUIP_ITEMS_0911 if i["group"] == "CRD") == EQUIP_0911_CRD_PURCH
+
 SUBTOTAL_2 = 4_067_985
 RISK_ALLOWANCE = 397_875  # 13.1 design development risk (13.2 incl. above)
 COST_LIMIT_EXCL_INF = 4_465_860

@@ -2,7 +2,8 @@
 """Build an editable Chinese 16:9 PPT from the 0907 portfolio briefing.
 
 Text, tables, charts and Gantt bars are native PowerPoint objects.
-Numbers follow the live HTML default (HIPO must-have / to-purchase view).
+HIPO owner equipment follows Equipment List Costs for scoping 0911
+(phased purchase). Cost-plan building-works lines are unchanged.
 """
 from __future__ import annotations
 
@@ -55,11 +56,16 @@ from hipo_lab_cost import (  # noqa: E402
     ACCURACY_UPPER,
     BUILDING_WORKS,
     CLIENT_EQUIP,
-    EQUIP_ITEMS,
-    EQUIP_LIST_ARD_PURCH,
-    EQUIP_LIST_CRD_PURCH,
-    EQUIP_LIST_ISO_PURCH,
-    EQUIP_LIST_PURCHASE,
+    EQUIP_0911_ARD_P1,
+    EQUIP_0911_ARD_PURCH,
+    EQUIP_0911_CRD_P1,
+    EQUIP_0911_CRD_PURCH,
+    EQUIP_0911_ISO_P1,
+    EQUIP_0911_ISO_PURCH,
+    EQUIP_0911_PHASE1,
+    EQUIP_0911_PHASE2,
+    EQUIP_0911_PURCHASE,
+    EQUIP_ITEMS_0911,
     FACILITATING,
     FFE,
     FINISHES,
@@ -103,11 +109,17 @@ from hplc_capex_v2 import (  # noqa: E402
 ROOT = Path("/workspace")
 OUT = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07.pptx"
 OUT_V2 = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07-v2.pptx"
+OUT_V3 = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07-v3.pptx"
 
-# Live HTML default after must-have sync
+# Cost-plan building works / risk / inflation stay on the 260806 plan.
+# Owner equipment uses the 0911 phased list (to-purchase), not the cost-plan
+# client-equipment line (£1,975,045) or the 5 Aug list (£1,957,045).
 HIPO_OTHER = HIPO_TOTAL - CLIENT_EQUIP  # 2,586,999
-HIPO_EQUIP = EQUIP_LIST_PURCHASE  # 1,957,045
-HIPO_PROJECT = HIPO_OTHER + HIPO_EQUIP  # 4,544,044
+HIPO_EQUIP = EQUIP_0911_PURCHASE  # 1,713,045
+HIPO_PHASE1 = EQUIP_0911_PHASE1  # 963,445
+HIPO_PHASE2 = EQUIP_0911_PHASE2  # 749,600
+HIPO_PROJECT = HIPO_OTHER + HIPO_EQUIP  # 4,300,044
+EQUIP_ITEMS = EQUIP_ITEMS_0911
 
 NAVY = RGBColor(0x0F, 0x2B, 0x46)
 TEAL = RGBColor(0x00, 0x96, 0x88)
@@ -481,7 +493,7 @@ def s_cover(prs, n, total):
         add_tb(s, x + 0.18, 3.45, w - 0.36, 0.70, name, 16, True, NAVY)
         add_tb(s, x + 0.18, 4.30, w - 0.36, 0.70, val, 28, True, col)
         add_tb(s, x + 0.18, 5.15, w - 0.36, 0.70, when, 14, False, MUTED)
-    add_tb(s, 0.55, 6.40, 12.2, 0.35, "四条独立工作流  ·  2026年9月7日", 14, False, MUTED)
+    add_tb(s, 0.55, 6.40, 12.2, 0.35, "四条独立工作流  ·  2026年9月11日", 14, False, MUTED)
     return s
 
 
@@ -913,7 +925,9 @@ def s_hipo_cost_b(prs, n, total):
         (L["secProf"], gbp(PROF_SERVICES), "sec"),
         (L["prof"], gbp(PROF_SERVICES), "leaf"),
         (L["secEquip"], gbp(HIPO_EQUIP), "sec"),
-        (f"待采购 {gbp(HIPO_EQUIP)}（《Equipment List Costs for scoping 5 Aug》）", gbp(HIPO_EQUIP), "row"),
+        (f"待采购合计（《Equipment List Costs for scoping 0911》）", gbp(HIPO_EQUIP), "row"),
+        (f"一期 {gbp(HIPO_PHASE1)}", gbp(HIPO_PHASE1), "leaf"),
+        (f"二期及后续 {gbp(HIPO_PHASE2)}", gbp(HIPO_PHASE2), "leaf"),
         (L["secRisk"], gbp(RISK_ALLOWANCE), "sec"),
         (L["risk"], gbp(RISK_ALLOWANCE), "leaf"),
         (L["secInf"], gbp(INFLATION), "sec"),
@@ -983,51 +997,184 @@ def _ne_zh(ne: str) -> str:
     return {"E": "既有", "N/E": "新购/既有"}.get(ne, "新购")
 
 
+def _phase_zh(phase) -> str:
+    if phase == 1:
+        return "一期"
+    if phase == 2:
+        return "二期"
+    return "后续"
+
+
+def s_c1_isolator(prs, n, total):
+    s = new_slide(prs, n, total)
+    title_block(s, "C1 · 隔离器选型", "不建议采用国内隔离器方案", C1_C)
+    kpi_row(
+        s,
+        [
+            ("须 CE 标志", "英国落地前提"),
+            ("+3–4 个月", "事后补认证下限"),
+            ("成品高完整性", "本项目所需类型"),
+        ],
+        1.15,
+        1.08,
+        C1_C,
+    )
+    bullets(
+        s,
+        [
+            "英国落地须符合 UK 标准并取得 CE 标志。国内既有方案（天俱时）未按 UK 标准设计，不具备 CE。",
+            "事后补做 CE：按已有项目经验至少增加 3–4 个月；若认证要求改设计，周期还会延长。",
+            "CE 所需设计与测试文件，国内方案设计时未按该标准准备，补齐工作量大。",
+            "本项目需要成品高完整性隔离器。已接触的国内供应商资料难以直接用于本项目；东富龙以设备定制隔离器为主，与本需求不匹配。",
+            "推荐路径：按已取得的 Howorth、ILC Dover 预算报价推进供货方案深化。",
+        ],
+        ML + 0.05,
+        2.40,
+        CW - 0.10,
+        4.55,
+        16,
+        after=10,
+    )
+    return s
+
+
+def s_hipo_phase(prs, n, total):
+    s = new_slide(prs, n, total)
+    title_block(s, "高活实验室 · 业主设备分阶段", "Equipment List Costs for scoping 0911", HIPO_C)
+    kpi_row(
+        s,
+        [
+            (gbp(HIPO_EQUIP), "待采购合计"),
+            (gbp(HIPO_PHASE1), "一期"),
+            (gbp(HIPO_PHASE2), "二期及后续"),
+            (gbp(HIPO_PROJECT), "项目投资（待采购全口径）"),
+        ],
+        1.12,
+        1.00,
+        HIPO_C,
+    )
+    gap, w = 0.16, (CW - 0.16) / 2
+    add_round(s, ML, 2.26, w, 2.28, WHITE, 0.08)
+    add_rect(s, ML, 2.26, 0.09, 2.28, HIPO_C)
+    add_tb(s, ML + 0.22, 2.34, w - 0.36, 0.32, "一期", 15, True, NAVY)
+    bullets(
+        s,
+        [
+            "开业配置：分析 HPLC 先购 1 套；质谱及气源纳入一期",
+            "隔离器内固体操作仪器原则上纳入一期",
+            "同期按一个项目配置反应系统（EasyMax 等先购 1 套）",
+        ],
+        ML + 0.18,
+        2.70,
+        w - 0.30,
+        1.72,
+        13,
+        after=6,
+    )
+    add_round(s, ML + w + gap, 2.26, w, 2.28, WHITE, 0.08)
+    add_rect(s, ML + w + gap, 2.26, 0.09, 2.28, GOLD)
+    add_tb(s, ML + w + gap + 0.22, 2.34, w - 0.36, 0.32, "二期及后续", 15, True, NAVY)
+    bullets(
+        s,
+        [
+            "制备 HPLC、粒度仪、自动滴定仪",
+            "结晶筛选与部分反应配套、器皿清洗",
+            "软件 £200,000 尚未分阶段，计入后续",
+        ],
+        ML + w + gap + 0.18,
+        2.70,
+        w - 0.30,
+        1.72,
+        13,
+        after=6,
+    )
+    rows = [
+        ["分组", "待采购", "一期", "二期及后续"],
+        ["ARD / QC", gbp(EQUIP_0911_ARD_PURCH), gbp(EQUIP_0911_ARD_P1), gbp(EQUIP_0911_ARD_PURCH - EQUIP_0911_ARD_P1)],
+        ["隔离器内仪器", gbp(EQUIP_0911_ISO_PURCH), gbp(EQUIP_0911_ISO_P1), gbp(EQUIP_0911_ISO_PURCH - EQUIP_0911_ISO_P1)],
+        ["CRD", gbp(EQUIP_0911_CRD_PURCH), gbp(EQUIP_0911_CRD_P1), gbp(EQUIP_0911_CRD_PURCH - EQUIP_0911_CRD_P1)],
+        ["合计", gbp(HIPO_EQUIP), gbp(HIPO_PHASE1), gbp(HIPO_PHASE2)],
+    ]
+    add_table(
+        s,
+        rows,
+        ML,
+        4.68,
+        CW,
+        1.72,
+        col_w=[3.80, 2.877, 2.877, 2.879],
+        font=13,
+        aligns=["left", "right", "right", "right"],
+    )
+    add_tb(
+        s,
+        ML,
+        6.50,
+        CW,
+        0.58,
+        "SFC、GC 先利旧既有仪器。成本计划原文业主设备 £1,975,045、项目投资 £4,562,044；本期按 0911 待采购计入项目投资，未改写成本计划。",
+        12,
+        False,
+        MUTED,
+    )
+    return s
+
+
 def s_equip(prs, n0, total, items, title_extra, gantt_unused=None):
     s = new_slide(prs, n0, total)
     title_block(s, "业主（凯莱英）供货并安装设备", title_extra, HIPO_C)
+    grp = items[0]["group"] if items else None
+    src = [it for it in EQUIP_ITEMS if it["group"] == grp] if grp else items
+    g_purch = sum(it.get("purch", 0) or 0 for it in src)
+    g_p1 = sum(it.get("phase1", 0) or 0 for it in src)
     add_round(s, ML, 1.10, CW, 0.46, NAVY, 0.08)
-    add_tb(s, ML + 0.22, 1.16, 7.2, 0.34, "合计（新购且必须）", 14, True, WHITE)
-    add_tb(s, ML + 7.4, 1.16, 4.8, 0.34, gbp(HIPO_EQUIP), 16, True, WHITE, PP_ALIGN.RIGHT)
-    header = ["设备", "位置", "Manufacturer", "新购 / 既有", "费用", "必须"]
+    add_tb(s, ML + 0.22, 1.16, 7.4, 0.34, f"本组待采购 {gbp(g_purch)}  ·  一期 {gbp(g_p1)}", 14, True, WHITE)
+    add_tb(s, ML + 7.6, 1.16, 4.6, 0.34, f"清单合计 {gbp(HIPO_EQUIP)}", 15, True, WHITE, PP_ALIGN.RIGHT)
+    header = ["设备", "位置", "厂家", "新购 / 既有", "阶段", "待采购", "一期"]
     data = [header]
     for it in items:
+        purch = it.get("purch", 0) or 0
+        p1 = it.get("phase1", 0) or 0
         data.append(
             [
                 it["titleZh"],
-                it["location"],
+                it["location"] or "—",
                 it["mfr"] or "—",
                 _ne_zh(it["ne"]),
-                gbp(it["cost"]) if it["cost"] else "—",
-                "是",
+                _phase_zh(it.get("phase")),
+                gbp(purch) if purch else "—",
+                gbp(p1) if p1 else "—",
             ]
         )
     n_rows = len(data)
     max_h = 5.36
     row_h = min(0.38, max_h / n_rows)
     table_h = row_h * n_rows
-    font = 12 if n_rows > 16 else 13
-    tbl_shape = s.shapes.add_table(n_rows, 6, Inches(ML), Inches(1.68), Inches(CW), Inches(table_h))
+    font = 11 if n_rows > 14 else 12
+    tbl_shape = s.shapes.add_table(n_rows, 7, Inches(ML), Inches(1.68), Inches(CW), Inches(table_h))
     table = tbl_shape.table
-    widths = [3.15, 2.15, 2.55, 1.35, 1.55, 1.683]
+    widths = [2.70, 1.85, 2.15, 1.20, 0.95, 1.80, 1.783]
     for i, w in enumerate(widths):
         table.columns[i].width = Inches(w)
     for row in table.rows:
         row.height = Inches(row_h)
-    aligns = ["left", "left", "left", "center", "right", "center"]
+    aligns = ["left", "left", "left", "center", "center", "right", "right"]
     for r, row in enumerate(data):
         if r == 0:
             for c, val in enumerate(row):
-                fill_cell(table.cell(r, c), val, 12, True, WHITE, NAVY, aligns[c])
+                fill_cell(table.cell(r, c), val, 11, True, WHITE, NAVY, aligns[c])
             continue
         bg = ROW_ALT if r % 2 == 0 else WHITE
         ne = row[3]
+        phase = row[4]
         for c, val in enumerate(row):
             if c == 3:
                 col = MUTED if ne == "既有" else HIPO_C
+            elif c == 4:
+                col = HIPO_C if phase == "一期" else (GOLD if phase == "二期" else MUTED)
             else:
                 col = TEXT
-            fill_cell(table.cell(r, c), val, font, c in (3, 4, 5), col, bg, aligns[c])
+            fill_cell(table.cell(r, c), val, font, c in (3, 4, 5, 6), col, bg, aligns[c])
     return s
 
 
@@ -1039,7 +1186,7 @@ def s_thanks(prs, n, total):
     add_rect(s, 9.8, 0, 3.533, 0.07, WHITE)
     add_tb(s, 1.0, 2.05, 11.3, 1.10, "谢谢", 54, True, WHITE, PP_ALIGN.CENTER)
     add_rect(s, 5.9, 3.25, 1.5, 0.07, GOLD)
-    add_tb(s, 1.0, 3.55, 11.3, 0.45, "Asymchem UK  ·  Sandwich  ·  2026年9月7日", 18, False, RGBColor(0xB8, 0xC5, 0xD6), PP_ALIGN.CENTER)
+    add_tb(s, 1.0, 3.55, 11.3, 0.45, "Asymchem UK  ·  Sandwich  ·  2026年9月11日", 18, False, RGBColor(0xB8, 0xC5, 0xD6), PP_ALIGN.CENTER)
     add_tb(s, 1.0, 4.10, 11.3, 0.40, "UK PDF 资本项目", 16, False, RGBColor(0x8A, 0x9B, 0xAE), PP_ALIGN.CENTER)
     chips = ["HPLC + 冻干  £5.33M", "C1 OEB5  £2.48M", f"高活实验室  {gbp_m(HIPO_PROJECT)}", "B902 扩建  £78.1M"]
     w = 2.70
@@ -1131,6 +1278,7 @@ def build():
         [
             "范围：二层物料分装与首层最终包装固定隔离器；HVAC 升级；进出气闸联锁及雾化淋浴；覆盖各单元操作与废物流的定制柔性隔离器。",
             "估算：已取得供应商预算报价 —— ILC Dover 反应釜投料柔性隔离器整包 £115,800（含 R19–R22 投料方案概念设计）；Howorth 单腔分装隔离器 £250,000/台。两者均为 Ex Works 口径，不含包装、运输、安装与调试。",
+            "选型：不建议采用国内隔离器方案；英国落地须符合 UK 标准并取得 CE 标志，补认证至少增加 3–4 个月，且本项目需要成品高完整性隔离器。",
             "交付关联：须与厂房内改造（制备 HPLC + 冻干）同步完成，方能为制备 HPLC 操作提供 OEB5 能力。",
             "周期：假设与改造项目一并批准；制备 HPLC 单元驱动 C1 模块升级交付时间线。",
         ],
@@ -1154,6 +1302,7 @@ def build():
         ],
         C1_C,
     )
+    add(s_c1_isolator)
     add(s_c1_cost)
     add(s_c1_charts)
     add(
@@ -1166,7 +1315,7 @@ def build():
     )
     add(lambda prs, n, total: _decision(prs, n, total, "C1 · 决策", [
         "是否批准 C1 OEB5 升级与改造项目一并推进？",
-        "是否授权启动 ILC Dover 柔性隔离器及固定隔离器供货方案深化？",
+        "确认不采用国内隔离器方案，按已取得的 Howorth / ILC Dover 预算报价深化供货。",
     ], C1_C))
 
     add(
@@ -1193,7 +1342,7 @@ def build():
             f"构成：建筑工程费 £1.95M + 专业服务费 £0.14M + 业主（凯莱英）供货设备 {gbp_m(HIPO_EQUIP)} + 风险预备费 £0.40M + 通胀 £0.10M。",
             "周期：概念进度（草案）自资金批准与推进决定起 262 个工作日，计划交付 2027 年 11 月；隔离器 2027-07-14 到场。",
             "隔离器费用：为基于与供应商沟通的估算，最终取决于项目范围最终确认的密闭等级。",
-            f"业主（凯莱英）供货并安装设备待采购 {gbp(HIPO_EQUIP)}。",
+            f"业主设备按 0911 分阶段清单待采购 {gbp(HIPO_EQUIP)}：一期 {gbp(HIPO_PHASE1)}，二期及后续 {gbp(HIPO_PHASE2)}。成本计划原文设备行 £1,975,045，未改写。",
             "需求对应：欧洲商务已列 AZ、Genmab、BioNTech、NCC 等对 SW 高活能力的需求或询盘；BioNTech 明确要求与 TJ4 相当的密闭及独立高活分析。",
         ],
         HIPO_C,
@@ -1233,14 +1382,15 @@ def build():
                 [
                     "暖通 £217,920：AHU 恢复使用、全套风管与送回风、袋进袋出 HEPA 排风过滤、BMS 升级、系统平衡",
                     "电气 £107,380、消防喷淋 £30,030、门禁/布线/CCTV/火警 £51,345、实验室气体管道 £63,700、雾化淋浴 £35,000",
-                    f"业主（凯莱英）供货并安装设备待采购 {gbp(HIPO_EQUIP)}",
-                    f"待采购分项：ARD/QC {gbp(EQUIP_LIST_ARD_PURCH)}、隔离器内仪器 {gbp(EQUIP_LIST_ISO_PURCH)}、CRD {gbp(EQUIP_LIST_CRD_PURCH)}",
+                    f"业主（凯莱英）供货并安装设备待采购 {gbp(HIPO_EQUIP)}（0911 清单）",
+                    f"待采购分项：ARD/QC {gbp(EQUIP_0911_ARD_PURCH)}、隔离器内仪器 {gbp(EQUIP_0911_ISO_PURCH)}、CRD {gbp(EQUIP_0911_CRD_PURCH)}",
                 ],
             ),
         ],
         HIPO_C,
         "风险与前提：正在就厂房改造事宜征求 DPML 同意 —— 改造完成后实验室将无法按当前运行状态交还 DPML，该沟通进展由 Clare 跟进。目前 DPML（Paul Bax，2026-08-21）原则上同意 PDF 与 DPH（含 G.128）拟议改造，最终以设计审查为准；可启动两项 Licence for Alteration，范围与图纸随设计深化补充。",
     )
+    add(s_hipo_phase)
     add(s_hipo_cost_a)
     add(s_hipo_cost_b)
     add(
@@ -1286,6 +1436,7 @@ def build():
             "高活实验室 · 决策",
             [
                 "是否批准资金与推进决定节点？概念进度以此为起点，262 个工作日加 6 周启动与决策时间，计划交付 2027 年 11 月。",
+                "是否按 0911 分阶段清单批准一期业主设备采购？",
                 "是否安排 AHU 状况核查与既有通风柜可用性确认？二者为风险登记册中金额最高的两项。",
             ],
             HIPO_C,
@@ -1309,9 +1460,9 @@ def build():
     total[0] = len(pages)
     for i, (fn, a, k) in enumerate(pages, 1):
         fn(prs, i, total, *a, **k)
-    OUT_V2.parent.mkdir(parents=True, exist_ok=True)
-    prs.save(str(OUT_V2))
-    print("wrote", OUT_V2, "slides", len(prs.slides), "bytes", OUT_V2.stat().st_size)
+    OUT_V3.parent.mkdir(parents=True, exist_ok=True)
+    prs.save(str(OUT_V3))
+    print("wrote", OUT_V3, "slides", len(prs.slides), "bytes", OUT_V3.stat().st_size)
 
 
 if __name__ == "__main__":
