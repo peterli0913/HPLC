@@ -110,16 +110,24 @@ ROOT = Path("/workspace")
 OUT = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07.pptx"
 OUT_V2 = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07-v2.pptx"
 OUT_V3 = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-09-07-v3.pptx"
+OUT_1012 = ROOT / "汇报/UK-PDF-Portfolio/UK_PDF_Portfolio_Briefing_2026-10-12-v1.pptx"
+DECK_DATE = "2026年10月12日"
 
 # Cost-plan building works / risk / inflation stay on the 260806 plan.
-# Owner equipment uses the 0911 phased list (to-purchase), not the cost-plan
+# Owner equipment uses the 0911 phased list, not the cost-plan
 # client-equipment line (£1,975,045) or the 5 Aug list (£1,957,045).
+# The headline HIPO figure carries Phase-1 equipment only; Phase 2 is shown
+# separately and kept out of every total that feeds the portfolio sum.
 HIPO_OTHER = HIPO_TOTAL - CLIENT_EQUIP  # 2,586,999
 HIPO_EQUIP = EQUIP_0911_PURCHASE  # 1,713,045
 HIPO_PHASE1 = EQUIP_0911_PHASE1  # 963,445
 HIPO_PHASE2 = EQUIP_0911_PHASE2  # 749,600
-HIPO_PROJECT = HIPO_OTHER + HIPO_EQUIP  # 4,300,044
+HIPO_FULL = HIPO_OTHER + HIPO_EQUIP  # 4,300,044
+HIPO_PROJECT = HIPO_OTHER + HIPO_PHASE1  # 3,550,444
 EQUIP_ITEMS = EQUIP_ITEMS_0911
+
+PART1_TOTAL = HPLC_OOM + C1_OOM  # 7,805,600
+INBUILDING_TOTAL = PART1_TOTAL + HIPO_PROJECT  # 11,356,044
 
 NAVY = RGBColor(0x0F, 0x2B, 0x46)
 TEAL = RGBColor(0x00, 0x96, 0x88)
@@ -480,35 +488,35 @@ def s_cover(prs, n, total):
     add_tb(s, 0.55, 2.40, 12.2, 0.40, "资本项目汇报", 20, False, MUTED)
     add_rect(s, 0.55, 2.92, 1.6, 0.06, GOLD)
     cards = [
-        ("HPLC + 冻干", "£5.33M", "2027-12 / 2028-06", HPLC_C),
-        ("C1 模块 OEB5", "£2.48M", "2027-10 安装确认", C1_C),
-        ("OEB5 高活实验室", gbp_m(HIPO_PROJECT), "计划 2027-11 交付", HIPO_C),
-        ("B902 东侧扩建", "£78.1M", "2030-05 竣工", EXT_C),
+        ("一、地面层改造 + C1 升级", gbp_m(PART1_TOTAL), "HPLC + 冻干 £5.33M  ·  C1 £2.48M\n2027-10 C1 / 2027-12 HPLC / 2028-06 冻干", HPLC_C),
+        ("二、OEB5 高活实验室", gbp_m(HIPO_PROJECT), "一期口径\n计划 2027-11 交付", HIPO_C),
+        ("三、B902 东侧扩建", "£78.1M", "可研评估 OOM\n2030-05 竣工", EXT_C),
     ]
-    gap, w, h = 0.18, 2.95, 3.05
+    gap = 0.18
+    w = (12.2 - gap * 2) / 3
+    h = 3.05
     for i, (name, val, when, col) in enumerate(cards):
         x = 0.55 + i * (w + gap)
         add_round(s, x, 3.15, w, h, WHITE, 0.08)
         add_rect(s, x, 3.15, w, 0.10, col)
-        add_tb(s, x + 0.18, 3.45, w - 0.36, 0.70, name, 16, True, NAVY)
-        add_tb(s, x + 0.18, 4.30, w - 0.36, 0.70, val, 28, True, col)
-        add_tb(s, x + 0.18, 5.15, w - 0.36, 0.70, when, 14, False, MUTED)
-    add_tb(s, 0.55, 6.40, 12.2, 0.35, "四条独立工作流  ·  2026年9月11日", 14, False, MUTED)
+        add_tb(s, x + 0.20, 3.45, w - 0.40, 0.70, name, 17, True, NAVY)
+        add_tb(s, x + 0.20, 4.20, w - 0.40, 0.70, val, 30, True, col)
+        add_tb(s, x + 0.20, 5.05, w - 0.40, 1.00, when, 13, False, MUTED)
+    add_tb(s, 0.55, 6.40, 12.2, 0.35, f"三部分  ·  {DECK_DATE}", 14, False, MUTED)
     return s
 
 
 def s_overview(prs, n, total):
     s = new_slide(prs, n, total)
-    title_block(s, "项目概览", "四条独立工作流 · 可行性 / 概念 / 内部估算量级")
+    title_block(s, "项目概览", "三部分 · 可行性 / 概念 / 内部估算量级")
     rows = [
         ["子项目", "范围", "投资（估算量级）", "关键节点"],
-        ["HPLC + 冻干", "既有 PDF footprint 改造", "£5.33M", "2027-12 HPLC / 2028-06 冻干"],
-        ["C1 模块 OEB5 升级", "现有 C1 模块 OEB5 日常运行能力", "£2.48M", "2027-10 安装确认"],
-        ["OEB5 高活实验室", "既有 G-128 套间改造；GIFA 215 m²；4+1 台隔离器", gbp_m(HIPO_PROJECT), "计划 2027-11 交付"],
-        ["B902 东侧扩建", "新建四层+夹层，反应/加氢/过滤干燥", "£78.1M", "2030-05 竣工"],
+        ["一、HPLC + 冻干", "既有 PDF footprint 改造（地面层）", "£5.33M", "2027-12 HPLC / 2028-06 冻干"],
+        ["一、C1 模块 OEB5 升级", "现有 C1 模块 OEB5 日常运行能力", "£2.48M", "2027-10 安装确认"],
+        ["二、OEB5 高活实验室", "既有 G-128 套间改造；GIFA 215 m²；4+1 台隔离器", f"{gbp_m(HIPO_PROJECT)}（一期）", "计划 2027-11 交付"],
+        ["三、B902 东侧扩建", "新建四层+夹层，反应/加氢/过滤干燥", "£78.1M", "2030-05 竣工"],
     ]
-    add_table(s, rows, ML, 1.15, CW, 3.35, col_w=[2.6, 4.7, 2.5, 2.633], font=14, aligns=["left", "left", "center", "left"])
-    inb = 5.33 + 2.48 + HIPO_PROJECT / 1e6
+    add_table(s, rows, ML, 1.15, CW, 3.35, col_w=[2.75, 4.55, 2.5, 2.633], font=14, aligns=["left", "left", "center", "left"])
     notes = [
         (
             ML,
@@ -532,7 +540,7 @@ def s_overview(prs, n, total):
             CW,
             0.55,
             MUTED,
-            f"厂房内三条线合计（改造 £5.33M + C1 £2.48M + 高活实验室 {gbp_m(HIPO_PROJECT)}）约 {gbp_m(inb * 1e6)}，不含 902 东侧扩建。各线口径不同：扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。",
+            f"第一、二部分合计（改造 £5.33M + C1 £2.48M + 高活实验室一期 {gbp_m(HIPO_PROJECT)}）约 {gbp_m(INBUILDING_TOTAL)}，不含 B902 东侧扩建。各线口径不同：扩建与改造为可行性量级，C1 为内部估算，高活实验室为概念阶段成本计划。",
         ),
     ]
     for x, y, w, h, col, txt in notes:
@@ -561,7 +569,7 @@ def s_demand_why(prs, n, total):
             "BioNTech 希望把现由中国支持的早期项目延伸到 Sandwich，并列明能力要求：与 TJ4 相当的高活密闭（1 ng/m³）、实验室至公斤级、适用的高活色谱、高活冻干、与常规分析分开的高活分析。",
         ],
         ML,
-        y + 0.14,
+        y + 0.41,
         CW,
         2.00,
         15,
@@ -743,7 +751,7 @@ def s_gantt(prs, n, total, title, sub, kpis, spec: dict, accent, note=""):
 
 def s_hplc_cost(prs, n, total):
     s = new_slide(prs, n, total)
-    title_block(s, "改造 · 投资总览", "9802-RBP-ZZ-ZZ-CP-X-100001", HPLC_C)
+    title_block(s, "HPLC + 冻干 · 投资总览", "9802-RBP-ZZ-ZZ-CP-X-100001", HPLC_C)
     add_round(s, ML, 1.12, CW, 0.50, NAVY, 0.08)
     add_tb(s, ML + 0.22, 1.18, 6.5, 0.38, "项目总投资估算", 16, True, WHITE)
     add_tb(s, ML + 7.0, 1.18, 5.2, 0.38, gbp(HPLC_OOM), 18, True, WHITE, PP_ALIGN.RIGHT)
@@ -780,7 +788,7 @@ def s_hplc_cost(prs, n, total):
 
 def s_hplc_charts(prs, n, total):
     s = new_slide(prs, n, total)
-    title_block(s, "改造 · 投资结构", "直接 / 间接 / 一般风险与预备费", HPLC_C)
+    title_block(s, "HPLC + 冻干 · 投资结构", "直接 / 间接 / 一般风险与预备费", HPLC_C)
     kpi_row(
         s,
         [
@@ -877,7 +885,7 @@ def s_hipo_cost_a(prs, n, total):
     s = new_slide(prs, n, total)
     title_block(s, "高活实验室 · 投资总览（1/2）", "G-128 Concept Cost Plan · 2026-08-06 · GIFA 215 m²", HIPO_C)
     add_round(s, ML, 1.12, CW, 0.48, NAVY, 0.08)
-    add_tb(s, ML + 0.22, 1.16, 6.5, 0.38, "项目投资（含通胀）", 15, True, WHITE)
+    add_tb(s, ML + 0.22, 1.16, 6.5, 0.38, "一期项目投资（含通胀）", 15, True, WHITE)
     add_tb(s, ML + 7.0, 1.16, 5.2, 0.38, gbp(HIPO_PROJECT), 17, True, WHITE, PP_ALIGN.RIGHT)
     L = HIPO_COST_I18N_ZH
     left = [
@@ -924,15 +932,14 @@ def s_hipo_cost_b(prs, n, total):
         (L["sec10"], gbp(OHP), "sec"),
         (L["secProf"], gbp(PROF_SERVICES), "sec"),
         (L["prof"], gbp(PROF_SERVICES), "leaf"),
-        (L["secEquip"], gbp(HIPO_EQUIP), "sec"),
-        (f"待采购合计（《Equipment List Costs for scoping 0911》）", gbp(HIPO_EQUIP), "row"),
-        (f"一期 {gbp(HIPO_PHASE1)}", gbp(HIPO_PHASE1), "leaf"),
-        (f"二期及后续 {gbp(HIPO_PHASE2)}", gbp(HIPO_PHASE2), "leaf"),
+        (L["secEquip"], gbp(HIPO_PHASE1), "sec"),
+        ("一期设备（分阶段清单，计入本期）", gbp(HIPO_PHASE1), "row"),
+        (f"二期及后续设备 {gbp(HIPO_PHASE2)}（不计入本期）", "—", "leaf"),
         (L["secRisk"], gbp(RISK_ALLOWANCE), "sec"),
         (L["risk"], gbp(RISK_ALLOWANCE), "leaf"),
         (L["secInf"], gbp(INFLATION), "sec"),
         (L["inflation"], gbp(INFLATION), "leaf"),
-        ("项目投资（含通胀）", gbp(HIPO_PROJECT), "sub"),
+        ("一期项目投资（含通胀）", gbp(HIPO_PROJECT), "sub"),
     ]
     add_cost_table(s, rows, ML, 1.15, CW, 5.80, 13)
     return s
@@ -940,22 +947,22 @@ def s_hipo_cost_b(prs, n, total):
 
 def s_hipo_charts(prs, n, total):
     s = new_slide(prs, n, total)
-    title_block(s, "高活实验室 · 投资结构", "项目投资构成与建筑工程费分项", HIPO_C)
+    title_block(s, "高活实验室 · 投资结构", "一期项目投资构成与建筑工程费分项", HIPO_C)
     kpi_row(
         s,
         [
-            (gbp(HIPO_PROJECT), "项目投资（含通胀）"),
+            (gbp(HIPO_PROJECT), "一期项目投资（含通胀）"),
             (gbp(TOTAL_BUILDING_WORKS), "建筑工程费合计"),
-            (gbp(HIPO_EQUIP), "业主（凯莱英）供货设备"),
+            (gbp(HIPO_PHASE1), "一期业主设备"),
             (gbp(RISK_ALLOWANCE), "风险预备费"),
-            (f"{gbp(ACCURACY_LOWER)} – {gbp(ACCURACY_UPPER)}", "估算精度区间"),
+            (gbp(HIPO_PHASE2), "二期及后续设备（不计入）"),
         ],
         1.12,
         1.00,
         HIPO_C,
     )
     add_round(s, ML, 2.30, 6.10, 4.62, WHITE, 0.06)
-    add_tb(s, ML + 0.15, 2.36, 5.8, 0.30, "项目投资构成", 14, True, NAVY, PP_ALIGN.CENTER)
+    add_tb(s, ML + 0.15, 2.36, 5.8, 0.30, "一期项目投资构成", 14, True, NAVY, PP_ALIGN.CENTER)
     add_stack_bar(
         s,
         ML + 0.05,
@@ -966,11 +973,11 @@ def s_hipo_charts(prs, n, total):
         [
             ("建筑工程费", TOTAL_BUILDING_WORKS),
             ("专业服务费", PROF_SERVICES),
-            ("业主（凯莱英）供货设备", HIPO_EQUIP),
+            ("一期业主设备", HIPO_PHASE1),
             ("风险预备费", RISK_ALLOWANCE),
             ("通胀", INFLATION),
         ],
-        "项目投资",
+        "一期项目投资",
     )
     add_round(s, ML + 6.28, 2.30, 6.153, 4.62, WHITE, 0.06)
     add_tb(s, ML + 6.48, 2.36, 5.75, 0.30, "建筑工程费 — 分项", 14, True, NAVY, PP_ALIGN.CENTER)
@@ -1005,6 +1012,78 @@ def _phase_zh(phase) -> str:
     return "后续"
 
 
+def s_part1_overview(prs, n, total):
+    s = new_slide(prs, n, total)
+    title_block(s, "第一部分 · 投资与节点总览", "HPLC + 冻干与 C1 OEB5 升级同步交付，共同形成制备 HPLC 的 OEB5 运行能力", HPLC_C)
+    cont = HPLC_CONT + C1_CONT
+    rows = [
+        ["子项", "投资估算", "构成", "关键节点", "估算依据"],
+        [
+            "HPLC + 冻干",
+            gbp(HPLC_OOM),
+            f"直接 {gbp(DIRECT_TOTAL)} + 间接 {gbp(INDIRECT_TOTAL)} + 30% 项目预备费 {gbp(HPLC_CONT)}",
+            "HPLC 2027-12；冻干 2028-06",
+            "RBPC FS P01",
+        ],
+        [
+            "C1 OEB5 升级",
+            gbp(C1_OOM),
+            f"主设备 {gbp(C1_EQUIP_SUB)} + 30% 项目预备费 {gbp(C1_CONT)}",
+            "安装与确认 2027-10",
+            "内部估算；供应商预算报价",
+        ],
+        ["合计", gbp(PART1_TOTAL), f"其中项目预备费 {gbp(cont)}", "—", "—"],
+    ]
+    add_table(
+        s,
+        rows,
+        ML,
+        1.20,
+        CW,
+        2.50,
+        col_w=[1.95, 1.70, 4.60, 2.25, 1.933],
+        font=13,
+        aligns=["left", "right", "left", "left", "left"],
+    )
+    cards = [
+        (
+            "主要设备",
+            [
+                f"冻干机 {gbp(LYO)}；HPLC 撬装 {gbp(HPLC_SKID)}",
+                f"固定隔离器 {gbp(ISO_FIXED)}；柔性隔离 {gbp(FLEX_ISO)}",
+                f"HVAC 与气闸 {gbp(HVAC_GROUP)}",
+            ],
+            HPLC_C,
+        ),
+        (
+            "交付关联",
+            [
+                "C1 升级先于 HPLC 投用完成（2027-10 → 2027-12）",
+                "冻干机制造 8–10 个月，为第一部分关键路径",
+            ],
+            C1_C,
+        ),
+        (
+            "预备费口径",
+            [
+                "两条线均按 30% 计列项目预备费",
+                f"合计 {gbp(cont)}，HPLC + 冻干另含 30% 价格风险",
+            ],
+            GOLD,
+        ),
+    ]
+    gap = 0.16
+    w = (CW - gap * 2) / 3
+    top, h = 3.95, 2.95
+    for i, (ti, items, col) in enumerate(cards):
+        x = ML + i * (w + gap)
+        add_round(s, x, top, w, h, WHITE, 0.08)
+        add_rect(s, x, top, w, 0.08, col)
+        add_tb(s, x + 0.18, top + 0.18, w - 0.36, 0.34, ti, 15, True, NAVY)
+        bullets(s, items, x + 0.14, top + 0.60, w - 0.28, h - 0.70, 13, after=6)
+    return s
+
+
 def s_c1_isolator(prs, n, total):
     s = new_slide(prs, n, total)
     title_block(s, "C1 · 隔离器选型", "不建议采用国内隔离器方案", C1_C)
@@ -1022,7 +1101,7 @@ def s_c1_isolator(prs, n, total):
     bullets(
         s,
         [
-            "英国落地须符合 UK 标准并取得 CE 标志。国内既有方案（天俱时）未按 UK 标准设计，不具备 CE。",
+            "英国落地须符合 UK 标准并取得 CE 标志。国内既有方案暂不具备 CE。",
             "事后补做 CE：按已有项目经验至少增加 3–4 个月；若认证要求改设计，周期还会延长。",
             "CE 所需设计与测试文件，国内方案设计时未按该标准准备，补齐工作量大。",
             "本项目需要成品高完整性隔离器。已接触的国内供应商资料难以直接用于本项目；东富龙以设备定制隔离器为主，与本需求不匹配。",
@@ -1044,10 +1123,10 @@ def s_hipo_phase(prs, n, total):
     kpi_row(
         s,
         [
-            (gbp(HIPO_EQUIP), "待采购合计"),
-            (gbp(HIPO_PHASE1), "一期"),
+            (gbp(HIPO_PHASE1), "一期设备（计入本期）"),
             (gbp(HIPO_PHASE2), "二期及后续"),
-            (gbp(HIPO_PROJECT), "项目投资（待采购全口径）"),
+            (gbp(HIPO_EQUIP), "待采购合计"),
+            (gbp(HIPO_PROJECT), "一期项目投资（含通胀）"),
         ],
         1.12,
         1.00,
@@ -1061,7 +1140,7 @@ def s_hipo_phase(prs, n, total):
         s,
         [
             "开业配置：分析 HPLC 先购 1 套；质谱及气源纳入一期",
-            "隔离器内固体操作仪器原则上纳入一期",
+            "隔离器内固体操作仪器纳入一期",
             "同期按一个项目配置反应系统（EasyMax 等先购 1 套）",
         ],
         ML + 0.18,
@@ -1079,7 +1158,7 @@ def s_hipo_phase(prs, n, total):
         [
             "制备 HPLC、粒度仪、自动滴定仪",
             "结晶筛选与部分反应配套、器皿清洗",
-            "软件 £200,000 尚未分阶段，计入后续",
+            "软件 £200,000，计入后续",
         ],
         ML + w + gap + 0.18,
         2.70,
@@ -1106,17 +1185,6 @@ def s_hipo_phase(prs, n, total):
         font=13,
         aligns=["left", "right", "right", "right"],
     )
-    add_tb(
-        s,
-        ML,
-        6.50,
-        CW,
-        0.58,
-        "SFC、GC 先利旧既有仪器。成本计划原文业主设备 £1,975,045、项目投资 £4,562,044；本期按 0911 待采购计入项目投资，未改写成本计划。",
-        12,
-        False,
-        MUTED,
-    )
     return s
 
 
@@ -1129,7 +1197,7 @@ def s_equip(prs, n0, total, items, title_extra, gantt_unused=None):
     g_p1 = sum(it.get("phase1", 0) or 0 for it in src)
     add_round(s, ML, 1.10, CW, 0.46, NAVY, 0.08)
     add_tb(s, ML + 0.22, 1.16, 7.4, 0.34, f"本组待采购 {gbp(g_purch)}  ·  一期 {gbp(g_p1)}", 14, True, WHITE)
-    add_tb(s, ML + 7.6, 1.16, 4.6, 0.34, f"清单合计 {gbp(HIPO_EQUIP)}", 15, True, WHITE, PP_ALIGN.RIGHT)
+    add_tb(s, ML + 7.6, 1.16, 4.6, 0.34, f"一期合计 {gbp(HIPO_PHASE1)}", 15, True, WHITE, PP_ALIGN.RIGHT)
     header = ["设备", "位置", "厂家", "新购 / 既有", "阶段", "待采购", "一期"]
     data = [header]
     for it in items:
@@ -1186,12 +1254,17 @@ def s_thanks(prs, n, total):
     add_rect(s, 9.8, 0, 3.533, 0.07, WHITE)
     add_tb(s, 1.0, 2.05, 11.3, 1.10, "谢谢", 54, True, WHITE, PP_ALIGN.CENTER)
     add_rect(s, 5.9, 3.25, 1.5, 0.07, GOLD)
-    add_tb(s, 1.0, 3.55, 11.3, 0.45, "Asymchem UK  ·  Sandwich  ·  2026年9月11日", 18, False, RGBColor(0xB8, 0xC5, 0xD6), PP_ALIGN.CENTER)
+    add_tb(s, 1.0, 3.55, 11.3, 0.45, f"Asymchem UK  ·  Sandwich  ·  {DECK_DATE}", 18, False, RGBColor(0xB8, 0xC5, 0xD6), PP_ALIGN.CENTER)
     add_tb(s, 1.0, 4.10, 11.3, 0.40, "UK PDF 资本项目", 16, False, RGBColor(0x8A, 0x9B, 0xAE), PP_ALIGN.CENTER)
-    chips = ["HPLC + 冻干  £5.33M", "C1 OEB5  £2.48M", f"高活实验室  {gbp_m(HIPO_PROJECT)}", "B902 扩建  £78.1M"]
-    w = 2.70
+    chips = [
+        f"地面层改造 + C1  {gbp_m(PART1_TOTAL)}",
+        f"高活实验室一期  {gbp_m(HIPO_PROJECT)}",
+        "B902 扩建  £78.1M",
+    ]
+    w = 3.40
+    x0 = (SW - (w * 3 + 0.18 * 2)) / 2
     for i, t in enumerate(chips):
-        x = 1.15 + i * (w + 0.18)
+        x = x0 + i * (w + 0.18)
         chip = add_round(s, x, 5.00, w, 0.70, RGBColor(0x1A, 0x3A, 0x55), 0.18)
         shape_text(chip, [(t, 12, True, WHITE)], align=PP_ALIGN.CENTER, anchor="ctr", after=0)
     add_tb(s, ML, 7.20, 9.2, 0.26, FOOTER, 11, False, RGBColor(0x8A, 0x9B, 0xAE))
@@ -1217,15 +1290,21 @@ def build():
 
     add(
         s_section,
-        "改造",
-        "一、厂房内 HPLC + 冻干",
-        "RBPC · Project 9802 · P01",
-        [("技术可行", "FS P01"), ("£5.33M", "项目总投资估算"), ("2027-12", "HPLC 目标（+3 个月）"), ("2028-06", "冻干目标（+3 个月）")],
+        "第一部分",
+        "一、Pilot Plant 地面层改造 + C1 OEB5 升级",
+        "HPLC + 冻干（RBPC FS P01）  ·  C1 模块 OEB5 升级（内部估算）",
+        [
+            (gbp_m(PART1_TOTAL), "第一部分投资合计"),
+            ("£5.33M", "HPLC + 冻干"),
+            ("£2.48M", "C1 OEB5 升级"),
+            ("2028-06", "最晚节点（冻干目标）"),
+        ],
         HPLC_C,
     )
+    add(s_part1_overview)
     add(
         s_exec,
-        "改造 · 执行摘要",
+        "HPLC + 冻干 · 执行摘要",
         "9802-RBP-ZZ-ZZ-RP-X-100000",
         [("技术可行", "FS P01"), ("£5.33M", "项目总投资估算"), ("2027-12", "HPLC 目标（+3 个月）"), ("2028-06", "冻干目标（+3 个月）")],
         [
@@ -1239,7 +1318,7 @@ def build():
     )
     add(
         s_scope_cards,
-        "改造 · 范围",
+        "HPLC + 冻干 · 范围",
         "",
         [
             ("HPLC", ["DAC300/CP300 泵撬；移动头罐；2000 L 废液罐", "国内汉邦供货", "PG.05 区域安装"]),
@@ -1251,24 +1330,11 @@ def build():
     add(s_hplc_charts)
     add(
         s_gantt,
-        "改造 · 周期",
+        "HPLC + 冻干 · 周期",
         "FS §4.4 图 1 · 以 2026-09 启动重新基线（原 6 月口径 +3 个月）",
         [("冻干制造", "8–10 月"), ("HPLC 供货", "~18 周"), ("FEED", "12–14 周"), ("详细设计", "18–20 周")],
         gantts["hplc"],
         HPLC_C,
-    )
-    add(lambda prs, n, total: _decision(prs, n, total, "改造 · 决策", [
-        "是否批准进入 FEED？",
-        "是否批准长周期设备早期采购资金？",
-    ], HPLC_C))
-
-    add(
-        s_section,
-        "C1 OEB5",
-        "二、C1 模块 OEB5 升级",
-        "Sandwich PDF · 内部估算",
-        [("OEB5 日常运行", "升级目标"), ("£2.48M", "项目总投资估算"), ("2027-10", "安装与确认目标（+3 个月）")],
-        C1_C,
     )
     add(
         s_exec,
@@ -1313,36 +1379,38 @@ def build():
         gantts["c1"],
         C1_C,
     )
-    add(lambda prs, n, total: _decision(prs, n, total, "C1 · 决策", [
-        "是否批准 C1 OEB5 升级与改造项目一并推进？",
+    add(lambda prs, n, total: _decision(prs, n, total, "第一部分 · 决策", [
+        f"是否批准 HPLC + 冻干与 C1 OEB5 升级一并推进（合计 {gbp_m(PART1_TOTAL)}），进入 FEED？",
+        "是否批准冻干机等长周期设备早期采购资金？",
         "确认不采用国内隔离器方案，按已取得的 Howorth / ILC Dover 预算报价深化供货。",
-    ], C1_C))
+    ], HPLC_C))
 
+    hipo_kpis = [
+        ("概念阶段", "成本计划 / 概念进度 / 风险登记册"),
+        (gbp_m(HIPO_PROJECT), "一期项目投资估算"),
+        ("2027-11", "计划交付（概念进度 +6 周）"),
+        ("215 m²", "GIFA（实验室约 182 + 办公区约 33）"),
+    ]
     add(
         s_section,
-        "高活实验室",
-        "三、OEB5 高活实验室（G-128 套间改造）",
+        "第二部分",
+        "二、OEB5 高活实验室（G-128 套间改造）",
         "Concept 阶段 · 成本计划 260806 / 概念进度 260727 / 风险登记册",
-        [("概念阶段", "成本计划 / 概念进度 / 风险登记册"), (gbp_m(HIPO_PROJECT), "项目总投资估算"), ("2027-11", "计划交付（概念进度 +6 周）"), ("215 m²", "GIFA（实验室约 182 + 办公区约 33）")],
+        hipo_kpis,
         HIPO_C,
     )
     add(
         s_exec,
         "高活实验室 · 执行摘要",
         "DPH_G-128 Suite Alterations Concept Cost Plan 260806",
-        [
-            ("概念阶段", "成本计划 / 概念进度 / 风险登记册"),
-            (gbp_m(HIPO_PROJECT), "项目总投资估算"),
-            ("2027-11", "计划交付（概念进度 +6 周）"),
-            ("215 m²", "GIFA（实验室约 182 + 办公区约 33）"),
-        ],
+        hipo_kpis,
         [
             "范围：既有 G-128 套间改造为实验室与办公区，GIFA 215 m²；隔离器在成本计划中计列 4 台 × £150,000 + 1 台 × £100,000。",
-            f"投资：项目投资（含通胀）{gbp(HIPO_PROJECT)}；不含增值税；估算精度区间 £3.74M – £4.99M。",
-            f"构成：建筑工程费 £1.95M + 专业服务费 £0.14M + 业主（凯莱英）供货设备 {gbp_m(HIPO_EQUIP)} + 风险预备费 £0.40M + 通胀 £0.10M。",
+            f"投资：一期项目投资（含通胀）{gbp(HIPO_PROJECT)}；不含增值税。含二期及后续设备的全口径为 {gbp(HIPO_FULL)}。",
+            f"构成：建筑工程费 £1.95M + 专业服务费 £0.14M + 一期业主设备 {gbp_m(HIPO_PHASE1)} + 风险预备费 £0.40M + 通胀 £0.10M。",
             "周期：概念进度（草案）自资金批准与推进决定起 262 个工作日，计划交付 2027 年 11 月；隔离器 2027-07-14 到场。",
-            "隔离器费用：为基于与供应商沟通的估算，最终取决于项目范围最终确认的密闭等级。",
-            f"业主设备按 0911 分阶段清单待采购 {gbp(HIPO_EQUIP)}：一期 {gbp(HIPO_PHASE1)}，二期及后续 {gbp(HIPO_PHASE2)}。成本计划原文设备行 £1,975,045，未改写。",
+            "隔离器费用：目前为基于与供应商沟通的估算，最终取决于项目范围最终确认的密闭等级。",
+            f"业主设备按分阶段清单待采购 {gbp(HIPO_EQUIP)}：一期 {gbp(HIPO_PHASE1)} 计入本期，二期及后续 {gbp(HIPO_PHASE2)} 不计入本期。",
             "需求对应：欧洲商务已列 AZ、Genmab、BioNTech、NCC 等对 SW 高活能力的需求或询盘；BioNTech 明确要求与 TJ4 相当的密闭及独立高活分析。",
         ],
         HIPO_C,
@@ -1382,8 +1450,8 @@ def build():
                 [
                     "暖通 £217,920：AHU 恢复使用、全套风管与送回风、袋进袋出 HEPA 排风过滤、BMS 升级、系统平衡",
                     "电气 £107,380、消防喷淋 £30,030、门禁/布线/CCTV/火警 £51,345、实验室气体管道 £63,700、雾化淋浴 £35,000",
-                    f"业主（凯莱英）供货并安装设备待采购 {gbp(HIPO_EQUIP)}（0911 清单）",
-                    f"待采购分项：ARD/QC {gbp(EQUIP_0911_ARD_PURCH)}、隔离器内仪器 {gbp(EQUIP_0911_ISO_PURCH)}、CRD {gbp(EQUIP_0911_CRD_PURCH)}",
+                    f"业主（凯莱英）供货并安装设备：一期 {gbp(HIPO_PHASE1)}（分阶段清单待采购合计 {gbp(HIPO_EQUIP)}）",
+                    f"一期分项：ARD/QC {gbp(EQUIP_0911_ARD_P1)}、隔离器内仪器 {gbp(EQUIP_0911_ISO_P1)}、CRD {gbp(EQUIP_0911_CRD_P1)}",
                 ],
             ),
         ],
@@ -1436,16 +1504,15 @@ def build():
             "高活实验室 · 决策",
             [
                 "是否批准资金与推进决定节点？概念进度以此为起点，262 个工作日加 6 周启动与决策时间，计划交付 2027 年 11 月。",
-                "是否按 0911 分阶段清单批准一期业主设备采购？",
-                "是否安排 AHU 状况核查与既有通风柜可用性确认？二者为风险登记册中金额最高的两项。",
+                f"是否按分阶段清单批准一期业主设备采购（{gbp(HIPO_PHASE1)}）？",
             ],
             HIPO_C,
         )
     )
     add(
         s_exec,
-        "扩建 · 可研结论",
-        "四、B902 东侧扩建  ·  Scitech RIBA 1  ·  300291-RE-0001  ·  2026-05-22 Issue A1",
+        "扩建 · 评估结论",
+        "三、B902 东侧扩建（评估结果）  ·  Scitech RIBA 1  ·  300291-RE-0001  ·  2026-05-22 Issue A1",
         [("FS 完成", "RIBA 1"), ("£78.1M", "项目 OOM"), ("2030-05", "总控完成")],
         [
             "范围：东侧约 600 m²，四层+设备夹层，10 台反应釜、2500 L 加氢釜、3 套过滤干燥机及公用工程。",
@@ -1460,9 +1527,9 @@ def build():
     total[0] = len(pages)
     for i, (fn, a, k) in enumerate(pages, 1):
         fn(prs, i, total, *a, **k)
-    OUT_V3.parent.mkdir(parents=True, exist_ok=True)
-    prs.save(str(OUT_V3))
-    print("wrote", OUT_V3, "slides", len(prs.slides), "bytes", OUT_V3.stat().st_size)
+    OUT_1012.parent.mkdir(parents=True, exist_ok=True)
+    prs.save(str(OUT_1012))
+    print("wrote", OUT_1012, "slides", len(prs.slides), "bytes", OUT_1012.stat().st_size)
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ from c1_oeb5_cost import GANTT_C1  # noqa: E402
 from hipo_lab_cost import GANTT_HIPO, SHIFT_WEEKS_CLARE  # noqa: E402
 
 FONT = "微软雅黑"
-TODAY = datetime(2026, 8, 21)
+TODAY = datetime(2026, 10, 12)
 SHIFT_MONTHS = 3
 HIPO_SHIFT_DAYS = SHIFT_WEEKS_CLARE * 7
 HIPO_DELIVERY = "2027-11-12"
