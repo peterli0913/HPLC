@@ -246,9 +246,92 @@ def card_groups(boxes: list[Box]) -> list[tuple[str, list[str]]]:
     return [(t.top, t.text, lines) for t, _b, lines in groups]
 
 
+def _kind(label: str) -> str:
+    low = label.lower().strip()
+    if low in {"total", "subtotal"} or low.startswith("of which") or low.startswith("phase 1 investment") or low.startswith("facilitating and building"):
+        return "total"
+    if re.match(r"^\d+\.\d+", label):
+        return "leaf"
+    if re.match(r"^\d+[\.\s]", label):
+        return "group"
+    if low.startswith(("direct cost", "indirect cost", "general risk", "direct construction", "other project", "main equipment (")):
+        return "section"
+    return "line"
+
+
+def cost_tree(rows: list[list[str]]) -> str:
+    blocks = []
+    section = None
+    group = None
+
+    def flush_group():
+        nonlocal group
+        if group and section is not None:
+            section[3].append(group)
+            group = None
+
+    def flush_section():
+        nonlocal section
+        flush_group()
+        if section:
+            blocks.append(section)
+            section = None
+
+    for row in rows:
+        label, amt = row[0], row[-1]
+        kind = _kind(label)
+        if kind == "total":
+            flush_section()
+            blocks.append(["total", label, amt, []])
+        elif kind == "section":
+            flush_section()
+            section = ["section", label, amt, []]
+        elif kind == "group":
+            if section is None:
+                section = ["section", label, amt, []]
+            else:
+                flush_group()
+                group = ["group", label, amt, []]
+        else:
+            if section is None:
+                section = ["section", label, amt, []]
+            elif group is not None and kind == "leaf":
+                group[3].append((label, amt))
+            else:
+                flush_group()
+                section[3].append(("line", label, amt, []))
+    flush_section()
+    parts = []
+    for kind, label, amt, children in blocks:
+        if kind == "total":
+            parts.append(f'<div class="cost-subtotal"><span>{esc(label)}</span><span>{esc(amt)}</span></div>')
+            continue
+        inner = []
+        for child in children:
+            if child[0] == "group":
+                leaves = "".join(
+                    f'<div class="cost-leaf"><span>{esc(a)}</span><span>{esc(b)}</span></div>' for a, b in child[3]
+                )
+                body = f'<div class="cost-children">{leaves}</div>' if leaves else ""
+                inner.append(
+                    f'<details class="cost-item" open><summary><span class="cost-label">{esc(child[1])}</span>'
+                    f'<span class="cost-amt">{esc(child[2])}</span></summary>{body}</details>'
+                )
+            else:
+                inner.append(f'<div class="cost-leaf"><span>{esc(child[1])}</span><span>{esc(child[2])}</span></div>')
+        title = f'<span class="cost-section-title">{esc(label)}</span>' if label else ""
+        parts.append(
+            f'<details class="cost-section" open><summary><span class="cost-section-title">{esc(label)}</span>'
+            f'<span class="cost-section-amt">{esc(amt)}</span></summary><div class="cost-section-body">{"".join(inner)}</div></details>'
+        )
+    return '<div class="cost-scroll">' + "".join(parts) + "</div>"
+
+
 def table_html(rows: list[list[str]]) -> str:
     if not rows:
         return ""
+    if len(rows[0]) == 2 and moneyish(rows[0][-1]):
+        return cost_tree(rows)
     header = not moneyish(rows[0][-1]) and not rows[0][-1].startswith("£")
     # A cost sheet starts with a named total and a ? figure.
     if rows[0][-1].startswith("£"):
@@ -304,7 +387,10 @@ def table_html(rows: list[list[str]]) -> str:
                 cls.append("total")
             cells.append(f'<{tag} class="{" ".join(cls)}">{esc(val).replace(chr(10), "<br>")}</{tag}>')
         body.append("<tr>" + "".join(cells) + "</tr>")
-    return "<table>" + "".join(body) + "</table>"
+    table = "<table>" + "".join(body) + "</table>"
+    if header and len(rows) > 6:
+        return f'<div class="demand-wrap">{table}</div>'
+    return table
 
 
 def donut_svg(pairs: list[tuple[str, float]], caption: str = "") -> str:
@@ -351,13 +437,17 @@ def stack_html(pairs: list[tuple[str, float]], caption: str) -> str:
 
 
 def chart_html(box: Box, caption: str) -> str:
+    import json as _json
     cats, series = box.chart
     if len(cats) <= 1 and len(series) > 1:
-        return stack_html([(name, vals[0] if vals else 0) for name, vals in series], caption)
-    if len(series) == 1 and len(cats) > 1:
+        spec = {"kind": "bar", "series": [{"name": name, "value": (vals[0] if vals else 0)} for name, vals in series]}
+    elif len(series) == 1 and len(cats) > 1:
         vals = series[0][1]
-        return donut_svg([(cat, vals[i] if i < len(vals) else 0) for i, cat in enumerate(cats)], caption)
-    return ""
+        spec = {"kind": "doughnut", "labels": cats, "values": [vals[i] if i < len(vals) else 0 for i in range(len(cats))]}
+    else:
+        return ""
+    cap = f'<div class="chart-title">{esc(caption)}</div>' if caption else ""
+    return f'<div class="chart-card">{cap}<div class="chart-wrap"><canvas data-chart="{esc(_json.dumps(spec))}"></canvas></div></div>'
 
 
 def bullets_html(text: str) -> str:
@@ -531,143 +621,142 @@ def cover_html(texts: list[Box], footer: str, page: str) -> str:
 
 
 CSS = r"""
-:root {
-  --navy:#0f2b46; --teal:#1f7a6f; --gold:#c9a227; --text:#243140; --muted:#5c6b7a;
-  --line:#e3e8ee; --bg:#f3f5f8; --card:#fff; --warn:#b43a2a;
-}
-* { box-sizing: border-box; }
-html, body { margin:0; height:100%; background:#101820; color:var(--text);
-  font-family: Calibri, "Segoe UI", sans-serif; }
-.stage { height:100vh; display:flex; align-items:center; justify-content:center; }
-.slide { display:none; width:min(100vw, calc(100vh * 16 / 9)); height:min(100vh, calc(100vw * 9 / 16));
-  background:var(--bg); position:relative; padding:1.6% 2.2% 4.6%; flex-direction:column; overflow:hidden; }
-.slide.on { display:flex; }
-.rule { position:absolute; left:0; right:0; top:0; height:7px;
-  background:linear-gradient(90deg,#0f2b46 0 42%, #1f7a6f 42% 72%, #c9a227 72% 100%); }
-.hd h2 { margin:0; color:var(--navy); font-size:1.7rem; line-height:1.15; font-weight:700; }
-.sub { margin:.15rem 0 0; color:var(--muted); font-size:.92rem; }
-.main { flex:1; min-height:0; display:flex; flex-direction:column; gap:.55rem; margin-top:.55rem; }
-.kpis { display:grid; gap:.5rem; }
-.kpis.n2 { grid-template-columns:repeat(2,1fr); }
-.kpis.n3 { grid-template-columns:repeat(3,1fr); }
-.kpis.n4 { grid-template-columns:repeat(4,1fr); }
-.kpis.n5 { grid-template-columns:repeat(5,1fr); }
-.kpi, .card, .panel, .note { background:var(--card); border:1px solid var(--line); border-radius:10px; }
-.kpi { padding:.45rem .7rem .5rem .75rem; border-left:4px solid var(--teal); min-width:0; }
-.kpi b { display:block; color:var(--navy); font-size:1.25rem; line-height:1.15; }
-.kpi span { display:block; color:var(--muted); font-size:.78rem; line-height:1.25; margin-top:.12rem; }
-.cols { display:grid; grid-template-columns:1fr 1fr; gap:.55rem; min-height:0; }
-.cols.charts { flex:1; }
-.cols.charts .panel { display:flex; }
-.cols.charts .chart { width:100%; }
-.panel { padding:.35rem .45rem; overflow:auto; min-height:0; }
-.panel.grow, .gantt { flex:1; min-height:0; }
-table { width:100%; border-collapse:collapse; font-size:.74rem; table-layout:fixed; }
-th { background:var(--navy); color:#fff; text-align:left; font-weight:600; position:sticky; top:0; }
-th, td { padding:.28rem .4rem; border-bottom:1px solid var(--line); vertical-align:top; }
-td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
-td.strong, td.total { font-weight:700; color:var(--navy); }
-td.leaf { color:#607080; }
-tr:nth-child(even) td { background:#f7f9fb; }
-.pill { display:inline-block; border-radius:99px; padding:.05rem .45rem; font-weight:700; font-size:.72rem; white-space:nowrap; }
-.pill.lost { color:var(--warn); background:#fdecea; }
-.pill.live { color:#1a4a6e; background:#e7eef5; }
-.pill.sw { color:var(--teal); background:#e5f4f1; }
-.pill.enq { color:#5c6b7a; background:#eef1f4; }
-.pill.listed { color:#0f6b4c; background:#e5f6ef; }
-.pill.p1 { color:var(--teal); background:#e5f4f1; }
-.pill.p2 { color:#8a6a12; background:#fbf3dc; }
-.pill.later { color:#5c6b7a; background:#eef1f4; }
-.cards { display:grid; gap:.5rem; min-height:0; flex:1; }
-.cards.n2 { grid-template-columns:1fr 1fr; }
-.cards.n3 { grid-template-columns:repeat(3,1fr); }
-.cards.n4 { grid-template-columns:1fr 1fr; }
-.card { padding:.55rem .7rem .65rem; border-top:4px solid var(--navy); overflow:auto; }
-.card h3 { margin:0 0 .3rem; color:var(--navy); font-size:.95rem; }
-.card ul, .notes ul, .note ul { margin:.1rem 0 0; padding-left:1.05rem; }
-.card li, .note li { margin:.16rem 0; font-size:.84rem; line-height:1.35; }
-.stats { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
-.stats div { background:#fff; border:1px solid var(--line); border-radius:8px; padding:.35rem .7rem; font-weight:700; color:var(--navy); }
-.notes { display:flex; flex-direction:column; gap:.4rem; }
-.note { border-left:4px solid var(--gold); padding:.4rem .65rem; font-size:.86rem; line-height:1.35; }
-.note p { margin:.12rem 0; }
-.chart { display:flex; flex-direction:column; gap:.35rem; height:100%; }
-.chartcap { text-align:center; font-weight:700; color:var(--navy); font-size:.85rem; }
-.stack { display:flex; height:28px; border-radius:6px; overflow:hidden; background:#eef2f6; }
-.donut { width:150px; height:150px; align-self:center; }
-.donut text { font-size:11px; fill:var(--navy); font-weight:700; }
-.cl { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.22rem; font-size:.75rem; }
-.cl li { display:grid; grid-template-columns:12px 1fr auto; gap:.35rem; align-items:center; }
-.cl i { width:10px; height:10px; border-radius:2px; display:block; }
-.cl b { font-variant-numeric:tabular-nums; color:var(--navy); }
-.gantt { position:relative; display:flex; flex-direction:column; justify-content:space-between; background:#fff; border:1px solid var(--line); border-radius:10px; padding:.35rem .5rem; overflow:hidden; }
-.grow { display:grid; grid-template-columns:9.2rem 1fr 6.6rem; gap:.35rem; align-items:center; }
-.gl { font-size:.68rem; font-weight:700; color:var(--navy); text-align:right; line-height:1.15; }
-.gtrack { position:relative; height:14px; background:#eef2f6; border-radius:4px; }
-.gbar { position:absolute; top:2px; height:10px; border-radius:3px; }
-.gbar.done { background:#009688; }
-.gbar.plan { background:#1a4a6e; }
-.gbar.build { background:#2e6da4; }
-.gbar.warn { background:#c9a227; }
-.gbar.staff { background:#5b6eae; }
-.gbar.assume { background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 4px,#8f7db8 4px,#8f7db8 8px); }
-.gd { font-size:.62rem; color:var(--muted); text-align:right; white-space:nowrap; }
-.gtoday { position:absolute; top:.3rem; bottom:1.5rem; width:2px; background:var(--warn); }
-.legend { display:flex; flex-wrap:wrap; gap:.45rem .7rem; font-size:.68rem; color:var(--muted); margin-top:.15rem; }
-.legend i { display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:.2rem; vertical-align:middle; }
-.legend i.done { background:#009688; } .legend i.plan { background:#1a4a6e; }
-.legend i.build { background:#2e6da4; } .legend i.warn { background:#c9a227; }
-.legend i.staff { background:#5b6eae; }
-.legend i.assume { background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 3px,#8f7db8 3px,#8f7db8 6px); }
-footer { position:absolute; left:0; right:0; bottom:0; height:4.2%; background:#fff; border-top:1px solid var(--line);
-  display:flex; align-items:center; justify-content:space-between; padding:0 2.2%; color:var(--muted); font-size:.75rem; }
-.cover { background:linear-gradient(180deg,#f7f8fa,#eef2f5); }
-.cover-inner { padding:4% 2% 0; }
-.badge { display:inline-block; background:var(--navy); color:#fff; border-radius:99px; padding:.28rem .7rem; font-size:.78rem; font-weight:700; }
-.cover h1 { margin:.7rem 0 .15rem; color:var(--navy); font-size:2.3rem; line-height:1.05; }
-.lede { margin:0; color:var(--muted); font-size:1.15rem; }
-.cover-inner { flex:1; display:flex; flex-direction:column; }
-.cover-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; margin-top:auto; margin-bottom:auto; }
-.cover-card { background:#fff; border-radius:14px; padding:.9rem 1rem 1rem; border:1px solid var(--line); box-shadow:0 8px 24px rgba(15,43,70,.06); }
-.cover-card h3 { margin:0; color:var(--navy); font-size:1rem; min-height:2.4rem; }
-.cover-card b { display:block; margin:.35rem 0; font-size:2.1rem; color:#1f7a6f; }
-.cover-card:nth-child(1) b { color:#5b6eae; }
-.cover-card:nth-child(3) b { color:#1a4a6e; }
-.cover-card p { margin:0; display:flex; flex-direction:column; gap:.15rem; color:var(--muted); font-size:.88rem; }
-.date { margin:1rem 0 0; color:var(--muted); }
-.thanks { background:var(--navy); color:#fff; align-items:center; justify-content:center; }
-.thanks-inner { text-align:center; }
-.thanks h2 { font-size:3.2rem; margin:0 0 .4rem; }
-.thanks p { color:#d5dee6; font-size:1.05rem; }
-.thanks .fine { color:#8aa0b5; }
-.navhint { position:fixed; right:14px; bottom:10px; color:#9aabbc; font-size:12px; z-index:5; }
-@media print {
-  .stage { display:block; height:auto; }
-  .slide { display:flex !important; width:100%; height:auto; min-height:100vh; break-after:page; }
-  .navhint { display:none; }
+:root{--navy:#0f2b46;--teal:#009688;--accent:#c9a227;--ext:#1a4a6e;--hplc:#5b6eae;--c1:#8b6914;--hipo:#1f7a6f;--bg:#f4f6f8;--card:#fff;--text:#2c3e50;--muted:#5a6a7a;--warn:#b43a2a;--line:#e8ecf0}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:"Segoe UI",Calibri,"PingFang SC","Microsoft YaHei",sans-serif;overflow:hidden}
+.slide{display:none;height:100vh;padding:1.7rem 2.6rem 3rem;flex-direction:column;animation:fade .28s ease}
+.slide.on{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.top-bar{position:fixed;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--navy),var(--teal),var(--accent));z-index:100}
+h2{font-size:1.55rem;color:var(--navy);font-weight:700;margin:0 0 .15rem;line-height:1.2}
+.sub{font-size:.92rem;color:var(--muted);font-weight:400;margin:0 0 .7rem}
+.badge{display:inline-block;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;padding:.18rem .5rem;border-radius:3px;margin-bottom:.35rem}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;gap:.6rem}
+.kpis{display:grid;gap:.55rem}
+.kpis.n2{grid-template-columns:repeat(2,1fr)}
+.kpis.n3{grid-template-columns:repeat(3,1fr)}
+.kpis.n4{grid-template-columns:repeat(4,1fr)}
+.kpis.n5{grid-template-columns:repeat(5,1fr)}
+.kpis.n6{grid-template-columns:repeat(3,1fr)}
+.kpi{background:var(--card);border-radius:10px;padding:.6rem .75rem;border-left:4px solid var(--teal);box-shadow:0 2px 12px rgba(15,43,70,.05)}
+.kpi b{display:block;color:var(--navy);font-size:1.15rem;line-height:1.2}
+.kpi span{display:block;color:var(--muted);font-size:.74rem;margin-top:.12rem;line-height:1.3}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;min-height:0;flex:1}
+.panel{min-height:0;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.7rem .8rem;box-shadow:0 2px 12px rgba(15,43,70,.05)}
+.cards{display:grid;gap:.6rem;min-height:0}
+.cards.n2{grid-template-columns:1fr 1fr}
+.cards.n3{grid-template-columns:repeat(3,1fr)}
+.cards.n4{grid-template-columns:1fr 1fr}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.75rem .85rem;box-shadow:0 2px 12px rgba(15,43,70,.05);overflow:auto}
+.card h3{margin:0 0 .35rem;color:var(--navy);font-size:.92rem}
+.card ul,.note ul{margin:.15rem 0 0 1.05rem;padding:0}
+.card li,.note li{margin:.22rem 0;font-size:.86rem;line-height:1.45}
+.note{background:#fff;border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.55rem .8rem;font-size:.86rem;line-height:1.45;box-shadow:0 1px 6px rgba(15,43,70,.04)}
+.note p{margin:.12rem 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+.stats div{background:#fff;border:1px solid var(--line);border-radius:8px;padding:.45rem .7rem;font-weight:700;color:var(--navy);font-size:.9rem}
+.demand-wrap{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 12px rgba(15,43,70,.05)}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{position:sticky;top:0;background:#f3f6f8;color:var(--navy);font-size:.74rem;font-weight:700;text-align:left;z-index:1}
+th,td{padding:.42rem .5rem;border-bottom:1px solid #eef1f4;vertical-align:top;line-height:1.4}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+td.strong{font-weight:700;color:var(--navy)}
+td.leaf{color:#607080}
+td.total{font-weight:700;color:var(--navy);background:#e8eef4}
+tr:nth-child(even) td{background:#f8fafb}
+.pill{display:inline-block;border-radius:99px;padding:.08rem .48rem;font-weight:700;font-size:.72rem;white-space:nowrap}
+.pill.lost{background:#f8e6e3;color:var(--warn)}
+.pill.live{background:#e7eef5;color:#1a4a6e}
+.pill.sw,.pill.p1{background:#e5f4f2;color:#1f7a6f}
+.pill.enq,.pill.later{background:#eef2f6;color:#5a6a7a}
+.pill.listed{background:#eef3f8;color:#1a4a6e}
+.pill.p2{background:#fbf3dc;color:#8a6a12}
+.cost-scroll{flex:1;min-height:0;overflow:auto;padding-right:.15rem}
+.cost-total-bar{background:var(--navy);color:#fff;border-radius:8px;padding:.55rem .75rem;margin:.35rem 0;font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+.cost-section{border:1px solid #c5d0dc;border-radius:10px;margin-bottom:.45rem;background:#fff;box-shadow:0 1px 6px rgba(15,43,70,.05)}
+.cost-section>summary{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.55rem .75rem;cursor:pointer;list-style:none;background:linear-gradient(180deg,#eef3f8,#f8fafb)}
+.cost-section>summary::-webkit-details-marker{display:none}
+.cost-section-title{font-size:.9rem;font-weight:700;color:var(--navy);flex:1}
+.cost-section-amt{font-size:.9rem;font-weight:700;color:#fff;background:var(--navy);padding:.22rem .6rem;border-radius:6px;white-space:nowrap}
+.cost-section-body{padding:.15rem .45rem .45rem}
+.cost-item{border-top:1px solid #f0f3f6}
+.cost-item>summary{display:flex;justify-content:space-between;gap:.5rem;padding:.38rem .4rem .38rem .7rem;cursor:pointer;list-style:none;font-size:.8rem}
+.cost-item>summary::-webkit-details-marker{display:none}
+.cost-label{font-weight:600;color:var(--navy)}
+.cost-amt{font-weight:700;color:var(--navy);white-space:nowrap}
+.cost-children{padding:0 .4rem .35rem 1.2rem}
+.cost-leaf{display:flex;justify-content:space-between;gap:.6rem;font-size:.78rem;color:var(--muted);padding:.22rem 0}
+.cost-leaf span:last-child{font-weight:600;color:#5c6b7a;white-space:nowrap}
+.cost-subtotal{display:flex;justify-content:space-between;padding:.45rem .65rem;margin:.25rem 0;font-size:.82rem;font-weight:700;color:var(--navy);background:#e8eef4;border-radius:6px}
+.cols.charts .panel{height:100%;display:flex;padding:0;border:none;background:transparent;box-shadow:none;overflow:visible}
+.chart-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.7rem .8rem .5rem;box-shadow:0 2px 12px rgba(15,43,70,.05);display:flex;flex-direction:column;min-height:0;flex:1}
+.chart-title{font-size:.84rem;font-weight:700;color:var(--navy);text-align:center;margin-bottom:.25rem}
+.chart-wrap{position:relative;flex:1;min-height:320px}
+.gantt{position:relative;flex:1;min-height:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.65rem .75rem .45rem;display:flex;flex-direction:column;box-shadow:0 2px 12px rgba(15,43,70,.05)}
+.gantt-body{flex:1;overflow:auto;min-height:0}
+.grow{display:grid;grid-template-columns:9.4rem 1fr 6.8rem;gap:.4rem;align-items:center;margin:.18rem 0}
+.gl{font-size:.74rem;font-weight:700;color:var(--navy);text-align:right;line-height:1.15}
+.gtrack{position:relative;height:16px;background:#eef2f6;border-radius:4px}
+.gbar{position:absolute;top:2px;height:12px;border-radius:3px}
+.gbar.done{background:var(--teal)} .gbar.plan{background:#1a4a6e} .gbar.build{background:#2e6da4}
+.gbar.warn{background:var(--accent)} .gbar.staff{background:#5b6eae}
+.gbar.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 4px,#8f7db8 4px,#8f7db8 8px)}
+.gd{font-size:.68rem;color:var(--muted);text-align:right;white-space:nowrap}
+.gtoday{position:absolute;top:2.2rem;bottom:1.6rem;width:2px;background:var(--warn);z-index:2}
+.legend{display:flex;flex-wrap:wrap;gap:.35rem .7rem;font-size:.7rem;color:var(--muted);margin-top:.35rem}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:.22rem;vertical-align:middle}
+.legend i.done{background:var(--teal)} .legend i.plan{background:#1a4a6e} .legend i.build{background:#2e6da4}
+.legend i.warn{background:var(--accent)} .legend i.staff{background:#5b6eae}
+.legend i.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 3px,#8f7db8 3px,#8f7db8 6px)}
+.slide>footer{margin-top:auto;display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;padding-top:.35rem}
+.cover{justify-content:center}
+.cover-inner{max-width:1100px;margin:0 auto;width:100%}
+.cover h1{font-size:2.15rem;color:var(--navy);margin:.55rem 0 .2rem}
+.lede{color:var(--muted);font-size:1.05rem;margin:0}
+.cover-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1.6rem}
+.cover-card{background:#fff;border-radius:12px;padding:1rem 1.05rem 1.1rem;border:1px solid var(--line);box-shadow:0 8px 24px rgba(15,43,70,.06)}
+.cover-card h3{margin:0;color:var(--navy);font-size:1rem;min-height:2.5rem}
+.cover-card b{display:block;margin:.35rem 0;font-size:2rem;color:var(--hipo)}
+.cover-card:nth-child(1) b{color:var(--hplc)}
+.cover-card:nth-child(3) b{color:var(--ext)}
+.cover-card p{margin:0;display:flex;flex-direction:column;gap:.12rem;color:var(--muted);font-size:.88rem;line-height:1.35}
+.date{margin-top:1.1rem;color:var(--muted);font-size:.9rem}
+.thanks{background:var(--navy);color:#fff;align-items:center;justify-content:center;text-align:center}
+.thanks h2{color:#fff;font-size:3rem}
+.thanks p{color:#d5dee6;font-size:1.05rem}
+.thanks .fine{color:#8aa0b5;font-size:.9rem}
+.thanks footer{display:none}
+@media print{
+  body{overflow:auto;height:auto}
+  .slide{display:flex !important;height:auto;min-height:100vh;break-after:page}
+  .top-bar{position:absolute}
 }
 """
 
 JS = r"""
-const slides=[...document.querySelectorAll('.slide')];
-let n=Math.max(0, Math.min(slides.length-1, +(new URLSearchParams(location.search).get('n')||0)));
-function show(i){ n=i; slides.forEach((s,k)=>s.classList.toggle('on', k===i)); }
-document.addEventListener('keydown', (e)=>{
-  if(['ArrowRight','PageDown',' '].includes(e.key)) show(Math.min(slides.length-1, n+1));
-  if(['ArrowLeft','PageUp','Backspace'].includes(e.key)) show(Math.max(0, n-1));
-  if(e.key==='Home') show(0);
-  if(e.key==='End') show(slides.length-1);
+const slides=[...document.querySelectorAll(".slide")];
+let n=Math.max(0, Math.min(slides.length-1, +(new URLSearchParams(location.search).get("n")||0)));
+function show(i){ n=i; slides.forEach((s,k)=>s.classList.toggle("on", k===i)); }
+document.addEventListener("keydown", (e)=>{
+  if(["ArrowRight","PageDown"," "].includes(e.key)) show(Math.min(slides.length-1, n+1));
+  if(["ArrowLeft","PageUp","Backspace"].includes(e.key)) show(Math.max(0, n-1));
+  if(e.key==="Home") show(0);
+  if(e.key==="End") show(slides.length-1);
 });
 show(n);
-const bad=[];
-slides.forEach((s,i)=>{
-  const prev=s.classList.contains('on');
-  s.classList.add('on');
-  const over=s.scrollHeight-s.clientHeight;
-  if(over>6) bad.push((i+1)+':'+over);
-  if(!prev) s.classList.remove('on');
+const COLORS=["#0f2b46","#1a4a6e","#009688","#c9a227","#5b6eae","#2e6da4","#8a9bae","#1f7a6f"];
+document.querySelectorAll("canvas[data-chart]").forEach((el)=>{
+  const spec=JSON.parse(el.dataset.chart);
+  const opts={responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{position:spec.legend||"bottom",labels:{boxWidth:12,font:{size:12}}}}};
+  if(spec.kind==="bar"){
+    opts.indexAxis="y";
+    opts.scales={x:{stacked:true,ticks:{callback:(v)=>"\u00a3"+(v/1e6).toFixed(2)+"M"}},y:{stacked:true,display:false}};
+    new Chart(el,{type:"bar",data:{labels:[" "],datasets:spec.series.map((s,i)=>({label:s.name,data:[s.value],backgroundColor:COLORS[i%COLORS.length]}))},options:opts});
+  } else {
+    opts.plugins.legend.position="right";
+    new Chart(el,{type:"doughnut",data:{labels:spec.labels,datasets:[{data:spec.values,backgroundColor:COLORS}]},options:opts});
+  }
 });
-document.body.dataset.overflow=bad.join(',')||'none';
 """
 
 
@@ -679,7 +768,8 @@ def write_html(src: Path = SRC, out: Path = OUT) -> None:
         "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"/>"
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>"
         "<title>Asymchem UK · Sandwich Pilot Plant – Capital projects briefing, 12 October 2026</title>"
-        f"<style>{CSS}</style></head><body><div class=\"stage\">{''.join(sections)}</div>"
+        "<script src=\"https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js\"></script>"
+        f"<style>{CSS}</style></head><body><div class=\"top-bar\"></div>{''.join(sections)}"
         ""
         f"<script>{JS}</script></body></html>"
     )
