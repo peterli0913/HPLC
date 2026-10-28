@@ -184,7 +184,10 @@ def gantt_html(rows, legend, show_today: bool) -> str:
             "construction / commissioning": "build",
         }.get(name.lower(), "plan")
         legs.append(f'<span><i class="{tone}"></i>{esc(name)}</span>')
-    return '<div class="gantt">' + today + "".join(body) + '</div><div class="legend">' + "".join(legs) + "</div>"
+    return (
+        '<div class="gantt"><div class="gantt-rows">' + today + "".join(body) + "</div>"
+        + '<div class="legend">' + "".join(legs) + "</div></div>"
+    )
 
 
 def kpi_pairs(boxes: list[Box]) -> list[tuple[str, str]]:
@@ -624,14 +627,14 @@ CSS = r"""
 :root{--navy:#0f2b46;--teal:#009688;--accent:#c9a227;--ext:#1a4a6e;--hplc:#5b6eae;--c1:#8b6914;--hipo:#1f7a6f;--bg:#f4f6f8;--card:#fff;--text:#2c3e50;--muted:#5a6a7a;--warn:#b43a2a;--line:#e8ecf0}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:"Segoe UI",Calibri,"PingFang SC","Microsoft YaHei",sans-serif;overflow:hidden}
-.slide{display:none;height:100vh;padding:1.7rem 2.6rem 3rem;flex-direction:column;animation:fade .28s ease}
+.slide{display:none;height:100vh;padding:1.7rem 2.6rem 1.1rem;flex-direction:column;overflow:hidden;animation:fade .28s ease}
 .slide.on{display:flex}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
 .top-bar{position:fixed;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--navy),var(--teal),var(--accent));z-index:100}
 h2{font-size:1.55rem;color:var(--navy);font-weight:700;margin:0 0 .15rem;line-height:1.2}
 .sub{font-size:.92rem;color:var(--muted);font-weight:400;margin:0 0 .7rem}
 .badge{display:inline-block;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;padding:.18rem .5rem;border-radius:3px;margin-bottom:.35rem}
-.main{flex:1;min-height:0;display:flex;flex-direction:column;gap:.6rem}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;gap:.6rem;overflow:hidden}
 .scroll-page{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:.8rem;padding-right:.2rem}
 .joined{display:flex;flex-direction:column;gap:.6rem}
 .split-next{margin-top:.2rem}
@@ -659,10 +662,14 @@ h2{font-size:1.55rem;color:var(--navy);font-weight:700;margin:0 0 .15rem;line-he
 .note p{margin:.12rem 0}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
 .stats div{background:#fff;border:1px solid var(--line);border-radius:8px;padding:.45rem .7rem;font-weight:700;color:var(--navy);font-size:.9rem}
-.demand-wrap{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 12px rgba(15,43,70,.05)}
-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.panel:has(> .demand-wrap){flex:1 1 auto;min-height:0;padding:0;overflow:hidden;display:flex;flex-direction:column;background:#fff}
+.demand-wrap{flex:1 1 auto;min-height:0;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 12px rgba(15,43,70,.05);width:100%;}
+.panel:has(> .demand-wrap) > .demand-wrap{border:none;border-radius:0;box-shadow:none}
+.demand-wrap table{background:#fff;width:100%;}
+table{width:100%;border-collapse:collapse;font-size:.8rem;background:#fff}
 th{position:sticky;top:0;background:#f3f6f8;color:var(--navy);font-size:.74rem;font-weight:700;text-align:left;z-index:1}
 th,td{padding:.42rem .5rem;border-bottom:1px solid #eef1f4;vertical-align:top;line-height:1.4}
+td{background:#fff}
 td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
 td.strong{font-weight:700;color:var(--navy)}
 td.leaf{color:#607080}
@@ -696,23 +703,24 @@ tr:nth-child(even) td{background:#f8fafb}
 .chart-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.7rem .8rem .5rem;box-shadow:0 2px 12px rgba(15,43,70,.05);display:flex;flex-direction:column;min-height:0;flex:1}
 .chart-title{font-size:.84rem;font-weight:700;color:var(--navy);text-align:center;margin-bottom:.25rem}
 .chart-wrap{position:relative;flex:1;min-height:320px}
-.gantt{position:relative;flex:1;min-height:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.65rem .75rem .45rem;display:flex;flex-direction:column;box-shadow:0 2px 12px rgba(15,43,70,.05)}
-.gantt-body{flex:1;overflow:auto;min-height:0}
-.grow{display:grid;grid-template-columns:14.5rem 1fr 7.2rem;gap:.45rem;align-items:center;margin:.28rem 0}
-.gl{font-size:.72rem;font-weight:700;color:var(--navy);text-align:right;line-height:1.25;overflow-wrap:anywhere}
-.gtrack{position:relative;height:16px;background:#eef2f6;border-radius:4px}
+.gantt{position:relative;flex:1;min-height:0;width:100%;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.7rem .85rem .55rem;display:flex;flex-direction:column;align-items:stretch;box-shadow:0 2px 12px rgba(15,43,70,.05)}
+.gantt-rows{position:relative;flex:0 0 auto;width:100%;background:#fff;}
+.grow{display:grid;grid-template-columns:14.5rem minmax(0,1fr) 7.4rem;gap:.45rem;align-items:center;margin:0;padding:.28rem .15rem;background:#fff;width:100%;border-bottom:1px solid #eef2f6}
+.grow:nth-child(even){background:#fff;}
+.gl{font-size:.72rem;font-weight:700;color:var(--navy);text-align:right;line-height:1.25;overflow-wrap:anywhere;background:transparent}
+.gtrack{position:relative;height:16px;background:#fff;border-radius:4px;box-shadow:inset 0 0 0 1px #e1e8ef}
 .gbar{position:absolute;top:2px;height:12px;border-radius:3px}
 .gbar.done{background:var(--teal)} .gbar.plan{background:#1a4a6e} .gbar.build{background:#2e6da4}
 .gbar.warn{background:var(--accent)} .gbar.staff{background:#5b6eae}
 .gbar.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 4px,#8f7db8 4px,#8f7db8 8px)}
 .gd{font-size:.68rem;color:var(--muted);text-align:right;white-space:nowrap}
-.gtoday{position:absolute;top:.7rem;bottom:2rem;width:2px;background:var(--warn);z-index:2;pointer-events:none}
+.gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);z-index:2;pointer-events:none}
 .legend{display:flex;flex-wrap:wrap;gap:.35rem .7rem;font-size:.7rem;color:var(--muted);margin-top:.35rem}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:.22rem;vertical-align:middle}
 .legend i.done{background:var(--teal)} .legend i.plan{background:#1a4a6e} .legend i.build{background:#2e6da4}
 .legend i.warn{background:var(--accent)} .legend i.staff{background:#5b6eae}
 .legend i.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 3px,#8f7db8 3px,#8f7db8 6px)}
-.slide>footer{margin-top:auto;display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;padding-top:.35rem}
+.slide>footer{flex:none;display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;padding-top:.4rem;background:var(--bg);z-index:2}
 .cover{justify-content:center}
 .cover-inner{max-width:1100px;margin:0 auto;width:100%}
 .cover h1{font-size:2.15rem;color:var(--navy);margin:.55rem 0 .2rem}
@@ -778,7 +786,20 @@ def slide_heads(slide) -> tuple[str, str]:
     return title, sub
 
 
-def combine_sections(first: str, second: str) -> str:
+def append_table_rows(first: str, second: str) -> str:
+    """Join the second table's data rows onto the first table. Drop the second heading."""
+    found = re.search(r"<table>(.*?)</table>", second, re.S)
+    if not found:
+        return first
+    rows = re.findall(r"<tr>.*?</tr>", found.group(1), re.S)
+    extra = "".join(rows[1:])
+    merged = re.sub(r"(<table>.*?)(</table>)", lambda m: m.group(1) + extra + m.group(2), first, count=1, flags=re.S)
+    return re.sub(r'(class="sub">)CRD.{0,6}1/2.{0,4}(</p>)', r"\1CRD\2", merged, count=1)
+
+
+def combine_sections(first: str, second: str, merge_tables: bool = False) -> str:
+    if merge_tables:
+        return append_table_rows(first, second)
     def piece(html, start, end):
         a = html.find(start)
         b = html.find(end, a if a >= 0 else 0)
@@ -823,7 +844,7 @@ def write_html(src: Path = SRC, out: Path = OUT) -> None:
         if i + 1 < len(slides) and should_join(title, sub, title2, sub2):
             first = render(i + 1, slides[i], len(slides))
             second = render(i + 2, slides[i + 1], len(slides))
-            sections.append(combine_sections(first, second))
+            sections.append(combine_sections(first, second, merge_tables="CRD" in sub and "CRD" in sub2))
             i += 2
         else:
             sections.append(render(i + 1, slides[i], len(slides)))
@@ -853,6 +874,8 @@ def write_html(src: Path = SRC, out: Path = OUT) -> None:
                 for line in para.text.splitlines():
                     text = line.strip().lstrip("\u2022").strip()
                     if len(text) < 8 or PAGE_RE.match(text):
+                        continue
+                    if "CRD" in text and ("1/2" in text or "2/2" in text) and len(text) < 16:
                         continue
                     if text not in plain:
                         missing.append(text[:160])
