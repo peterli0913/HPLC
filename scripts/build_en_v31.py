@@ -380,12 +380,9 @@ def main():
         raise SystemExit(1)
     polish(prs)
     prs.save(str(OUT_PPT))
-    total = len(prs.slides)
-    sections = [slide_html(i, slide, total) for i, slide in enumerate(prs.slides, 1)]
-    toc = "<nav>" + "".join(f'<a href="#s{i}">{i}</a>' for i in range(1, total + 1)) + "</nav>"
-    OUT_HTML.write_text(HTML_HEAD + toc + "".join(sections) + HTML_FOOT, encoding="utf-8")
+    from build_en_v31_show import write_html
+    write_html(OUT_PPT, OUT_HTML)
     print("wrote", OUT_PPT, OUT_PPT.stat().st_size)
-    print("wrote", OUT_HTML, OUT_HTML.stat().st_size, "slides", total)
 
 
 if __name__ == "__main__":
