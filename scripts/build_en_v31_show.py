@@ -164,7 +164,7 @@ def gantt_html(rows, legend, show_today: bool) -> str:
     today = ""
     if show_today:
         mark = pct(datetime(2026, 10, 12))
-        today = f'<div class="gtoday" style="left:calc(9.2rem + (100% - 16.4rem) * {mark/100:.4f})"></div>'
+        today = f'<div class="gtoday" style="left:calc(15rem + (100% - 23.4rem) * {mark/100:.4f})"></div>'
     legs = "".join(f'<span><i class="{bar_tone(name) if name.lower() not in {"done","today"} else "done"}"></i>{esc(name)}</span>' for name in legend)
     # legend colors should follow the words, not bar_tone of the legend phrase itself
     legs = []
@@ -488,7 +488,7 @@ def render(index: int, slide, total: int) -> str:
                 show_today = True
             elif re.fullmatch(r"\d{4} H[12]", box.text.strip()):
                 box.used = True
-            elif box.top > 6.4 and box.height <= 0.36 and box.left > 2:
+            elif box.top > 5.9 and box.height <= 0.6 and 2.5 < box.left < 11 and box.width < 4.2 and len(box.text) < 60:
                 legend.append(box.text.strip())
                 box.used = True
 
@@ -632,6 +632,10 @@ h2{font-size:1.55rem;color:var(--navy);font-weight:700;margin:0 0 .15rem;line-he
 .sub{font-size:.92rem;color:var(--muted);font-weight:400;margin:0 0 .7rem}
 .badge{display:inline-block;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;padding:.18rem .5rem;border-radius:3px;margin-bottom:.35rem}
 .main{flex:1;min-height:0;display:flex;flex-direction:column;gap:.6rem}
+.scroll-page{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:.8rem;padding-right:.2rem}
+.joined{display:flex;flex-direction:column;gap:.6rem}
+.split-next{margin-top:.2rem}
+.split-next h2{font-size:1.25rem}
 .kpis{display:grid;gap:.55rem}
 .kpis.n2{grid-template-columns:repeat(2,1fr)}
 .kpis.n3{grid-template-columns:repeat(3,1fr)}
@@ -694,15 +698,15 @@ tr:nth-child(even) td{background:#f8fafb}
 .chart-wrap{position:relative;flex:1;min-height:320px}
 .gantt{position:relative;flex:1;min-height:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.65rem .75rem .45rem;display:flex;flex-direction:column;box-shadow:0 2px 12px rgba(15,43,70,.05)}
 .gantt-body{flex:1;overflow:auto;min-height:0}
-.grow{display:grid;grid-template-columns:9.4rem 1fr 6.8rem;gap:.4rem;align-items:center;margin:.18rem 0}
-.gl{font-size:.74rem;font-weight:700;color:var(--navy);text-align:right;line-height:1.15}
+.grow{display:grid;grid-template-columns:14.5rem 1fr 7.2rem;gap:.45rem;align-items:center;margin:.28rem 0}
+.gl{font-size:.72rem;font-weight:700;color:var(--navy);text-align:right;line-height:1.25;overflow-wrap:anywhere}
 .gtrack{position:relative;height:16px;background:#eef2f6;border-radius:4px}
 .gbar{position:absolute;top:2px;height:12px;border-radius:3px}
 .gbar.done{background:var(--teal)} .gbar.plan{background:#1a4a6e} .gbar.build{background:#2e6da4}
 .gbar.warn{background:var(--accent)} .gbar.staff{background:#5b6eae}
 .gbar.assume{background:repeating-linear-gradient(-45deg,#6d5b95,#6d5b95 4px,#8f7db8 4px,#8f7db8 8px)}
 .gd{font-size:.68rem;color:var(--muted);text-align:right;white-space:nowrap}
-.gtoday{position:absolute;top:2.2rem;bottom:1.6rem;width:2px;background:var(--warn);z-index:2}
+.gtoday{position:absolute;top:.7rem;bottom:2rem;width:2px;background:var(--warn);z-index:2;pointer-events:none}
 .legend{display:flex;flex-wrap:wrap;gap:.35rem .7rem;font-size:.7rem;color:var(--muted);margin-top:.35rem}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:.22rem;vertical-align:middle}
 .legend i.done{background:var(--teal)} .legend i.plan{background:#1a4a6e} .legend i.build{background:#2e6da4}
@@ -760,10 +764,75 @@ document.querySelectorAll("canvas[data-chart]").forEach((el)=>{
 """
 
 
+def slide_heads(slide) -> tuple[str, str]:
+    found = []
+    for shape in slide.shapes:
+        if not shape.has_text_frame or shape.top.inches > 1.25 or shape.width.inches < 6:
+            continue
+        text = shape.text_frame.text.strip().split("\n")[0].strip()
+        if text:
+            found.append((shape.top.inches, text))
+    found.sort()
+    title = found[0][1] if found else ""
+    sub = found[1][1] if len(found) > 1 else ""
+    return title, sub
+
+
+def combine_sections(first: str, second: str) -> str:
+    def piece(html, start, end):
+        a = html.find(start)
+        b = html.find(end, a if a >= 0 else 0)
+        if a < 0 or b < 0:
+            return ""
+        return html[a:b]
+
+    head = piece(first, "<header", '<div class="main">')
+    main_a = piece(first, '<div class="main">', "<footer>").replace('<div class="main">', '<div class="joined">', 1)
+    head_b = piece(second, "<header", '<div class="main">')
+    main_b = piece(second, '<div class="main">', "<footer>").replace('<div class="main">', '<div class="joined">', 1)
+    foot = piece(first, "<footer>", "</section>") + "</section>"
+    head_b = head_b.replace("<header", '<header class="split-next"', 1)
+    return (
+        '<section class="slide"><div class="rule"></div>'
+        + head
+        + '<div class="main scroll-page">'
+        + main_a
+        + head_b
+        + main_b
+        + "</div>"
+        + foot
+    )
+
+
+def should_join(title: str, sub: str, title2: str, sub2: str) -> bool:
+    if "(1/2)" in title and "(2/2)" in title2:
+        return True
+    if "CRD" in sub and "CRD" in sub2 and "1/2" in sub and "2/2" in sub2:
+        return True
+    return False
+
+
 def write_html(src: Path = SRC, out: Path = OUT) -> None:
     prs = Presentation(str(src))
-    total = len(prs.slides)
-    sections = [render(i, slide, total) for i, slide in enumerate(prs.slides, 1)]
+    slides = list(prs.slides)
+    sections = []
+    i = 0
+    while i < len(slides):
+        title, sub = slide_heads(slides[i])
+        title2, sub2 = slide_heads(slides[i + 1]) if i + 1 < len(slides) else ("", "")
+        if i + 1 < len(slides) and should_join(title, sub, title2, sub2):
+            first = render(i + 1, slides[i], len(slides))
+            second = render(i + 2, slides[i + 1], len(slides))
+            sections.append(combine_sections(first, second))
+            i += 2
+        else:
+            sections.append(render(i + 1, slides[i], len(slides)))
+            i += 1
+    total = len(sections)
+    numbered = []
+    for n, section in enumerate(sections, 1):
+        numbered.append(re.sub(r"\d+ / \d+", f"{n} / {total}", section, count=1))
+    sections = numbered
     doc = (
         "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"/>"
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>"
